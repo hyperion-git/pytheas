@@ -13,11 +13,46 @@ time.  It is a single-file, dependency-light tool designed for quick
 tidal predictions in precision accelerometry, gravimetry, and sensor
 characterization.
 
-```
+**Dependency:** numpy only (matplotlib optional, for `--plot`).
+
+
+## Installation
+
+### Quick install (pip)
+
+```bash
 pip install pytheas
 ```
 
-**Dependency:** numpy only.
+### From source with micromamba (recommended)
+
+```bash
+git clone https://github.com/hyperion-git/pytheas.git
+cd pytheas
+
+# Option A: use the included environment file
+micromamba create -f environment.yml -y
+micromamba activate pytheas
+
+# Option B: create manually
+micromamba create -n pytheas python=3.12 numpy matplotlib pytest -c conda-forge -y
+micromamba activate pytheas
+
+# Install in development mode
+pip install -e .
+
+# Verify
+pytheas --lat 48.14 --lon 11.58 --alt 500
+python -m pytest tests/ -v
+```
+
+### From source with pip only
+
+```bash
+git clone https://github.com/hyperion-git/pytheas.git
+cd pytheas
+pip install -e ".[test]"
+```
 
 
 ## Quick Start

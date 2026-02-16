@@ -11,6 +11,10 @@ license = "MIT"
 requires-python = ">=3.9"
 dependencies = ["numpy>=1.20"]
 
+[project.optional-dependencies]
+plot = ["matplotlib>=3.5"]
+test = ["pytest>=7.0", "matplotlib>=3.5"]
+
 [project.scripts]
 pytheas = "pytheas.__main__:main"
 
