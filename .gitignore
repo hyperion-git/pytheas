@@ -6,4 +6,5 @@ dist/
 build/
 .pytest_cache/
 .claude/
+.alethic/
 *:Zone.Identifier
