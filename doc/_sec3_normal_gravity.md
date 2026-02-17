@@ -156,6 +156,8 @@ This lies between the equatorial and polar values, as expected, and matches the 
 
 **Figure 4** shows how normal gravity varies from equator to pole, comparing three models: the simple spherical approximation (constant at all latitudes), the sphere-plus-rotation model (which accounts for centrifugal acceleration), and the full GRS80 Somigliana formula (which also incorporates the oblate shape of the Earth). The figure demonstrates that rotation accounts for most of the latitude variation, while the ellipsoidal shape provides an additional refinement.
 
+![Figure 4: Normal gravity vs. geodetic latitude comparing three models — spherical Earth (constant), rotation-corrected spherical model, and full GRS80 Somigliana formula on the oblate ellipsoid.](figures/fig04_gravity_vs_latitude.png)
+
 ---
 
 ## 3.5 Free-air correction (going up)
@@ -240,6 +242,8 @@ where $\gamma_0(\varphi)$ is Somigliana's formula from Section 3.4.
 This is a standard result in physical geodesy, found (in various equivalent forms) in textbooks such as Torge & Muller (*Geodesy*, 4th ed.) and Hofmann-Wellenhof & Moritz (*Physical Geodesy*). The formula is exact to second order in $h/a$ on the level ellipsoid.
 
 **Figure 5** illustrates the free-air correction as a function of altitude, showing both the magnitude of the gravity reduction and the difference between the first-order and second-order approximations. Panel (b) highlights how the second-order term, though small at low altitudes, becomes significant above a few hundred meters.
+
+![Figure 5: Free-air correction to gravity as a function of altitude. Panel (a) shows the total gravity reduction; panel (b) shows the difference between first-order and second-order approximations, demonstrating when the quadratic term becomes significant.](figures/fig05_free_air.png)
 
 ### Why the second-order term matters
 

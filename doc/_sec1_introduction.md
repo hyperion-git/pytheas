@@ -48,6 +48,8 @@ A quick dimensional check confirms the structure: $\gamma$ carries units of m/s$
 
 The decomposition $g(t) = g_{\text{static}} + g_{\text{tidal}}$ has the same additive structure as perturbation theory in general: a large, time-independent baseline plus small, time-varying corrections. The tidal terms are the "perturbation," suppressed by a factor of roughly $10^{-7}$ relative to the static part. Yet it is precisely these tiny corrections that encode the positions and masses of the Moon and Sun, and that make gravimetry a window into celestial mechanics.
 
+![Figure 12: Anatomy of g(t) showing the decomposition into static normal gravity baseline at 9.807402 m/s², lunar tidal oscillation with 1.5 μm/s² peak-to-peak amplitude, and smaller solar tidal contribution, both amplified by the elastic factor δ = 1.16.](figures/fig12_anatomy.png)
+
 Figure 12 makes this additive structure visually explicit. Panel (a) displays $g_{\text{static}}$ as a horizontal line at 9.807402 m/s$^2$ -- the normal gravity baseline computed from Somigliana's formula plus the free-air correction for Munich's 500-meter altitude. Panel (b) shows the lunar tidal contribution oscillating in $\mu$m/s$^2$, with a peak-to-peak amplitude of approximately 1.5 $\mu$m/s$^2$. Panel (c) adds the solar tidal contribution, smaller by roughly a factor of two. Both tidal panels include the elastic amplification factor $\delta = 1.16$ already applied.
 
 ---
@@ -65,6 +67,8 @@ Why 12.4 hours and not 12? Because the Moon is not stationary. It advances appro
 And why two bulges, not one? The tidal field is quadrupolar: it has spherical harmonic degree 2. The near side of the Earth is pulled harder toward the Moon than the center; the far side is pulled less hard. Both extremes produce a positive vertical tidal acceleration relative to the freely falling center. The angular dependence of the degree-2 tidal potential goes as $\cos^2\theta$ (where $\theta$ is the angle between the observer and the sub-lunar point), which has two maxima -- at $\theta = 0$ (directly beneath the Moon) and $\theta = \pi$ (directly opposite). The "two high tides per day" that oceanographers have documented since antiquity follow directly from this quadrupolar symmetry.
 
 In a real gravimeter record, the 48-hour window would also show atmospheric pressure effects (a few nGal per hectopascal of pressure change), instrumental drift, and microseismic noise. We are deliberately not modeling any of these -- our formula captures only the gravitational signal from the static Earth and the two dominant tidal sources. The effects we omit, and why, are catalogued in Subsection 1.5.
+
+![Figure 1: 48-hour timeseries of gravitational acceleration g(t) at Munich starting 2025-03-20 00:00 UTC, showing the total acceleration dominated by the static baseline (top panel) and the tidal residual revealing the M2 semi-diurnal lunar tide with 12.4-hour period plus solar contribution (bottom panel).](figures/fig01_g_timeseries.png)
 
 ---
 
@@ -107,6 +111,8 @@ where $h_2 = 0.6078$ and $k_2 = 0.2980$ are the IERS 2010 Love numbers for the d
 The single largest error source in the model is the frequency-independent treatment of $\delta$. The Love numbers $h_2$ and $k_2$ are, strictly speaking, functions of tidal frequency. Near the K1 tidal constituent (period approximately 23.93 hours), the Free Core Nutation -- a normal mode involving differential precession of the fluid outer core and solid mantle -- produces a resonance that alters $\delta$ by up to approximately 1%. Applied to the total tidal signal of approximately 1,000 nGal at the K1 frequency, this produces an error of approximately 10 nGal. This is the dominant limitation of the single-$\delta$ approach.
 
 The ephemeris errors are secondary. The Meeus lunar ephemeris achieves approximately 10 arcsecond accuracy in ecliptic longitude and sub-arcsecond accuracy in parallax; when propagated through the tidal formula and averaged over the semi-diurnal cycle, the RMS error is approximately 1 nGal. The solar ephemeris, at approximately 1 arcminute accuracy, contributes less than 1 nGal. The normal gravity formula (Somigliana with second-order free-air correction) is exact on the reference ellipsoid to machine precision and accurate to better than 1 nGal for altitudes up to several kilometers.
+
+![Figure 13: Error budget ranking nine sources by magnitude on a logarithmic axis, showing modeled effects (ephemeris, normal gravity) below 1 nGal, frequency-independent Love number treatment at ~10 nGal, and unmodeled effects (ocean loading, atmospheric pressure) setting the accuracy floor at 10–50 nGal.](figures/fig13_error_budget.png)
 
 Figure 13 ranks all error sources visually. The horizontal bar chart displays nine contributions on a logarithmic axis, color-coded by modeling status: the modeled sources (ephemeris, normal gravity) cluster below 1 nGal; the frequency-independent Love number treatment sits at approximately 10 nGal; and the unmodeled effects -- ocean tidal loading (1--50 nGal depending on proximity to the coast) and atmospheric pressure loading (approximately 3 nGal per hectopascal) -- set a separate accuracy floor for sites near the ocean or exposed to large barometric swings.
 

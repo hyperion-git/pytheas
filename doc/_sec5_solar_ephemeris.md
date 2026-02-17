@@ -436,6 +436,8 @@ two reasons:
    achieve arcminute accuracy.  The Moon required 60+ terms for comparable
    precision.
 
+![Figure 8: Lunar and solar tidal contributions overlaid over a seven-day window, showing the ~2.2:1 amplitude ratio between Moon and Sun.](figures/fig08_moon_vs_sun.png)
+
 The upshot: a three-term equation of center plus an exact orbit equation
 for the distance gives solar tidal accelerations accurate to better than
 0.2 nGal --- far below the overall accuracy target of Pytheas.  There is

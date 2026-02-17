@@ -25,6 +25,8 @@ center to the Moon ($\mathbf{R}$) and from the observer to the Moon
 ($\mathbf{R} - \mathbf{r}$), whose difference drives the tidal acceleration,
 along with the characteristic quadrupolar pattern of the tidal field.
 
+![Figure 9: Tidal geometry showing Earth's center, Moon position, observer position vectors, and the quadrupolar tidal field pattern with stretching along the Earth-Moon line and compression perpendicular to it.](figures/fig09_tidal_schematic.png)
+
 #### Gravity at two points
 
 Newton's law of gravitation tells us that a mass $M$ at position $\mathbf{R}$
@@ -345,6 +347,8 @@ geometric pattern that could produce systematic biases at certain observer
 locations.  Figure 10 compares the exact Newtonian tidal acceleration with the
 gradient approximation over 24 hours at Munich, with the residual panel
 revealing the ~30 nGal systematic error of the approximation.
+
+![Figure 10: Exact Newtonian tidal acceleration vs. gradient approximation over 24 hours at Munich. The residual panel reveals a systematic ~30 nGal error from the first-order approximation.](figures/fig10_exact_vs_approx.png)
 
 **For the Sun:**
 

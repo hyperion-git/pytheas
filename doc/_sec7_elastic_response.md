@@ -207,6 +207,8 @@ The tidal signal is **16% larger** than it would be on a rigid Earth. Breaking d
 
 The displacement effect dominates: the ground rises so much that the free-air effect (losing gravity by moving up) is large. But the mass redistribution -- the tidal bulge concentrating mass beneath you -- partially counteracts this. The net result is that the elastic Earth amplifies the tidal signal, but by much less than $h_2$ alone would suggest. Figure 11 overlays the tidal signal for a rigid Earth against the elastic prediction, with the shaded region between the curves making the 16% amplification visually striking.
 
+![Figure 11: Rigid Earth vs. elastic Earth tidal gravity signal. The shaded region between the curves shows the 16% amplification from the elastic response (gravimetric factor δ = 1.1608).](figures/fig11_rigid_vs_elastic.png)
+
 ### How Pytheas applies this
 
 In Pytheas, the gravimetric factor is applied as a simple multiplicative correction to the tidal acceleration:

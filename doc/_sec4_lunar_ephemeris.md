@@ -33,6 +33,8 @@ This is an *inverse-cube* law, not inverse-square.  A 1% change in distance prod
 
 The ratio of apogee to perigee distances is about 1.14, which means the ratio of tidal forces at perigee versus apogee is $(406{,}700 / 356{,}500)^3 \approx 1.48$ -- the tidal pull is nearly 50% stronger at perigee than at apogee.  For a gravimeter measuring at the nGal level, getting the Moon's distance wrong by even a few hundred kilometres produces errors larger than our target accuracy.  Figure 6 shows the tight correlation between lunar distance variations over a synodic month and the resulting tidal acceleration amplitude -- the anti-correlation is clear: when the Moon is closest (perigee), the tidal acceleration is strongest, and vice versa at apogee.
 
+![Figure 6: Lunar distance and tidal acceleration amplitude over a synodic month, showing the inverse-cube relationship between distance variations and tidal force.](figures/fig06_lunar_distance_tides.png)
+
 In short: we need the Moon's position (all three coordinates -- longitude, latitude, distance) to high precision at every moment.
 
 ---
@@ -263,6 +265,8 @@ The dominant distance variation of ~20,900 km is consistent with the mean distan
 The dominant latitude term (5.13°) is essentially the Moon's orbital inclination.  All other terms are corrections to this basic north-south oscillation.
 
 Figure 7 ranks the largest longitude perturbation terms by amplitude, illustrating how the series converges -- the first few terms capture the dominant physics (the equation of the centre, evection, and variation), while the long tail of smaller corrections refines the result to sub-arcminute accuracy.
+
+![Figure 7: Convergence of the lunar longitude perturbation series. The largest terms (equation of the centre, evection, variation) dominate, with a rapid fall-off to smaller corrections.](figures/fig07_perturbation_terms.png)
 
 ### The eccentricity correction $E$
 

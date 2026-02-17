@@ -253,6 +253,8 @@ In ECEF, the observer is stationary (ignoring tectonic motion and tides in the s
 
 **Figure 2** illustrates these three reference frames (ECI, ECEF, and ENU) and the rotation connecting them.  The GMST angle rotates the ECEF axes relative to ECI, while the local ENU basis at the observer's location is defined within the ECEF frame.
 
+![Figure 2: Three reference frames (ECI, ECEF, ENU) showing the Earth-Centered Inertial frame fixed to distant stars, the Earth-Centered Earth-Fixed frame rotating with the planet, and the local East-North-Up basis at an observer's location. The GMST rotation angle connects ECI and ECEF.](figures/fig02_reference_frames.png)
+
 ---
 
 ## 2.7 GMST: Greenwich Mean Sidereal Time
@@ -447,6 +449,8 @@ We describe the sensor pointing direction using two angles:
 - **Azimuth** $\alpha$: the angle of the horizontal projection of the measurement axis, measured clockwise from north.  $\alpha = 0$ is north, $\alpha = 90^\circ$ is east, $\alpha = 180^\circ$ is south, and $\alpha = 270^\circ$ is west.
 
 These are the standard spherical coordinates in the local ENU frame, following the surveying convention (azimuth clockwise from north).  **Figure 3** shows the ENU basis vectors (East, North, Up) at an observer's location, with the measurement axis $\hat{n}$ oriented at zenith angle $\theta_z$ from vertical and azimuth $\alpha$ from north.
+
+![Figure 3: The local ENU (East-North-Up) basis vectors at an observer's location, with the measurement axis n̂ specified by zenith angle θ_z from vertical and azimuth α measured clockwise from north.](figures/fig03_measurement_axis.png)
 
 ### The measurement axis vector
 
