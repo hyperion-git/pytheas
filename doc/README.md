@@ -10,6 +10,39 @@ Each section includes worked numerical examples, code snippets from the [Pytheas
 
 ---
 
+## Getting Started
+
+To run the code snippets in this document, install Pytheas and its plotting dependency:
+
+```bash
+pip install -e "/path/to/pytheas[plot]"
+```
+
+Or with conda/micromamba:
+
+```bash
+git clone https://github.com/hyperion-git/pytheas.git
+cd pytheas
+micromamba create -f environment.yml -y
+micromamba activate pytheas
+pip install -e .
+```
+
+Verify the installation:
+
+```python
+from pytheas import compute_g
+from datetime import datetime
+
+result = compute_g(datetime(2025, 3, 20, 12, 0), lat_deg=48.14, lon_deg=11.58, alt_m=500.0)
+print(f"g = {result['g_total']:.10f} m/s²")  # ≈ 9.8074917... m/s²
+```
+
+**Requirements:** Python >= 3.9, NumPy >= 1.20, Matplotlib >= 3.5 (for figures).
+See the [project README](../README.md) for full installation options and the CLI interface.
+
+---
+
 ## Table of Contents
 
 ### [1. Introduction: What Does a Gravimeter Read?](_sec1_introduction.md)
