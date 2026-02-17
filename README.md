@@ -81,6 +81,25 @@ data = compute_timeseries(
 # data['times'], data['g_total'], data['g_tidal'], ...
 ```
 
+### Tilted sensor
+
+```python
+# Sensor tilted 15 deg from vertical toward east (zenith=15, azimuth=90)
+result = compute_g(
+    datetime(2025, 3, 20, 12, 0),
+    lat_deg=48.14, lon_deg=11.58, alt_m=500.0,
+    zenith_deg=15.0, azimuth_deg=90.0,
+)
+print(f"g       = {result['g_total']:.10f} m/s^2")
+print(f"g_tidal = {result['g_tidal'] * 1e6:.4f} um/s^2")
+```
+
+The `zenith_deg` parameter is the angle from vertical (0 = straight up,
+90 = horizontal) and `azimuth_deg` is clockwise from north.  For a
+perfectly vertical sensor both default to 0.  The static component
+scales as `cos(zenith)` while the tidal projection depends on the full
+3D geometry.
+
 ### Horizontal sensor
 
 ```python
@@ -92,6 +111,23 @@ result = compute_g(
 )
 print(f"horizontal tidal = {result['g_tidal'] * 1e6:.4f} um/s^2")
 ```
+
+### N-sample timeseries
+
+```python
+# 500 evenly spaced samples over a 48-hour window
+data = compute_timeseries(
+    start=datetime(2025, 3, 20),
+    end=datetime(2025, 3, 22),
+    lat_deg=48.14, lon_deg=11.58, alt_m=500.0,
+    n_samples=500,
+)
+print(f"{len(data['times'])} points, dt ~ "
+      f"{(data['times'][1] - data['times'][0]).total_seconds():.1f} s")
+```
+
+When `n_samples` is given it overrides the default `interval_minutes`
+cadence.  The samples are inclusive of both endpoints.
 
 ### Command line
 
@@ -234,11 +270,12 @@ Single-epoch computation.  Returns a dict with keys:
 - `g_tidal_moon` -- lunar tidal contribution (m/s^2)
 - `g_tidal_sun` -- solar tidal contribution (m/s^2)
 
-### `compute_timeseries(start, end, lat_deg, lon_deg, alt_m, ...)`
+### `compute_timeseries(start, end, lat_deg, lon_deg, alt_m, ..., n_samples=None)`
 
-Multi-epoch computation over `[start, end]` at a given cadence.  Returns
-the same keys as `compute_g`, each as a numpy array, plus `times` (list
-of datetime objects).
+Multi-epoch computation over `[start, end]`.  By default uses
+`interval_minutes=10.0` cadence; pass `n_samples=N` to get exactly N
+evenly spaced samples instead.  Returns the same keys as `compute_g`,
+each as a numpy array, plus `times` (list of datetime objects).
 
 ### Building blocks
 

@@ -485,7 +485,7 @@ def compute_g(dt, lat_deg, lon_deg, alt_m,
 
 def compute_timeseries(start, end, lat_deg, lon_deg, alt_m,
                        zenith_deg=0.0, azimuth_deg=0.0,
-                       interval_minutes=10.0):
+                       interval_minutes=10.0, n_samples=None):
     """Compute a g(t) timeseries.
 
     Parameters
@@ -505,7 +505,10 @@ def compute_timeseries(start, end, lat_deg, lon_deg, alt_m,
     azimuth_deg : float
         Azimuth of the measurement axis (clockwise from north).
     interval_minutes : float
-        Time step in minutes (default 10).
+        Time step in minutes (default 10).  Ignored if *n_samples* is set.
+    n_samples : int, optional
+        Number of evenly spaced samples between *start* and *end*
+        (inclusive).  When given, overrides *interval_minutes*.
 
     Returns
     -------
@@ -523,12 +526,23 @@ def compute_timeseries(start, end, lat_deg, lon_deg, alt_m,
     g_static_val = g0 * np.dot(e_up, n_hat)
     r = geodetic_to_ecef(lat_deg, lon_deg, alt_m)
 
-    step = timedelta(minutes=interval_minutes)
-    times = []
-    t = start
-    while t <= end:
-        times.append(t)
-        t += step
+    if n_samples is not None:
+        if n_samples < 1:
+            raise ValueError("n_samples must be >= 1")
+        total_sec = (end - start).total_seconds()
+        if n_samples == 1:
+            times = [start]
+        else:
+            step_sec = total_sec / (n_samples - 1)
+            times = [start + timedelta(seconds=i * step_sec)
+                     for i in range(n_samples)]
+    else:
+        step = timedelta(minutes=interval_minutes)
+        times = []
+        t = start
+        while t <= end:
+            times.append(t)
+            t += step
 
     n = len(times)
     g_total      = np.empty(n)
