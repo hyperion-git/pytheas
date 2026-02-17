@@ -121,8 +121,8 @@ where:
 
 | Symbol | Meaning | GRS80 Value |
 |--------|---------|-------------|
-| $\gamma_e$ | Gravity at the equator | $9.780\,325\,3141$ m/s$^2$ |
-| $\gamma_p$ | Gravity at the pole | $9.832\,184\,9378$ m/s$^2$ |
+| $\gamma_e$ | Gravity at the equator | $9.780\,325\,3141\;\mathrm{m/s^2}$ |
+| $\gamma_p$ | Gravity at the pole | $9.832\,184\,9378\;\mathrm{m/s^2}$ |
 | $k$ | Somigliana constant | $(b\,\gamma_p)/(a\,\gamma_e) - 1$ |
 | $e^2$ | First eccentricity squared | $2f - f^2$ |
 
@@ -299,9 +299,9 @@ The free-air correction reduced gravity by about $1.60 \times 10^{-3}$ m/s$^2$ (
 
 | Model | Formula | Accuracy |
 |-------|---------|----------|
-| Spherical, non-rotating | $g = GM_E / R^2$ | $\sim 0.5\%$ |
-| + rotation | $g_\text{eff} = GM_E/R^2 - \Omega^2 R \cos^2\!\varphi$ | $\sim 0.2\%$ |
+| Spherical, non-rotating | $g = GM_E / R^2$ | ${\sim}\,0.5\%$ |
+| + rotation | $g_\text{eff} = GM_E/R^2 - \Omega^2 R \cos^2\!\varphi$ | ${\sim}\,0.2\%$ |
 | + shape (Somigliana) | $\gamma_0(\varphi)$ on ellipsoid | exact on surface |
-| + altitude (free-air) | $\gamma(\varphi, h)$ with $h/a$ and $h^2/a^2$ terms | $< 1\,\mu$Gal to $\sim$1 km |
+| + altitude (free-air) | $\gamma(\varphi, h)$ with $h/a$ and $h^2/a^2$ terms | ${<}\,1\;\mu\mathrm{Gal}$ to ${\sim}\,1\;\mathrm{km}$ |
 
 Starting from a single number ($9.82$ m/s$^2$), we now have a formula that gives gravity to sub-microGal accuracy anywhere on or near the Earth's surface — a precision of better than one part in $10^{10}$. This is the static baseline onto which tidal perturbations (Section 4) will be superimposed.

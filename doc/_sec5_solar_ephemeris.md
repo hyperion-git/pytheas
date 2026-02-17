@@ -416,8 +416,8 @@ than **0.2 nGal** in absolute terms.
 
 | Error source | Magnitude |
 |---|---|
-| Solar ephemeris (1 arcmin) | < 0.2 nGal |
-| Lunar ephemeris (~0.1 deg) | ~1 nGal |
+| Solar ephemeris (1 arcmin) | $<$ 0.2 nGal |
+| Lunar ephemeris (${\sim}$0.1 deg) | ${\sim}$1 nGal |
 | Neglected ocean loading | 1--5 nGal |
 | Target accuracy of Pytheas | 10--100 nGal |
 

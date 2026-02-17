@@ -169,7 +169,7 @@ This is the key result. It tells us that the measured tidal gravity change on th
 
 ### Summary of the three terms
 
-| Term | Origin | Expression | Effect on $|\Delta g|$ |
+| Term | Origin | Expression | Effect on $\lvert\Delta g\rvert$ |
 |------|--------|------------|----------------------|
 | 1 | Rigid-Earth tidal gravity | $-2V_2/R$ | Baseline |
 | $+h_2$ | Displacement (free-air) | $-2h_2 V_2/R$ | Amplifies |
@@ -254,8 +254,8 @@ The Love numbers we used are for a spherically symmetric Earth model. The real E
 
 | Omission | Typical error | Notes |
 |----------|--------------|-------|
-| Frequency-independent $\delta$ (no FCN) | ~10 nGal | Largest near K1 frequency |
-| No degree-3 Love numbers | <1 nGal | Suppressed by $(R/d)$ |
-| No lateral variation | <1 nGal | Subsumed into ocean loading |
+| Frequency-independent $\delta$ (no FCN) | $\sim$10 nGal | Largest near K1 frequency |
+| No degree-3 Love numbers | $<$1 nGal | Suppressed by $(R/d)$ |
+| No lateral variation | $<$1 nGal | Subsumed into ocean loading |
 
 For Pytheas's target accuracy of ~10 nGal at inland sites, using a single gravimetric factor $\delta = 1.1608$ is adequate. The FCN resonance is the dominant limitation of this approach.

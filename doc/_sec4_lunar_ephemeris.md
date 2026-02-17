@@ -233,10 +233,10 @@ The convergence of these series is best understood by examining the largest term
 | # | $n_D$ | $n_M$ | $n_{M'}$ | $n_F$ | Coefficient $a_i$ | Amplitude | Name / Physical origin |
 |---|-------|-------|----------|-------|-------------------|-----------|----------------------|
 | 1 | 0 | 0 | 1 | 0 | +6,288,774 | 6.289° | **Equation of the centre**: the Moon's elliptical motion.  The Moon moves faster at perigee and slower at apogee; this sinusoidal correction accounts for that. |
-| 2 | 2 | 0 | −1 | 0 | +1,274,027 | 1.274° | **Evection**: the Sun distorts the Moon's orbital eccentricity.  The effective eccentricity is larger when the Moon's apsidal line aligns with the Sun, and smaller when perpendicular.  Discovered by Ptolemy (~2nd century). |
+| 2 | 2 | 0 | $-1$ | 0 | +1,274,027 | 1.274° | **Evection**: the Sun distorts the Moon's orbital eccentricity.  The effective eccentricity is larger when the Moon's apsidal line aligns with the Sun, and smaller when perpendicular.  Discovered by Ptolemy (~2nd century). |
 | 3 | 2 | 0 | 0 | 0 | +658,314 | 0.658° | **Variation**: the Moon speeds up when between Earth and Sun (new/full moon) and slows down at quadrature (first/third quarter).  Discovered by Tycho Brahe (~1590). |
 | 4 | 0 | 0 | 2 | 0 | +213,618 | 0.214° | Second harmonic of the equation of the centre: correction from the next term in the eccentricity expansion. |
-| 5 | 0 | 1 | 0 | 0 | −185,116 | 0.185° | **Annual equation**: Earth's elliptical orbit means the Sun's perturbing force varies over the year.  The Moon runs slightly ahead of its mean position when Earth is farther from the Sun (around aphelion), and slightly behind when closer. |
+| 5 | 0 | 1 | 0 | 0 | $-185,116$ | 0.185° | **Annual equation**: Earth's elliptical orbit means the Sun's perturbing force varies over the year.  The Moon runs slightly ahead of its mean position when Earth is farther from the Sun (around aphelion), and slightly behind when closer. |
 
 Notice the rapid convergence: the largest term (6.29°) is about 5 times bigger than the second (1.27°), which is about twice the third (0.66°).  By the 24th term (coefficient 4,036), we are down to corrections of 0.004° -- about 14 arcseconds.
 
@@ -244,11 +244,11 @@ Notice the rapid convergence: the largest term (6.29°) is about 5 times bigger 
 
 | # | $n_D$ | $n_M$ | $n_{M'}$ | $n_F$ | Coefficient $b_k$ | Distance | Physical origin |
 |---|-------|-------|----------|-------|-------------------|----------|----------------|
-| 1 | 0 | 0 | 1 | 0 | −20,905,355 | 20,905 km | Equation of the centre: the Moon's elliptical orbit makes it closer at perigee, farther at apogee. |
-| 2 | 2 | 0 | −1 | 0 | −3,699,111 | 3,699 km | Evection in distance. |
-| 3 | 2 | 0 | 0 | 0 | −2,955,968 | 2,956 km | Variation in distance. |
-| 4 | 0 | 0 | 2 | 0 | −569,925 | 570 km | Second eccentricity harmonic. |
-| 5 | 2 | 0 | −2 | 0 | +246,158 | 246 km | Mixed term. |
+| 1 | 0 | 0 | 1 | 0 | $-20,905,355$ | 20,905 km | Equation of the centre: the Moon's elliptical orbit makes it closer at perigee, farther at apogee. |
+| 2 | 2 | 0 | $-1$ | 0 | $-3,699,111$ | 3,699 km | Evection in distance. |
+| 3 | 2 | 0 | 0 | 0 | $-2,955,968$ | 2,956 km | Variation in distance. |
+| 4 | 0 | 0 | 2 | 0 | $-569,925$ | 570 km | Second eccentricity harmonic. |
+| 5 | 2 | 0 | $-2$ | 0 | +246,158 | 246 km | Mixed term. |
 
 The dominant distance variation of ~20,900 km is consistent with the mean distance (385,001 km) times the eccentricity ($385{,}001 \times 0.055 \approx 21{,}175$ km).
 
@@ -258,9 +258,9 @@ The dominant distance variation of ~20,900 km is consistent with the mean distan
 |---|-------|-------|----------|-------|-------------------|-----------|----------------|
 | 1 | 0 | 0 | 0 | 1 | +5,128,122 | 5.128° | **Inclination term**: the Moon's orbit is tilted ~5.14° to the ecliptic, so it oscillates above and below by this amount each orbit. |
 | 2 | 0 | 0 | 1 | 1 | +280,602 | 0.281° | Coupling between eccentricity and inclination. |
-| 3 | 0 | 0 | 1 | −1 | +277,693 | 0.278° | Same coupling, opposite node crossing. |
-| 4 | 2 | 0 | 0 | −1 | +173,237 | 0.173° | Solar perturbation of latitude. |
-| 5 | 2 | 0 | −1 | 1 | +55,413 | 0.055° | Evection in latitude. |
+| 3 | 0 | 0 | 1 | $-1$ | +277,693 | 0.278° | Same coupling, opposite node crossing. |
+| 4 | 2 | 0 | 0 | $-1$ | +173,237 | 0.173° | Solar perturbation of latitude. |
+| 5 | 2 | 0 | $-1$ | 1 | +55,413 | 0.055° | Evection in latitude. |
 
 The dominant latitude term (5.13°) is essentially the Moon's orbital inclination.  All other terms are corrections to this basic north-south oscillation.
 
