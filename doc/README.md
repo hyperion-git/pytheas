@@ -4,7 +4,7 @@
 
 $$g_\text{total}(t) = \gamma(\varphi, h) + \delta \times \Big[a_\text{moon}(t) + a_\text{sun}(t)\Big] \cdot \hat{n}$$
 
-This document derives every term in the formula above from first principles, building up layer by layer from Newton's shell theorem to a complete, working tidal gravity calculator accurate to ~10 nGal at inland sites. A final section traces the Newtonian tidal model back to general relativity via geodesic deviation, confirming that post-Newtonian corrections are negligible at this accuracy level.
+This document derives every term in the formula above from first principles, building up layer by layer from Newton's shell theorem to a complete, working tidal gravity calculator accurate to ~10 nGal at inland sites. A final section traces the Newtonian tidal model back to general relativity via the Fermi normal coordinate framework, confirming that all post-Newtonian and gravitomagnetic corrections are negligible at this accuracy level.
 
 Each section includes worked numerical examples, code snippets from the [Pytheas](../README.md) library, and publication-quality figures.
 
@@ -110,12 +110,15 @@ See the [project README](../README.md) for full installation options and the CLI
 
 ### [8. General Relativity and the Tidal Model](_sec8_gr_tidal.md)
 
-- [8.1 Why Spacetime Curvature?](_sec8_gr_tidal.md#81-why-spacetime-curvature)
-- [8.2 The Electrogravitic Tidal Tensor](_sec8_gr_tidal.md#82-the-electrogravitic-tidal-tensor)
-- [8.3 From Curved Spacetime to Newton](_sec8_gr_tidal.md#83-from-curved-spacetime-to-newton)
-- [8.4 Post-Newtonian Corrections to the Tidal Tensor](_sec8_gr_tidal.md#84-post-newtonian-corrections-to-the-tidal-tensor)
-- [8.5 Gravitomagnetic (Lense-Thirring) Tidal Effects](_sec8_gr_tidal.md#85-gravitomagnetic-lense-thirring-tidal-effects)
-- [8.6 The Hierarchy of Corrections](_sec8_gr_tidal.md#86-the-hierarchy-of-corrections)
+- [8.1 The Fermi Normal Coordinate Framework](_sec8_gr_tidal.md#81-the-fermi-normal-coordinate-framework)
+- [8.2 The Geodesic Equation in the Lab Frame](_sec8_gr_tidal.md#82-the-geodesic-equation-in-the-lab-frame)
+- [8.3 Term-by-Term Derivation and Classification](_sec8_gr_tidal.md#83-term-by-term-derivation-and-classification)
+- [8.4 Recovering the Newtonian Tidal Formula](_sec8_gr_tidal.md#84-recovering-the-newtonian-tidal-formula)
+- [8.5 Post-Newtonian and Gravitomagnetic Corrections](_sec8_gr_tidal.md#85-post-newtonian-and-gravitomagnetic-corrections)
+- [8.6 The Complete Hierarchy](_sec8_gr_tidal.md#86-the-complete-hierarchy)
+- [8.7 Dimensional and Limiting-Case Checks](_sec8_gr_tidal.md#87-dimensional-and-limiting-case-checks)
+- [8.8 Conclusion](_sec8_gr_tidal.md#88-conclusion)
+- [8.9 Computational Verification](_sec8_gr_tidal.md#89-computational-verification)
 
 ---
 

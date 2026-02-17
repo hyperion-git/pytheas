@@ -21,13 +21,14 @@ apply_style()
 entries = [
     {"label": "Newtonian tidal (Moon)",         "nGal": 110_000,    "category": "newtonian"},
     {"label": "Newtonian tidal (Sun)",          "nGal": 50_000,     "category": "newtonian"},
-    {"label": "1PN correction (Sun)",           "nGal": 0.002,      "category": "1pn"},
+    {"label": "1PN correction (Sun)",           "nGal": 0.001,      "category": "1pn"},
     {"label": "Earth frame-dragging\n(direct Lense–Thirring)",
-                                                "nGal": 0.007,      "category": "gm"},
-    {"label": "1PN correction (Moon)",          "nGal": 6e-8,       "category": "1pn"},
-    {"label": "Sun spin tidal (GM)",            "nGal": 4e-13,      "category": "gm"},
-    {"label": "Moon orbital GM tidal",          "nGal": 1e-13,      "category": "gm"},
-    {"label": "Moon spin tidal (GM)",           "nGal": 1e-14,      "category": "gm"},
+                                                "nGal": 0.008,      "category": "gm"},
+    {"label": "1PN correction (Moon)",          "nGal": 3e-8,       "category": "1pn"},
+    {"label": "Orbital GM tidal (Sun)",         "nGal": 1e-9,       "category": "gm"},
+    {"label": "Orbital GM tidal (Moon)",        "nGal": 1e-10,      "category": "gm"},
+    {"label": "Spin GM tidal (Sun)",            "nGal": 2e-13,      "category": "gm"},
+    {"label": "Spin GM tidal (Moon)",           "nGal": 5e-15,      "category": "gm"},
 ]
 
 # Sort by magnitude (largest at top)
@@ -46,7 +47,7 @@ color_map = {
 bar_colors = [color_map[c] for c in categories]
 
 # ---- Plot ----
-fig, ax = plt.subplots(figsize=(7, 4.5))
+fig, ax = plt.subplots(figsize=(7, 5))
 
 y_pos = np.arange(len(entries))
 bars = ax.barh(y_pos, magnitudes, color=bar_colors, height=0.6, edgecolor="none")
