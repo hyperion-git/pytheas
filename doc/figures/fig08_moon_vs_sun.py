@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 
 import pytheas
-from style import apply_style, COLORS
+from style import apply_style, COLORS, add_dual_axis
 
 apply_style()
 
@@ -79,6 +79,8 @@ if len(maxima) >= 2:
                 arrowprops=dict(arrowstyle="->", color=COLORS["red"],
                                 lw=0.7, shrinkB=3),
                 ha="left")
+
+add_dual_axis(ax, 'µm/s²')
 
 fig.savefig("/home/xeal/dev/pytheas/doc/figures/fig08_moon_vs_sun.png")
 plt.close(fig)

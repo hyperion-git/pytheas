@@ -15,7 +15,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import pytheas
-from style import apply_style, COLORS
+from style import apply_style, COLORS, add_dual_axis
 
 apply_style()
 
@@ -67,6 +67,8 @@ ax.annotate(f"{pole_grs:.4f}",
             fontsize=7.5, color=COLORS["navy"],
             arrowprops=dict(arrowstyle="-", color=COLORS["navy"],
                             lw=0.6, shrinkB=2))
+
+add_dual_axis(ax, 'm/s²')
 
 fig.savefig("/home/xeal/dev/pytheas/doc/figures/fig04_gravity_vs_latitude.png")
 plt.close(fig)

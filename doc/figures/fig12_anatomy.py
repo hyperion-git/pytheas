@@ -17,7 +17,7 @@ from datetime import datetime, timedelta
 
 import pytheas
 from pytheas import compute_timeseries
-from style import apply_style, COLORS
+from style import apply_style, COLORS, add_dual_axis
 
 apply_style()
 
@@ -85,6 +85,10 @@ ax_c.text(0.98, 0.92, f"peak-to-peak: {pp_sun:.1f} $\\mu$m/s$^2$",
           color=COLORS["green"])
 
 ax_c.set_xlim(0, 48)
+
+add_dual_axis(ax_a, 'm/s²')
+add_dual_axis(ax_b, 'µm/s²')
+add_dual_axis(ax_c, 'µm/s²')
 
 # --- Bottom annotation ---
 fig.text(0.5, 0.01,

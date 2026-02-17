@@ -20,7 +20,7 @@ from pytheas import (
     geodetic_to_ecef, moon_position_ecef, sun_position_ecef,
     tidal_acceleration, enu_basis, compute_timeseries,
 )
-from style import apply_style, COLORS
+from style import apply_style, COLORS, add_dual_axis
 
 apply_style()
 
@@ -82,6 +82,8 @@ ax.set_ylabel(r"Total tidal $g_z$ ($\mu$m/s$^2$)")
 ax.legend(loc="upper right", frameon=False)
 ax.set_xlim(0, 48)
 ax.axhline(0, color="grey", linewidth=0.4, linestyle="-")
+
+add_dual_axis(ax, 'µm/s²')
 
 fig.savefig("/home/xeal/dev/pytheas/doc/figures/fig11_rigid_vs_elastic.png")
 plt.close(fig)

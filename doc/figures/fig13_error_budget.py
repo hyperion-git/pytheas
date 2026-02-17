@@ -12,7 +12,7 @@ sys.path.insert(0, "/home/xeal/dev/pytheas")
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
-from style import apply_style, COLORS
+from style import apply_style, COLORS, add_dual_axis
 
 apply_style()
 
@@ -80,6 +80,8 @@ ax.text(0.98, 0.98,
         style="italic", color="0.4",
         bbox=dict(boxstyle="round,pad=0.3", facecolor="0.95",
                   edgecolor="0.8", linewidth=0.5))
+
+add_dual_axis(ax, 'nGal', direction='x')
 
 fig.savefig("/home/xeal/dev/pytheas/doc/figures/fig13_error_budget.png")
 plt.close(fig)

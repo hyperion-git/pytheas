@@ -15,7 +15,7 @@ import numpy as np
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-from style import apply_style, COLORS
+from style import apply_style, COLORS, add_dual_axis
 
 apply_style()
 
@@ -91,6 +91,8 @@ fig.autofmt_xdate(rotation=30, ha='right')
 # Thousands separator on y-axis of panel (a)
 ax1.yaxis.set_major_formatter(plt.FuncFormatter(
     lambda x, _: f"{x:,.0f}"))
+
+add_dual_axis(ax2, 'µm/s²')
 
 plt.savefig("/home/xeal/dev/pytheas/doc/figures/fig06_lunar_distance_tides.png")
 plt.close()

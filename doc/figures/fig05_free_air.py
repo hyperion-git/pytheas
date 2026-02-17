@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 import pytheas
 from pytheas import A_GRS80, F_GRS80, OMEGA, GM_E, B_GRS80
-from style import apply_style, COLORS
+from style import apply_style, COLORS, add_dual_axis
 
 apply_style()
 
@@ -82,6 +82,9 @@ ax_inset.annotate(f"{val_1km:.1f} $\\mu$Gal\nat 1 km",
                   fontsize=7, color=COLORS["navy"],
                   arrowprops=dict(arrowstyle="->", color=COLORS["navy"],
                                   lw=0.7, shrinkB=3))
+
+add_dual_axis(ax_main, 'mGal')
+add_dual_axis(ax_inset, 'µGal')
 
 fig.savefig("/home/xeal/dev/pytheas/doc/figures/fig05_free_air.png")
 plt.close(fig)

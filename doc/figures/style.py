@@ -39,3 +39,47 @@ def apply_style():
         'ytick.major.width': 0.8,
         'figure.figsize': (6, 3.5),
     })
+
+
+# Dual-unit conversion table: primary_unit -> (dual_label, factor)
+# where dual_value = primary_value * factor
+_DUAL_UNITS = {
+    'm/s²':  ('Gal',    100),
+    'µm/s²': ('µGal',   100),
+    'mGal':  ('µm/s²',  10),
+    'µGal':  ('nm/s²',  10),
+    'nGal':  ('nm/s²',  0.01),
+}
+
+
+def add_dual_axis(ax, primary_unit, direction='y'):
+    """Add a secondary axis showing the equivalent gravity unit.
+
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+        The axes object that already has the primary unit.
+    primary_unit : str
+        One of 'm/s²', 'µm/s²', 'mGal', 'µGal', 'nGal'.
+    direction : str
+        'y' adds a right-hand axis; 'x' adds a top axis.
+    """
+    dual_label, factor = _DUAL_UNITS[primary_unit]
+
+    if direction == 'y':
+        sec = ax.secondary_yaxis(
+            'right',
+            functions=(lambda v: v * factor, lambda v: v / factor),
+        )
+        sec.set_ylabel(dual_label)
+        sec.spines['right'].set_visible(True)
+    else:
+        sec = ax.secondary_xaxis(
+            'top',
+            functions=(lambda v: v * factor, lambda v: v / factor),
+        )
+        sec.set_xlabel(dual_label)
+        sec.spines['top'].set_visible(True)
+
+    sec.tick_params(labelsize=8)
+    return sec

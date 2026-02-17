@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 
 import pytheas
-from style import apply_style, COLORS
+from style import apply_style, COLORS, add_dual_axis
 
 apply_style()
 
@@ -85,6 +85,9 @@ if len(maxima) >= 2:
     )
 
 ax_bot.set_xlim(0, 48)
+
+add_dual_axis(ax_top, 'm/s²')
+add_dual_axis(ax_bot, 'µm/s²')
 
 fig.savefig("/home/xeal/dev/pytheas/doc/figures/fig01_g_timeseries.png")
 plt.close(fig)

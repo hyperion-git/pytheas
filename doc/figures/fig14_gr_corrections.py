@@ -13,7 +13,7 @@ sys.path.insert(0, "/home/xeal/dev/pytheas")
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
-from style import apply_style, COLORS
+from style import apply_style, COLORS, add_dual_axis
 
 apply_style()
 
@@ -113,6 +113,8 @@ legend_elements = [
 ]
 ax.legend(handles=legend_elements, loc="lower right", frameon=False,
           fontsize=7.5)
+
+add_dual_axis(ax, 'nGal', direction='x')
 
 fig.savefig("/home/xeal/dev/pytheas/doc/figures/fig14_gr_corrections.png")
 plt.close(fig)

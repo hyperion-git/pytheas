@@ -20,7 +20,7 @@ from pytheas import (
     GM_MOON, geodetic_to_ecef, moon_position_ecef,
     tidal_acceleration, enu_basis,
 )
-from style import apply_style, COLORS
+from style import apply_style, COLORS, add_dual_axis
 
 apply_style()
 
@@ -129,6 +129,9 @@ ax_bot.text(0.02, 0.92, r"$\mathbf{(b)}$", transform=ax_bot.transAxes,
             fontsize=10, fontweight="bold", va="top")
 
 ax_bot.set_xlim(0, 24)
+
+add_dual_axis(ax_top, 'µm/s²')
+add_dual_axis(ax_bot, 'nGal')
 
 fig.savefig("/home/xeal/dev/pytheas/doc/figures/fig10_exact_vs_approx.png")
 plt.close(fig)
