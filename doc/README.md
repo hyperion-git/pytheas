@@ -34,8 +34,8 @@ Verify the installation:
 from pytheas import compute_g
 from datetime import datetime
 
-result = compute_g(datetime(2025, 3, 20, 12, 0), lat_deg=48.14, lon_deg=11.58, alt_m=500.0)
-print(f"g = {result['g_total']:.10f} m/s²")  # ≈ 9.8074917... m/s²
+result = compute_g(datetime(2025, 3, 20, 12, 0), lat_deg=48.42, lon_deg=9.96, alt_m=620.0)
+print(f"g = {result['g_total']:.10f} m/s²")  # Ulm, Eselsberg
 ```
 
 **Requirements:** Python >= 3.9, NumPy >= 1.20, Matplotlib >= 3.5 (for figures).
