@@ -42,7 +42,7 @@ micromamba activate pytheas
 pip install -e .
 
 # Verify
-pytheas --lat 48.14 --lon 11.58 --alt 500
+pytheas --lat 48.42 --lon 9.96 --alt 620
 python -m pytest tests/ -v
 ```
 
@@ -63,19 +63,19 @@ pip install -e ".[test]"
 from datetime import datetime
 from pytheas import compute_g, compute_timeseries
 
-# Single epoch -- vertical sensor at Munich, 500 m altitude
+# Single epoch -- vertical sensor at Ulm, Eselsberg (620 m)
 result = compute_g(
     datetime(2025, 3, 20, 12, 0),
-    lat_deg=48.14, lon_deg=11.58, alt_m=500.0,
+    lat_deg=48.42, lon_deg=9.96, alt_m=620.0,
 )
-print(f"g       = {result['g_total']:.10f} m/s^2")
-print(f"g_tidal = {result['g_tidal'] * 1e6:.4f} um/s^2")
+print(f"g       = {result['g_total']:.10f} m/s^2")  # ≈ 9.8073743815 m/s²
+print(f"g_tidal = {result['g_tidal'] * 1e6:.4f} µm/s^2")
 
 # 48-hour timeseries
 data = compute_timeseries(
     start=datetime(2025, 3, 20),
     end=datetime(2025, 3, 22),
-    lat_deg=48.14, lon_deg=11.58, alt_m=500.0,
+    lat_deg=48.42, lon_deg=9.96, alt_m=620.0,
     interval_minutes=10.0,
 )
 # data['times'], data['g_total'], data['g_tidal'], ...
@@ -91,7 +91,7 @@ result = compute_g(
     zenith_deg=15.0, azimuth_deg=90.0,
 )
 print(f"g       = {result['g_total']:.10f} m/s^2")
-print(f"g_tidal = {result['g_tidal'] * 1e6:.4f} um/s^2")
+print(f"g_tidal = {result['g_tidal'] * 1e6:.4f} µm/s^2")
 ```
 
 The `zenith_deg` parameter is the angle from vertical (0 = straight up,
@@ -109,7 +109,7 @@ result = compute_g(
     lat_deg=48.42, lon_deg=9.96, alt_m=620.0,
     zenith_deg=90.0, azimuth_deg=0.0,
 )
-print(f"horizontal tidal = {result['g_tidal'] * 1e6:.4f} um/s^2")
+print(f"horizontal tidal = {result['g_tidal'] * 1e6:.4f} µm/s^2")
 ```
 
 ### N-sample timeseries
@@ -133,17 +133,17 @@ cadence.  The samples are inclusive of both endpoints.
 
 ```bash
 # Default: 48-hour timeseries from now, vertical axis
-pytheas --lat 48.14 --lon 11.58 --alt 500
+pytheas --lat 48.42 --lon 9.96 --alt 620
 
 # Specify time window
-pytheas --lat 48.14 --lon 11.58 --alt 500 --start 2025-03-20 --hours 72
+pytheas --lat 48.42 --lon 9.96 --alt 620 --start 2025-03-20 --hours 72
 
 # Horizontal axis, CSV export, plot
-pytheas --lat 48.14 --lon 11.58 --alt 500 --zenith 90 --azimuth 0 \
+pytheas --lat 48.42 --lon 9.96 --alt 620 --zenith 90 --azimuth 0 \
         --csv output.csv --plot
 ```
 
-Or run as a module: `python -m pytheas --lat 48.14 --lon 11.58`.
+Or run as a module: `python -m pytheas --lat 48.42 --lon 9.96`.
 
 
 ## What It Computes
@@ -156,9 +156,9 @@ g_total(t) = g_static + delta * [a_tidal_moon(t) + a_tidal_sun(t)] . n_hat
 
 | Component | Source | Typical magnitude |
 |-----------|--------|-------------------|
-| `g_static` | GRS80 normal gravity + free-air correction | 9.78 -- 9.83 m/s^2 |
-| `g_tidal_moon` | Exact Newtonian lunar tidal acceleration | ~1.1 um/s^2 peak |
-| `g_tidal_sun` | Exact Newtonian solar tidal acceleration | ~0.5 um/s^2 peak |
+| `g_static` | GRS80 normal gravity + free-air correction | 9.78 -- 9.83 m/s² |
+| `g_tidal_moon` | Exact Newtonian lunar tidal acceleration | ~1.1 µm/s² peak |
+| `g_tidal_sun` | Exact Newtonian solar tidal acceleration | ~0.5 µm/s² peak |
 | `delta` | Elastic Earth amplification (gravimetric factor) | 1.1608 |
 
 
@@ -173,8 +173,8 @@ computed using the Somigliana closed-form formula:
 gamma_0 = gamma_e * (1 + k * sin^2(phi)) / sqrt(1 - e^2 * sin^2(phi))
 ```
 
-where `gamma_e = 9.7803253141 m/s^2` (equatorial) and
-`gamma_p = 9.8321849378 m/s^2` (polar).  The altitude correction uses
+where `gamma_e = 9.7803253141 m/s²` (equatorial) and
+`gamma_p = 9.8321849378 m/s²` (polar).  The altitude correction uses
 the second-order free-air gradient:
 
 ```
@@ -252,7 +252,7 @@ For a vertical sensor at a continental (inland) site:
 | Polar motion (not modeled) | <1 nGal | |
 | Planetary tides (not modeled) | <0.1 nGal | Jupiter, Venus combined |
 
-**Total for inland sites: ~10 nGal (1e-8 m/s^2).**
+**Total for inland sites: ~10 nGal (1e-8 m/s²).**
 
 Coastal sites may see up to 50 nGal additional error from unmodeled ocean
 loading.
@@ -264,11 +264,11 @@ loading.
 
 Single-epoch computation.  Returns a dict with keys:
 
-- `g_total` -- total g projected on axis (m/s^2)
-- `g_static` -- normal gravity component (m/s^2)
-- `g_tidal` -- total tidal perturbation (m/s^2)
-- `g_tidal_moon` -- lunar tidal contribution (m/s^2)
-- `g_tidal_sun` -- solar tidal contribution (m/s^2)
+- `g_total` -- total g projected on axis (m/s²)
+- `g_static` -- normal gravity component (m/s²)
+- `g_tidal` -- total tidal perturbation (m/s²)
+- `g_tidal_moon` -- lunar tidal contribution (m/s²)
+- `g_tidal_sun` -- solar tidal contribution (m/s²)
 
 ### `compute_timeseries(start, end, lat_deg, lon_deg, alt_m, ..., n_samples=None)`
 
