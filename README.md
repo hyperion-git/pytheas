@@ -84,10 +84,10 @@ data = compute_timeseries(
 ### Tilted sensor
 
 ```python
-# Sensor tilted 15 deg from vertical toward east (zenith=15, azimuth=90)
+# Sensor tilted 15 deg from vertical toward east at Ulm, Eselsberg
 result = compute_g(
     datetime(2025, 3, 20, 12, 0),
-    lat_deg=48.14, lon_deg=11.58, alt_m=500.0,
+    lat_deg=48.42, lon_deg=9.96, alt_m=620.0,
     zenith_deg=15.0, azimuth_deg=90.0,
 )
 print(f"g       = {result['g_total']:.10f} m/s^2")
@@ -103,10 +103,10 @@ scales as `cos(zenith)` while the tidal projection depends on the full
 ### Horizontal sensor
 
 ```python
-# North-pointing horizontal accelerometer (zenith=90, azimuth=0)
+# North-pointing horizontal accelerometer at Ulm, Eselsberg
 result = compute_g(
     datetime(2025, 3, 20, 12, 0),
-    lat_deg=48.14, lon_deg=11.58, alt_m=500.0,
+    lat_deg=48.42, lon_deg=9.96, alt_m=620.0,
     zenith_deg=90.0, azimuth_deg=0.0,
 )
 print(f"horizontal tidal = {result['g_tidal'] * 1e6:.4f} um/s^2")
@@ -115,11 +115,11 @@ print(f"horizontal tidal = {result['g_tidal'] * 1e6:.4f} um/s^2")
 ### N-sample timeseries
 
 ```python
-# 500 evenly spaced samples over a 48-hour window
+# 500 evenly spaced samples over a 48-hour window at Ulm, Eselsberg
 data = compute_timeseries(
     start=datetime(2025, 3, 20),
     end=datetime(2025, 3, 22),
-    lat_deg=48.14, lon_deg=11.58, alt_m=500.0,
+    lat_deg=48.42, lon_deg=9.96, alt_m=620.0,
     n_samples=500,
 )
 print(f"{len(data['times'])} points, dt ~ "
