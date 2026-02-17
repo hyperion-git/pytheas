@@ -4,7 +4,7 @@
 
 $$g_\text{total}(t) = \gamma(\varphi, h) + \delta \times \Big[a_\text{moon}(t) + a_\text{sun}(t)\Big] \cdot \hat{n}$$
 
-This document derives every term in the formula above from first principles, building up layer by layer from Newton's shell theorem to a complete, working tidal gravity calculator accurate to ~10 nGal at inland sites. The target audience is undergrad and beginning grad students with a background in calculus and classical mechanics.
+This document derives every term in the formula above from first principles, building up layer by layer from Newton's shell theorem to a complete, working tidal gravity calculator accurate to ~10 nGal at inland sites. A final section traces the Newtonian tidal model back to general relativity via geodesic deviation, confirming that post-Newtonian corrections are negligible at this accuracy level.
 
 Each section includes worked numerical examples, code snippets from the [Pytheas](../README.md) library, and publication-quality figures.
 
@@ -52,7 +52,7 @@ See the [project README](../README.md) for full installation options and the CLI
 - [1.3 A 48-Hour Portrait](_sec1_introduction.md#13-a-48-hour-portrait)
 - [1.4 Roadmap](_sec1_introduction.md#14-roadmap)
 - [1.5 The Error Budget at a Glance](_sec1_introduction.md#15-the-error-budget-at-a-glance)
-- [1.6 Prerequisites, Notation, and Conventions](_sec1_introduction.md#16-prerequisites-notation-and-conventions)
+- [1.6 Notation and Conventions](_sec1_introduction.md#16-notation-and-conventions)
 
 ### [2. Setting Up Coordinates](_sec2_coordinates.md)
 
@@ -79,7 +79,7 @@ See the [project README](../README.md) for full installation options and the CLI
 ### [4. Where is the Moon? (Lunar Ephemeris)](_sec4_lunar_ephemeris.md)
 
 - [4.1 Why We Need to Know](_sec4_lunar_ephemeris.md#41-why-we-need-to-know)
-- [4.2 Keplerian Orbits in 5 Minutes](_sec4_lunar_ephemeris.md#42-keplerian-orbits-in-5-minutes)
+- [4.2 Keplerian Orbit Review](_sec4_lunar_ephemeris.md#42-keplerian-orbit-review)
 - [4.3 Why the Moon Is Hard](_sec4_lunar_ephemeris.md#43-why-the-moon-is-hard)
 - [4.4 The Meeus Approach](_sec4_lunar_ephemeris.md#44-the-meeus-approach)
 - [4.5 From Ecliptic to Your Location](_sec4_lunar_ephemeris.md#45-from-ecliptic-to-your-location)
@@ -108,6 +108,15 @@ See the [project README](../README.md) for full installation options and the CLI
 - [7.5 Numerical Values](_sec7_elastic_response.md#75-numerical-values)
 - [7.6 What We Are Ignoring](_sec7_elastic_response.md#76-what-we-are-ignoring)
 
+### [8. General Relativity and the Tidal Model](_sec8_gr_tidal.md)
+
+- [8.1 Why Spacetime Curvature?](_sec8_gr_tidal.md#81-why-spacetime-curvature)
+- [8.2 The Electrogravitic Tidal Tensor](_sec8_gr_tidal.md#82-the-electrogravitic-tidal-tensor)
+- [8.3 From Curved Spacetime to Newton](_sec8_gr_tidal.md#83-from-curved-spacetime-to-newton)
+- [8.4 Post-Newtonian Corrections to the Tidal Tensor](_sec8_gr_tidal.md#84-post-newtonian-corrections-to-the-tidal-tensor)
+- [8.5 Gravitomagnetic (Lense-Thirring) Tidal Effects](_sec8_gr_tidal.md#85-gravitomagnetic-lense-thirring-tidal-effects)
+- [8.6 The Hierarchy of Corrections](_sec8_gr_tidal.md#86-the-hierarchy-of-corrections)
+
 ---
 
 ## Figures
@@ -127,3 +136,4 @@ See the [project README](../README.md) for full installation options and the CLI
 | 11 | Rigid vs. elastic Earth tidal signal | [fig11](figures/fig11_rigid_vs_elastic.png) |
 | 12 | Anatomy of $g(t)$: static + lunar + solar | [fig12](figures/fig12_anatomy.png) |
 | 13 | Error budget | [fig13](figures/fig13_error_budget.png) |
+| 14 | Hierarchy of GR corrections to tidal signal | [fig14](figures/fig14_gr_corrections.png) |
