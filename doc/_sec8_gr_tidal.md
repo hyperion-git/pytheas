@@ -271,8 +271,8 @@ $$
 
 | Body | $GM/d^3$ (s$^{-2}$) | Max tidal at surface ($\mu$Gal) | Moon/Sun ratio |
 |:-----|:---------------------|:-------------------------------|:---------------|
-| Moon | $8.63 \times 10^{-14}$ | $\sim 1.10$ | 2.18 |
-| Sun  | $3.97 \times 10^{-14}$ | $\sim 0.51$ | 1.00 |
+| Moon | $8.63 \times 10^{-14}$ | $\sim 110$ | 2.18 |
+| Sun  | $3.97 \times 10^{-14}$ | $\sim 51$ | 1.00 |
 
 These are the $\delta \cdot [\mathbf{a}_\text{Moon} + \mathbf{a}_\text{Sun}] \cdot \hat{n}$ terms in $g(t)$.
 
@@ -348,15 +348,15 @@ Figure 14 shows the hierarchy of corrections graphically.  The following table
 lists every contribution to the measured gravitational acceleration, ordered by
 magnitude.
 
-![Figure 14: Complete hierarchy of corrections to the gravimeter signal from the Fermi frame analysis, spanning from static normal gravity ($\sim 10^{14}$ nGal) down to spin gravitomagnetic tidal ($\sim 10^{-15}$ nGal).  Effects are classified by observational status: absorbed into $\gamma(\varphi,h)$ (gray), measured tidal signal (navy), horizontal with no $\hat{n}$ projection (green), instrument-dependent (blue), and below the 10 nGal accuracy floor (orange).](figures/fig14_gr_corrections.png)
+![Figure 14: Complete hierarchy of corrections to the gravimeter signal from the Fermi frame analysis, spanning from static normal gravity ($\sim 10^{12}$ nGal) down to spin gravitomagnetic tidal ($\sim 10^{-15}$ nGal).  Effects are classified by observational status: absorbed into $\gamma(\varphi,h)$ (gray), measured tidal signal (navy), horizontal with no $\hat{n}$ projection (green), instrument-dependent (blue), and below the 10 nGal accuracy floor (orange).](figures/fig14_gr_corrections.png)
 
 | Rank | Effect | Magnitude | Classification |
 |:-----|:-------|:----------|:---------------|
 | 1 | Static normal gravity $\gamma(\phi,h)$ | $9.81 \times 10^8\;\mu$Gal | (a) Time-independent |
 | 2 | Centrifugal | $3.4 \times 10^6\;\mu$Gal | (a) Time-independent |
-| 3 | Moon Newtonian tidal | $\sim 1.1\;\mu$Gal | **Measured tidal signal** |
-| 4 | Sun Newtonian tidal | $\sim 0.5\;\mu$Gal | **Measured tidal signal** |
-| 5 | Earth gravity gradient (0.3 m) | $\sim 92\;\mu$Gal | (a) Instrument correction |
+| 3 | Moon Newtonian tidal | $\sim 110\;\mu$Gal | **Measured tidal signal** |
+| 4 | Earth gravity gradient (0.3 m) | $\sim 92\;\mu$Gal | (a) Instrument correction |
+| 5 | Sun Newtonian tidal | $\sim 51\;\mu$Gal | **Measured tidal signal** |
 | 6 | Coriolis (1st order) | Horizontal | (b) No projection onto $\hat{n}$ |
 | 7 | Eötvös (2nd-order Coriolis) | $\sim 319\;$nGal | (c) Instrument-dependent |
 | 8 | GM curvature cross-term | $\sim 0.17\;$nGal | (d) Below 10 nGal floor |

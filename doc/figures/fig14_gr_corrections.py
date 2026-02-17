@@ -26,15 +26,15 @@ apply_style()
 #   below_floor = below 10 nGal accuracy floor
 entries = [
     {"label": "Static normal gravity $\\gamma(\\varphi,h)$",
-     "nGal": 9.81e14, "category": "absorbed"},
+     "nGal": 9.81e11, "category": "absorbed"},
     {"label": "Centrifugal",
-     "nGal": 3.4e12,  "category": "absorbed"},
+     "nGal": 3.39e9,  "category": "absorbed"},
     {"label": "Newtonian tidal (Moon)",
      "nGal": 110_000, "category": "signal"},
     {"label": "Newtonian tidal (Sun)",
      "nGal": 50_000,  "category": "signal"},
     {"label": "Coriolis (1st order, horizontal)",
-     "nGal": 15_000,  "category": "horizontal"},
+     "nGal": 2.5e7,   "category": "horizontal"},
     {"label": "Eötvös (2nd-order Coriolis)",
      "nGal": 319,     "category": "instrument"},
     {"label": "GM curvature cross-term",

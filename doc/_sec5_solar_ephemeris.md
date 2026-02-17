@@ -156,7 +156,7 @@ Since tidal acceleration scales as $R^{-3}$:
 $$\frac{\delta a_{\text{tidal}}}{a_{\text{tidal}}} = -3 \frac{\delta R}{R} = \mp 3 \times 0.0167 = \mp 5.0\%$$
 
 The solar tidal acceleration is ~5% stronger in January than July.  With a
-peak of ~50 nGal, this seasonal modulation is $\pm 2.5$ nGal --- small but
+peak of ~50 $\mu$Gal, this seasonal modulation is $\pm 2.5$ $\mu$Gal ---
 captured automatically by the exact distance formula.
 
 ---
@@ -220,19 +220,21 @@ Peak solar tidal acceleration:
 
 $$a_{\text{tidal}}^{\odot} \approx \frac{GM_\odot \, R_\oplus}{R^3} \approx \frac{1.33 \times 10^{20} \times 6.37 \times 10^6}{(1.50 \times 10^{11})^3} \approx 2.5 \times 10^{-7} \text{ m/s}^2$$
 
-(roughly 50 nGal peak vertical component after geometric projection).
+(roughly 50 $\mu$Gal peak vertical component after geometric projection).
 
 With $\Delta\lambda = 1' = 2.9 \times 10^{-4}$ rad:
 
-$$\delta a \sim 50 \text{ nGal} \times 2.9 \times 10^{-4} \approx 0.015 \text{ nGal}$$
+$$\delta a \sim 50{,}000 \text{ nGal} \times 2.9 \times 10^{-4} \approx 15 \text{ nGal}$$
 
-This is **0.03%** of the solar tidal signal, or $< 0.2$ nGal absolute.
+This is **0.03%** of the solar tidal signal, or $\sim 15$ nGal absolute.
+In practice, the Meeus ephemeris achieves better than 1 arcminute accuracy
+for the Sun, so the actual error is well below this bound.
 
 ### Comparison with other error sources
 
 | Error source | Magnitude |
 |---|---|
-| Solar ephemeris (1 arcmin) | $<$ 0.2 nGal |
+| Solar ephemeris (1 arcmin) | $\lesssim$ 15 nGal |
 | Lunar ephemeris (${\sim}$0.1 deg) | ${\sim}$1 nGal |
 | Neglected ocean loading | 1--5 nGal |
 | Target accuracy of Pytheas | 10--100 nGal |

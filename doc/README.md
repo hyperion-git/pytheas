@@ -126,7 +126,7 @@ See the [project README](../README.md) for full installation options and the CLI
 
 | # | Description | File |
 |---|-------------|------|
-| 1 | 48-hour $g(t)$ timeseries at Munich | [fig01](figures/fig01_g_timeseries.png) |
+| 1 | 48-hour $g(t)$ timeseries | [fig01](figures/fig01_g_timeseries.png) |
 | 2 | ECI, ECEF, and ENU reference frames | [fig02](figures/fig02_reference_frames.png) |
 | 3 | ENU basis vectors and measurement axis $\hat{n}$ | [fig03](figures/fig03_measurement_axis.png) |
 | 4 | Normal gravity vs. latitude (sphere, rotation, Somigliana) | [fig04](figures/fig04_gravity_vs_latitude.png) |

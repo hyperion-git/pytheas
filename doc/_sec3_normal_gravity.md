@@ -221,7 +221,7 @@ $$\gamma(48.1°, 520) \approx 9.809\,0 \times (1 - 1.633 \times 10^{-4} + 1.994 
 
 $$\approx 9.809\,0 \times 0.999\,837 \approx 9.807\,4 \text{ m/s}^2$$
 
-The free-air correction reduced gravity by ~160 mGal; the second-order term contributed ~0.2 $\mu$Gal — small at this altitude, but growing to tens of $\mu$Gal at higher elevations.
+The free-air correction reduced gravity by ~160 mGal; the second-order term contributed ~20 $\mu$Gal — small at this altitude, but growing rapidly at higher elevations.
 
 ---
 

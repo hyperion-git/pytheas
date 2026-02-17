@@ -181,7 +181,8 @@ the second-order free-air gradient:
 gamma(h) = gamma_0 * [1 - 2*(1+f+m-2f*sin^2(phi))*h/a + 3*h^2/a^2]
 ```
 
-This is accurate to <1 nGal for altitudes below 5 km.
+This is accurate to <1 nGal for altitudes below ~400 m, and <20 nGal
+below 1 km.
 
 ### Tidal acceleration
 
@@ -247,14 +248,14 @@ For a vertical sensor at a continental (inland) site:
 | Solar ephemeris | <1 nGal | 1 arcmin, negligible |
 | Elastic Earth (no FCN) | ~10 nGal | 1% near K1 only |
 | Normal gravity | <1 nGal | GRS80 + 2nd-order free-air |
-| Ocean loading (not modeled) | 1--50 nGal | negligible inland, significant at coast |
-| Atmospheric pressure (not modeled) | ~3 nGal/hPa | needs barometer data |
-| Polar motion (not modeled) | <1 nGal | |
-| Planetary tides (not modeled) | <0.1 nGal | Jupiter, Venus combined |
+| Ocean loading (not modeled) | 1--3000 nGal | negligible inland, up to ~3 µGal at coast |
+| Atmospheric pressure (not modeled) | ~300 nGal/hPa | needs barometer data |
+| Polar motion (not modeled) | ~10--20 nGal | 48-hour variation; static offset ~5 µGal |
+| Planetary tides (not modeled) | ~1--6 nGal | Venus dominates at inferior conjunction |
 
-**Total for inland sites: ~10 nGal (1e-8 m/s²).**
+**Total for inland sites: ~10 nGal (1e-10 m/s²).**
 
-Coastal sites may see up to 50 nGal additional error from unmodeled ocean
+Coastal sites may see up to ~3 µGal additional error from unmodeled ocean
 loading.
 
 

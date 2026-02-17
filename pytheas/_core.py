@@ -9,7 +9,7 @@ measurement axis, as a function of time.  The model includes:
   - Solar tidal acceleration (exact Newtonian formula, Meeus ephemeris)
   - Elastic Earth amplification via IERS 2010 Love numbers
 
-Accuracy: ~10-100 nGal (1e-8 to 1e-7 m/s^2) for inland sites.
+Accuracy: ~10-100 nGal (1e-10 to 1e-9 m/s^2) for inland sites.
 
 Dependencies: numpy only.
 """
