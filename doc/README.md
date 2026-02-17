@@ -139,4 +139,4 @@ See the [project README](../README.md) for full installation options and the CLI
 | 11 | Rigid vs. elastic Earth tidal signal | [fig11](figures/fig11_rigid_vs_elastic.png) |
 | 12 | Anatomy of $g(t)$: static + lunar + solar | [fig12](figures/fig12_anatomy.png) |
 | 13 | Error budget | [fig13](figures/fig13_error_budget.png) |
-| 14 | Hierarchy of GR corrections to tidal signal | [fig14](figures/fig14_gr_corrections.png) |
+| 14 | Complete hierarchy of corrections from Fermi frame analysis | [fig14](figures/fig14_gr_corrections.png) |

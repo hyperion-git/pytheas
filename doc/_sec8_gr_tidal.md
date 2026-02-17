@@ -348,7 +348,7 @@ Figure 14 shows the hierarchy of corrections graphically.  The following table
 lists every contribution to the measured gravitational acceleration, ordered by
 magnitude.
 
-![Figure 14: Hierarchy of GR corrections to the tidal signal, spanning from centrifugal ($10^6\;\mu$Gal) down to spin gravitomagnetic tidal ($10^{-15}$ nGal), showing the 10 nGal accuracy floor.](figures/fig14_gr_corrections.png)
+![Figure 14: Complete hierarchy of corrections to the gravimeter signal from the Fermi frame analysis, spanning from static normal gravity ($\sim 10^{14}$ nGal) down to spin gravitomagnetic tidal ($\sim 10^{-15}$ nGal).  Effects are classified by observational status: absorbed into $\gamma(\varphi,h)$ (gray), measured tidal signal (navy), horizontal with no $\hat{n}$ projection (green), instrument-dependent (blue), and below the 10 nGal accuracy floor (orange).](figures/fig14_gr_corrections.png)
 
 | Rank | Effect | Magnitude | Classification |
 |:-----|:-------|:----------|:---------------|
