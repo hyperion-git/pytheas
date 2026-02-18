@@ -218,47 +218,77 @@ To summarise:
 
 ## Step 4: What the Sensor Reads
 
-The sensor reads $\mathbf{F}_{\text{spring}}$, which already appears in
-the boxed equation from Step 3. To isolate it, we solve that equation
-for $\mathbf{F}_{\text{spring}}$ by specifying the acceleration
-$\ddot{\mathbf{r}}$ of the test mass.
+The boxed equation from Step 3 is written in the non-rotating geocentric
+frame. The sensor, however, is fixed to Earth's surface, which rotates
+at angular velocity $\boldsymbol{\omega}$. To obtain the equation of
+motion in the lab, we transform explicitly to the co-rotating frame.
 
-The test mass is stationary in the lab frame, which co-rotates with
-Earth at angular velocity $\boldsymbol{\omega}$. In the non-rotating
-geocentric frame used in Step 3, this corresponds to circular motion
-with centripetal acceleration:
+### Rotating-frame equation of motion
 
-$$\ddot{\mathbf{r}} = \boldsymbol{\omega} \times (\boldsymbol{\omega} \times \mathbf{r}) = -\omega^2\,\mathbf{r}_\perp$$
+Let $\mathbf{r}'$ denote the test mass position in the lab frame,
+related to its geocentric position by
 
-where $\mathbf{r}_\perp$ is the component of $\mathbf{r}$ perpendicular
-to the rotation axis (pointing outward from that axis).
+$$\mathbf{r} = \mathcal{R}(t)\,\mathbf{r}'$$
 
-Substituting into the boxed equation and solving for
-$\mathbf{F}_{\text{spring}}$:
+where $\mathcal{R}(t)$ is the rotation matrix for Earth's uniform
+angular velocity $\boldsymbol{\omega}$. Differentiating twice gives the
+standard kinematic identity:
 
-$$\boldsymbol{\omega} \times (\boldsymbol{\omega} \times \mathbf{r}) = -\frac{G M_E}{|\mathbf{r}|^3}\,\mathbf{r} + \mathbf{a}_{\text{tidal}}^{\text{Sun}} + \mathbf{a}_{\text{tidal}}^{\text{Moon}} + \frac{\mathbf{F}_{\text{spring}}}{m}$$
+$$\ddot{\mathbf{r}} = \ddot{\mathbf{r}}' + 2\,\boldsymbol{\omega} \times \dot{\mathbf{r}}' + \boldsymbol{\omega} \times (\boldsymbol{\omega} \times \mathbf{r}')$$
 
-$$\mathbf{F}_{\text{spring}} = m\left[\frac{G M_E}{|\mathbf{r}|^3}\,\mathbf{r} + \boldsymbol{\omega} \times (\boldsymbol{\omega} \times \mathbf{r}) - \mathbf{a}_{\text{tidal}}^{\text{Sun}} - \mathbf{a}_{\text{tidal}}^{\text{Moon}}\right]$$
+(the Euler term $\dot{\boldsymbol{\omega}} \times \mathbf{r}'$ vanishes
+for uniform rotation). Substituting into the boxed equation from Step 3,
+dividing by $m$, and expressing all vectors in the lab-frame basis,
+Newton's second law in the lab becomes:
 
-The three contributions have clear physical meaning:
+$$\boxed{\ddot{\mathbf{r}}' = \underbrace{-\frac{G M_E}{|\mathbf{r}'|^3}\,\mathbf{r}'}_{\text{Earth's gravity}} \;+\; \underbrace{\mathbf{a}_{\text{tidal}}'}_{\text{tidal}} \;\underbrace{-\; \boldsymbol{\omega} \times (\boldsymbol{\omega} \times \mathbf{r}')}_{\text{centrifugal}} \;\underbrace{-\; 2\,\boldsymbol{\omega} \times \dot{\mathbf{r}}'}_{\text{Coriolis}} \;+\; \frac{\mathbf{F}_{\text{spring}}'}{m}}$$
 
-- $GM_E\,\mathbf{r}/|\mathbf{r}|^3$: Earth's gravitational acceleration
-  (the spring supports the test mass against this).
-- $\boldsymbol{\omega}\times(\boldsymbol{\omega}\times\mathbf{r}) = -\omega^2\mathbf{r}_\perp$:
-  centripetal acceleration from Earth's rotation, which *reduces* the
-  required spring force (objects weigh less at the equator).
-- $-\mathbf{a}_{\text{tidal}}$: the tidal perturbations, acting as small
-  corrections.
+Here
+$\mathbf{a}_{\text{tidal}}' \equiv \mathbf{a}_{\text{tidal}}^{\text{Sun}\prime} + \mathbf{a}_{\text{tidal}}^{\text{Moon}\prime}$
+are the tidal accelerations expressed in the lab-frame basis, and the
+two additional terms are the fictitious accelerations that arise from
+working in a rotating frame. Since rotations preserve norms,
+$|\mathbf{r}'| = |\mathbf{r}|$.
 
-The sensor projects this onto its measurement axis $\mathbf{e}_{\mathbf{n}}$:
+The direct solar and lunar accelerations do **not** reappear — they
+canceled in the geocentric equation (Step 3) before the frame change,
+and rotating the coordinate basis cannot restore them.
 
-$$g_{\text{measured}} = \frac{\mathbf{F}_{\text{spring}}}{m} \cdot \mathbf{e}_{\mathbf{n}}$$
+### Equilibrium in the lab
+
+The test mass sits at rest on Earth's surface:
+$\dot{\mathbf{r}}' = \mathbf{0}$ and $\ddot{\mathbf{r}}' = \mathbf{0}$.
+The Coriolis term vanishes. Setting the left-hand side to zero and
+solving for $\mathbf{F}_{\text{spring}}'$:
+
+$$\mathbf{F}_{\text{spring}}' = m\left[\frac{G M_E}{|\mathbf{r}'|^3}\,\mathbf{r}' + \boldsymbol{\omega} \times (\boldsymbol{\omega} \times \mathbf{r}') - \mathbf{a}_{\text{tidal}}'\right]$$
+
+Each term has a clear physical origin in the lab frame:
+
+- $GM_E\,\mathbf{r}'/|\mathbf{r}'|^3$: Earth's gravitational
+  acceleration — the spring supports the test mass against this.
+- $\boldsymbol{\omega}\times(\boldsymbol{\omega}\times\mathbf{r}') = -\omega^2\mathbf{r}'_\perp$:
+  the centrifugal pseudo-acceleration, which *reduces* the required
+  spring force (objects weigh less at the equator).
+- $-\mathbf{a}_{\text{tidal}}'$: the tidal perturbations, expressed in
+  lab coordinates.
+
+The sensor projects this onto its measurement axis $\mathbf{e}_{\mathbf{n}}$
+(fixed in the lab frame):
+
+$$g_{\text{measured}} = \frac{\mathbf{F}_{\text{spring}}'}{m} \cdot \mathbf{e}_{\mathbf{n}}$$
 
 **Neither the direct solar acceleration** $G M_S / R^2$ **nor the direct
 lunar acceleration** $G M_M / D^2$ **appears.** These terms canceled in
-Step 3 before we ever solved for $\mathbf{F}_{\text{spring}}$ — the
-spring force inherits only the tidal residuals. This holds for any
+Step 3 *before* the rotation to the lab frame — the spring force
+inherits only the tidal residuals. This holds for any
 $\mathbf{e}_{\mathbf{n}}$.
+
+*Remark.* For a *moving* test mass ($\dot{\mathbf{r}}' \neq \mathbf{0}$),
+the Coriolis term $-2\,\boldsymbol{\omega}\times\dot{\mathbf{r}}'$
+contributes — this is the origin of the Foucault pendulum deflection and
+the Eötvös effect. For the static equilibrium relevant to gravimetry, it
+vanishes identically.
 
 
 ## Step 5: Why Tilting Doesn't Help
@@ -282,6 +312,55 @@ released, would also accelerate at $\ddot{\mathbf{R}}_E$ (plus the tidal
 corrections). The spring connecting them sees only the difference — which
 is the sum of the two tidal terms. This is true regardless of the spring's
 orientation.
+
+### Tilt-rotation coupling
+
+Although tilting cannot access the direct pull, it does change *which
+harmonic components* of the tidal field the sensor sees. This
+tilt-rotation coupling arises because the measurement axis is fixed in
+the lab while the tidal field rotates with the sky.
+
+The Sun's tidal acceleration at the surface
+($\mathbf{r}' = r_\oplus\,\mathbf{e}_{\mathbf{z}}$) has
+East-North-Up components
+
+$$a_E' = \frac{3\,GM_S\,r_\oplus}{R^3}\cos z\;\sin z\;\sin A$$
+
+$$a_N' = \frac{3\,GM_S\,r_\oplus}{R^3}\cos z\;\sin z\;\cos A$$
+
+$$a_U' = \frac{GM_S\,r_\oplus}{R^3}(3\cos^2 z - 1)$$
+
+where $z(t)$ and $A(t)$ are the Sun's zenith distance and azimuth in
+the lab — both functions of the hour angle
+$h = \Omega_\oplus\,t + h_0$.
+
+A sensor tilted at zenith angle $\theta$ and azimuth $\varphi$ measures
+
+$$g_{\text{tidal}} = \frac{GM_S\,r_\oplus}{R^3}\left[\frac{3}{2}\sin 2z\;\sin\theta\,\cos(A - \varphi) + (3\cos^2 z - 1)\,\cos\theta\right]$$
+
+The two terms respond differently to Earth's rotation:
+
+- The **vertical term** ($\propto \cos\theta$) depends on
+  $3\cos^2 z - 1$. Expanding $\cos z$ in the hour angle $h$, this
+  contains harmonics at frequencies $0$ (long-period, varying with the
+  Sun's declination) and $2\Omega_\oplus$ (semi-diurnal).
+- The **horizontal term** ($\propto \sin\theta$) depends on
+  $\sin 2z\,\cos(A - \varphi)$. This contains harmonics at
+  $\Omega_\oplus$ (diurnal) and $2\Omega_\oplus$ (semi-diurnal), with
+  relative amplitudes that depend on the sensor azimuth $\varphi$ and
+  the latitude.
+
+Tilting therefore *tunes the frequency response*: a vertical sensor
+($\theta = 0$) sees mainly semi-diurnal and long-period tides; a
+horizontal sensor ($\theta = 90°$) picks up the diurnal band; and
+intermediate tilts produce a weighted superposition. This is the
+tilt-rotation coupling — the interaction between the fixed sensor
+orientation and the rotating tidal quadrupole.
+
+The effect is real and observable, but every term carries the tidal
+prefactor $GM_S\,r_\oplus/R^3 \sim 5 \times 10^{-7}$ m/s². Varying
+$\theta$ redistributes power among tidal harmonics; it does not
+resurrect the canceled direct pull.
 
 
 ## Step 6: Numerical Comparison
