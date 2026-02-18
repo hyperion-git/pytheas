@@ -219,7 +219,7 @@ ax_a.text(35, 2.5, "Combined tidal", fontsize=6, color=c_comb,
 # Lunar direct annotation with arrow (curve is tiny at this scale)
 moon_peak_a = claimed_moon_theta.min() * 1e3  # negative peak
 ax_a.annotate("Lunar direct (canceled)", xy=(90, moon_peak_a),
-              xytext=(150, 6.0), fontsize=6, color=c_moon,
+              xytext=(110, 15.0), fontsize=6, color=c_moon,
               style="italic", ha="center",
               arrowprops=dict(arrowstyle="->", color=c_moon,
                               linewidth=0.5))
@@ -234,7 +234,7 @@ ax_b.text(50, 2.5, "Combined tidal", fontsize=6, color=c_comb,
           ha="center")
 moon_peak_b = claimed_moon_phi.min() * 1e3
 ax_b.annotate("Lunar direct (canceled)", xy=(200, moon_peak_b),
-              xytext=(300, 6.0), fontsize=6, color=c_moon,
+              xytext=(220, 15.0), fontsize=6, color=c_moon,
               style="italic", ha="center",
               arrowprops=dict(arrowstyle="->", color=c_moon,
                               linewidth=0.5))
