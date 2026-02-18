@@ -13,7 +13,7 @@ Accuracy: ~10-100 nGal (1e-10 to 1e-9 m/s^2) for inland sites.
 Dependency: numpy only.
 """
 
-__version__ = "3.1.0"
+__version__ = "3.1.1"
 
 from ._core import (
     # Main API

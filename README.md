@@ -16,39 +16,22 @@ precision accelerometry, gravimetry, and sensor characterization.
 
 ## Installation
 
-### Quick install (pip)
-
 ```bash
 pip install pytheas
 ```
 
-### From source with micromamba (recommended)
+From source with micromamba:
 
 ```bash
-git clone https://github.com/hyperion-git/pytheas.git
-cd pytheas
-
-# Option A: use the included environment file
-micromamba create -f environment.yml -y
-micromamba activate pytheas
-
-# Option B: create manually
-micromamba create -n pytheas python=3.12 numpy matplotlib pytest -c conda-forge -y
-micromamba activate pytheas
-
-# Install in development mode
+git clone https://github.com/hyperion-git/pytheas.git && cd pytheas
+micromamba create -f environment.yml -y && micromamba activate pytheas
 pip install -e .
-
-# Verify
-pytheas --lat 48.42 --lon 9.96 --alt 620
-python -m pytest tests/ -v
 ```
 
-### From source with pip only
+From source with pip:
 
 ```bash
-git clone https://github.com/hyperion-git/pytheas.git
-cd pytheas
+git clone https://github.com/hyperion-git/pytheas.git && cd pytheas
 pip install -e ".[test]"
 ```
 
@@ -97,6 +80,32 @@ The `zenith_deg` parameter specifies the angle from vertical (0 = up,
 north.  Both default to 0 (vertical sensor).  The static component
 scales as `cos(zenith)`, while the tidal projection depends on the full
 3D geometry.
+
+### Tilted sensor CSV timeseries
+
+```python
+import csv
+from datetime import datetime
+from pytheas import compute_timeseries
+
+# 7-day timeseries, sensor tilted 15 deg toward east at Ulm, Eselsberg
+data = compute_timeseries(
+    start=datetime(2025, 3, 20),
+    end=datetime(2025, 3, 27),
+    lat_deg=48.42, lon_deg=9.96, alt_m=620.0,
+    zenith_deg=15.0, azimuth_deg=90.0,
+    interval_minutes=10.0,
+)
+
+with open("tidal_tilted.csv", "w", newline="") as f:
+    w = csv.writer(f)
+    w.writerow(["time_utc", "g_total", "g_static", "g_tidal",
+                "g_tidal_moon", "g_tidal_sun"])
+    for i, t in enumerate(data["times"]):
+        w.writerow([t.isoformat(), data["g_total"][i], data["g_static"][i],
+                    data["g_tidal"][i], data["g_tidal_moon"][i],
+                    data["g_tidal_sun"][i]])
+```
 
 ### Horizontal sensor
 
