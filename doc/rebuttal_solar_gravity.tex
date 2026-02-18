@@ -383,10 +383,20 @@ azimuth~$\varphi$:
   + \cos\theta\;\vu{U}
 \end{equation}
 where $\vu{E}$, $\vu{N}$, $\vu{U}$ are the local East--North--Up
-unit vectors.
+unit vectors defined relative to the \emph{geodetic} vertical ---
+the plumb-line direction, which already includes the centrifugal
+deflection from the geocentric radial. (The centrifugal acceleration
+$-\omega^2\vb{r}'_\perp$ points away from the rotation axis, not
+along the geocentric radial, so it has both vertical and
+horizontal components in a geocentric basis. The geodetic basis
+absorbs this into the definition of ``Up.'')
 
-From Eq.~\eqref{eq:spring}, the measured acceleration as a function
-of orientation is
+In this basis, the effective gravity
+$\vb{g}_{\text{eff}} = (GM_E/r_\oplus^2)\,\hat{\vb{r}}
+  - \omega^2\vb{r}'_\perp$
+is purely along~$\vu{U}$ with magnitude~$g_0$. From
+Eq.~\eqref{eq:spring}, the measured acceleration as a function of
+orientation is then
 \begin{equation}
 g(\theta,\varphi)
   = g_0\cos\theta
@@ -395,9 +405,9 @@ g(\theta,\varphi)
   \;-\; a_U'\cos\theta
 \label{eq:sweep}
 \end{equation}
-where $g_0 \equiv GM_E/r_\oplus^2 - \omega^2 r_\perp$ is the
-static effective gravity, and $a_E'$, $a_N'$, $a_U'$ are the
-East, North, and Up components of the tidal acceleration.
+where $g_0 \approx 9.81$~m/s$^2$ (varying with latitude) and
+$a_E'$, $a_N'$, $a_U'$ are the East, North, and Up components of the
+tidal acceleration in the geodetic basis.
 
 Sweeping~$\theta$ and~$\varphi$ traces out the full angular
 dependence. If the direct pull $GM_S/R^2$ were present, it would
