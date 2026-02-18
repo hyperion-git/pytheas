@@ -1,45 +1,41 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[aps,prx,onecolumn,superscriptaddress,nofootinbib]{revtex4-2}
 
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{lmodern}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
-\usepackage{geometry}
+\usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{xcolor}
 
-\geometry{margin=2.5cm}
 \hypersetup{colorlinks=true, linkcolor=blue!60!black, urlcolor=blue!60!black}
 
 \newcommand{\vb}[1]{\mathbf{#1}}
 \newcommand{\vu}[1]{\vb{e}_{\vb{#1}}}
 
-\title{Why a Tilted Sensor Cannot Measure\\Direct Gravitational Pull}
-\author{}
-\date{}
-
 \begin{document}
+
+\title{Why a Tilted Sensor Cannot Measure Direct Gravitational Pull}
+\author{Alexander Friedrich}
+\affiliation{DLR Institute of Quantum Technologies, Ulm, Germany}
+\date{\today}
+
+\begin{abstract}
+A common claim holds that a sensor tilted relative to the local
+vertical can detect the direct gravitational pull of the Sun
+(${\sim}\,6 \times 10^{-3}$~m/s$^2$) or the Moon
+(${\sim}\,3.3 \times 10^{-5}$~m/s$^2$) as a time-varying signal.
+This is incorrect. We show, using only Newtonian point-mass mechanics,
+that the direct pull cancels exactly against the acceleration of the
+laboratory, leaving only the tidal residual --- regardless of sensor
+orientation. The proof is given in an inertial frame where no terms are
+hidden, and the result is then transformed to the rotating laboratory
+frame.
+\end{abstract}
+
 \maketitle
-
-\section*{The Claim}
-
-\begin{quote}
-A sensor tilted relative to the local vertical can detect the direct
-gravitational pull of the Sun (${\sim}\,6 \times 10^{-3}$~m/s$^2$) or the
-Moon (${\sim}\,3.3 \times 10^{-5}$~m/s$^2$) as a time-varying signal,
-because the projection of the gravitational acceleration onto the sensor
-axis changes as these bodies move across the sky.
-\end{quote}
-
-\noindent
-This is incorrect. The direct pull cancels exactly against the
-acceleration of the laboratory, leaving only the tidal residual ---
-regardless of sensor orientation. The proof requires nothing beyond
-Newton's laws applied to point masses.
 
 
 \section{Inertial and Non-Inertial Frames}
+\label{sec:frames}
 
 An \textbf{inertial frame} is one in which Newton's second law
 $\vb{F} = m\,\vb{a}$ holds without correction. A body subject to no
@@ -49,7 +45,7 @@ A \textbf{non-inertial frame} is one that accelerates. In such a frame,
 Newton's laws require fictitious forces --- centrifugal, Coriolis, etc.\
 --- to compensate for the acceleration of the frame itself.
 
-\subsection*{The laboratory is non-inertial}
+\subsection{The laboratory is non-inertial}
 
 A laboratory on Earth's surface is non-inertial for two reasons:
 
@@ -74,8 +70,9 @@ frame and carry every term explicitly.
 
 
 \section{The Proof}
+\label{sec:proof}
 
-\subsection*{Setup}
+\subsection{Setup}
 
 Four point masses in an inertial frame:
 
@@ -98,7 +95,7 @@ Earth. The sensor reads the spring force~$\vb{F}_{\text{spring}}$ ---
 the non-gravitational force required to keep the test mass co-moving
 with the lab.
 
-\subsection*{Step 1: Test mass equation of motion}
+\subsection{Test mass equation of motion}
 
 In the inertial frame, Newton's second law for the test mass:
 \begin{equation}
@@ -113,7 +110,7 @@ m\,\ddot{\vb{x}}
 \label{eq:test}
 \end{equation}
 
-\subsection*{Step 2: Earth's equation of motion}
+\subsection{Earth's equation of motion}
 
 Earth's center accelerates toward the Sun and Moon:
 \begin{equation}
@@ -128,14 +125,13 @@ Earth's center accelerates toward the Sun and Moon:
 Every object rigidly attached to the Earth --- including the sensor
 housing --- shares this acceleration.
 
-\subsection*{Step 3: Subtract to get the relative motion}
+\subsection{Subtract to get the relative motion}
 
 Define $\vb{r} \equiv \vb{x} - \vb{R}_E$ and the geocentric positions
 $\vb{R} \equiv \vb{R}_S - \vb{R}_E$,
 $\vb{D} \equiv \vb{R}_M - \vb{R}_E$. Then
 $\ddot{\vb{r}} = \ddot{\vb{x}} - \ddot{\vb{R}}_E$ gives:
 \begin{equation}
-\boxed{
 m\,\ddot{\vb{r}}
   = -\frac{G M_E\, m}{\lvert\vb{r}\rvert^3}\,\vb{r}
   \;+\; G M_S\, m \left[
@@ -147,11 +143,10 @@ m\,\ddot{\vb{r}}
     - \frac{\vb{D}}{D^3}
   \right]
   \;+\; \vb{F}_{\text{spring}}
-}
 \label{eq:relative}
 \end{equation}
 
-\subsection*{The cancellation}
+\subsection{The cancellation}
 
 Each bracketed term has the form
 \begin{equation}
@@ -182,19 +177,17 @@ What survives is $\vb{f}(\vb{r}) - \vb{f}(\vb{0})$: the
 baseline~$\vb{r}$ --- the \textbf{tidal acceleration}. To leading order
 in $r/R$:
 \begin{equation}
-\boxed{
 \vb{a}_{\text{tidal}}
   = \frac{GM}{R^3}\Big[
     3\,(\vu{R}\cdot\vb{r})\,\vu{R} - \vb{r}
   \Big]
   + O\!\left(\frac{GM\,r^2}{R^4}\right)
-}
 \label{eq:tidal}
 \end{equation}
 
 This is suppressed by a factor $r/R$ relative to the direct pull.
 
-\subsection*{Derivation of Eq.~\eqref{eq:tidal}}
+\subsection{Derivation of Eq.~\eqref{eq:tidal}}
 
 Expand $\lvert\vb{R} - \vb{r}\rvert^{-3}$ for $r \ll R$. Write
 \begin{equation}
@@ -239,13 +232,14 @@ quadrupole, Eq.~\eqref{eq:tidal}.\hfill$\square$
 
 
 \section{Transformation to the Laboratory Frame}
+\label{sec:lab}
 
 Equation~\eqref{eq:relative} is written in the non-rotating geocentric
 frame. The laboratory rotates with the Earth at angular
 velocity~$\boldsymbol{\omega}$. This is a second source of
-non-inertiality (see Section~1).
+non-inertiality (see Sec.~\ref{sec:frames}).
 
-\subsection*{Rotating-frame equation of motion}
+\subsection{Rotating-frame equation of motion}
 
 Let $\vb{r}'$ be the test mass position in the lab frame, related to
 its geocentric position by
@@ -263,7 +257,6 @@ Differentiating twice:
 uniform rotation). Substituting into Eq.~\eqref{eq:relative} and
 expressing all vectors in the lab basis:
 \begin{equation}
-\boxed{
 \ddot{\vb{r}}'
   = \underbrace{-\frac{G M_E}{\lvert\vb{r}'\rvert^3}\,\vb{r}'
     }_{\text{Earth's gravity}}
@@ -276,7 +269,6 @@ expressing all vectors in the lab basis:
     \times \dot{\vb{r}}'
     }_{\text{Coriolis}}
   \;+\; \frac{\vb{F}_{\text{spring}}'}{m}
-}
 \label{eq:lab}
 \end{equation}
 
@@ -285,7 +277,7 @@ canceled in Eq.~\eqref{eq:relative} before the frame change, and
 rotating the coordinate basis cannot restore a term that is already
 zero.
 
-\subsection*{What the sensor reads}
+\subsection{What the sensor reads}
 
 The test mass sits at rest in the lab:
 $\dot{\vb{r}}' = \ddot{\vb{r}}' = \vb{0}$. The Coriolis term
@@ -319,7 +311,7 @@ The three contributions are:
 The direct pull $GM_S/R^2$ and $GM_M/D^2$ appear nowhere. This holds
 for any~$\vu{n}$.
 
-\subsection*{Size of each term}
+\subsection{Size of each term}
 
 \begin{center}
 \begin{tabular}{lll}
@@ -353,6 +345,7 @@ see it.
 
 
 \section{Why Sensor Orientation Is Irrelevant}
+\label{sec:orientation}
 
 The cancellation in Eq.~\eqref{eq:cancel} is \textbf{vectorial}: the
 direct pull vanishes as a three-component vector, not as a particular
@@ -372,7 +365,7 @@ $GM_S/R^2$ toward the Sun. The spring connecting them measures only the
 uniform field produces no difference, regardless of the spring's
 orientation.
 
-\subsection*{Sweeping the sensor orientation}
+\subsection{Sweeping the sensor orientation}
 
 Parameterise the measurement axis by zenith angle~$\theta$ and
 azimuth~$\varphi$:
@@ -383,20 +376,9 @@ azimuth~$\varphi$:
   + \cos\theta\;\vu{U}
 \end{equation}
 where $\vu{E}$, $\vu{N}$, $\vu{U}$ are the local East--North--Up
-unit vectors defined relative to the \emph{geodetic} vertical ---
-the plumb-line direction, which already includes the centrifugal
-deflection from the geocentric radial. (The centrifugal acceleration
-$-\omega^2\vb{r}'_\perp$ points away from the rotation axis, not
-along the geocentric radial, so it has both vertical and
-horizontal components in a geocentric basis. The geodetic basis
-absorbs this into the definition of ``Up.'')
-
-In this basis, the effective gravity
-$\vb{g}_{\text{eff}} = (GM_E/r_\oplus^2)\,\hat{\vb{r}}
-  - \omega^2\vb{r}'_\perp$
-is purely along~$\vu{U}$ with magnitude~$g_0$. From
-Eq.~\eqref{eq:spring}, the measured acceleration as a function of
-orientation is then
+unit vectors defined relative to the \emph{geodetic} vertical.
+From Eq.~\eqref{eq:spring}, the sensor reading as a function of
+orientation is
 \begin{equation}
 g(\theta,\varphi)
   = g_0\cos\theta
@@ -405,25 +387,71 @@ g(\theta,\varphi)
   \;-\; a_U'\cos\theta
 \label{eq:sweep}
 \end{equation}
-where $g_0 \approx 9.81$~m/s$^2$ (varying with latitude) and
-$a_E'$, $a_N'$, $a_U'$ are the East, North, and Up components of the
-tidal acceleration in the geodetic basis.
+We now trace each physical contribution from
+Sec.~\ref{sec:lab} through this angular projection.
 
-Sweeping~$\theta$ and~$\varphi$ traces out the full angular
-dependence. If the direct pull $GM_S/R^2$ were present, it would
-contribute a term $\propto \sin\theta\cos(\varphi - \varphi_\odot)$
-with amplitude ${\sim}\,6 \times 10^{-3}$~m/s$^2$. Instead, the
-horizontal terms carry amplitudes
-$a_E', a_N' \sim 10^{-7}$~m/s$^2$ --- the tidal values --- and
-the vertical tidal correction~$a_U'$ is of the same order.
+\textbf{Earth's gravity and centrifugal ($g_0\cos\theta$).}
+The gravitational acceleration $GM_E/r_\oplus^2$ and the centrifugal
+acceleration $\omega^2 r_\oplus\cos^2\!\lambda$ combine into the
+effective gravity $\vb{g}_{\text{eff}} = g_0\,\vu{U}$, which by
+definition of the geodetic vertical points purely along~$\vu{U}$.
+Its projection onto the sensor axis is $g_0\cos\theta$: it reads
+the full $g_0 \approx 9.81$~m/s$^2$ when the sensor is vertical
+($\theta = 0$), vanishes when horizontal ($\theta = 90°$), and
+reverses when inverted ($\theta = 180°$). The centrifugal correction
+modifies~$g_0$ by at most $0.3\%$ (latitude-dependent) but
+introduces no separate angular signature --- it is entirely absorbed
+into the amplitude of the $\cos\theta$ term. There is no
+``rotational residual'' in the sweep.
 
-An angular scan therefore confirms the cancellation directly:
-one measures $g_0\cos\theta$ plus tidal corrections of order
-$10^{-7}$~m/s$^2$, with no $10^{-3}$~m/s$^2$ sinusoidal component
-at any orientation.
+\textbf{Coriolis ($-2\boldsymbol{\omega}\times\dot{\vb{r}}'$).}
+This acceleration is proportional to the test mass velocity
+$\dot{\vb{r}}'$, which vanishes for a mass at rest in the lab.
+It contributes nothing to the static sensor reading at any
+orientation.
+
+\textbf{Solar and lunar tides ($a_E'$, $a_N'$, $a_U'$).}
+The tidal accelerations from Eq.~\eqref{eq:tidal} decompose into
+East, North, and Up components. The horizontal components $a_E'$
+and $a_N'$ enter through $\sin\theta\cos\varphi$ and
+$\sin\theta\sin\varphi$: they vanish for a vertical sensor and are
+maximized for a horizontal one pointed in the appropriate direction.
+The vertical component $a_U'$ enters as $\cos\theta$, superimposed
+on the much larger $g_0\cos\theta$. Representative combined
+amplitudes (from Sec.~\ref{sec:lab}): solar tidal
+${\sim}\,5 \times 10^{-7}$~m/s$^2$, lunar tidal
+${\sim}\,1.1 \times 10^{-6}$~m/s$^2$. These are the only
+time-varying signals in the sweep.
+
+\textbf{Direct solar pull (canceled).}
+Were the direct pull $GM_S/R^2$ not canceled by Earth's free fall,
+it would project as
+$a_\odot\sin\theta\cos(\varphi - \varphi_\odot)$
+with amplitude $a_\odot \approx 5.93 \times 10^{-3}$~m/s$^2$ ---
+four orders of magnitude above the tidal terms. As shown in
+Fig.~\ref{fig:sweep}, no such signal exists at any orientation.
+An angular scan therefore confirms the cancellation directly: one
+measures $g_0\cos\theta$ plus tidal corrections of order
+$10^{-7}$~m/s$^2$, with no $10^{-3}$~m/s$^2$ sinusoidal component.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/orientation_sweep.pdf}
+\caption{Residual acceleration $g - g_0\cos\theta$ as a function of
+sensor orientation, after subtracting the dominant effective-gravity
+projection. (a)~Sweep over zenith angle~$\theta$ at fixed
+azimuth~$\varphi = 0°$ (East). (b)~Sweep over azimuth~$\varphi$ at
+fixed zenith angle~$\theta = 45°$. Blue solid line: actual tidal
+residual (${\sim}\,10^{-7}$~m/s$^2$, indistinguishable from zero at
+this scale). Red dashed line: hypothetical signal from the Sun's
+direct gravitational pull (${\sim}\,6 \times 10^{-3}$~m/s$^2$) if it
+were not canceled. No such signal exists at any orientation.}
+\label{fig:sweep}
+\end{figure}
 
 
 \section{Numerical Scale}
+\label{sec:numbers}
 
 \begin{center}
 \begin{tabular}{llll}
@@ -447,6 +475,7 @@ consequence of the cancellation.
 
 
 \section{What IS Observable}
+\label{sec:observable}
 
 Tilting the sensor accesses different components of the \emph{tidal}
 field, not the direct pull:
