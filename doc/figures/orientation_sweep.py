@@ -154,8 +154,9 @@ c_sol = "#1f8a70"      # teal — solar tidal
 c_lun = "#9b2f5c"      # magenta — lunar tidal
 c_cf = "#1c809e"       # blueberry — centrifugal
 
-# --- Figure: 2×2 grid ---
-fig, axes = plt.subplots(2, 2, figsize=(6.5, 5.0))
+# --- Figure: 2×2 grid with shared x-axes per column ---
+fig, axes = plt.subplots(2, 2, figsize=(6.5, 5.0),
+                         sharex="col")
 (ax_a, ax_b), (ax_c, ax_d) = axes
 
 # ============================================================
@@ -180,12 +181,11 @@ for ax, xdeg, x_sun, x_moon, x_tidal, x_cf, is_theta in [
     ax.plot(xdeg, x_tidal * 1e3, color=c_comb, linewidth=1.2)
     ax.axhline(0, color="#999999", linewidth=0.3, zorder=0)
 
+    # x-axis limits and ticks (labels only on bottom row via sharex)
     if is_theta:
-        ax.set_xlabel(r"Zenith angle $\theta$ (deg)")
         ax.set_xlim(0, 180)
         ax.set_xticks([0, 45, 90, 135, 180])
     else:
-        ax.set_xlabel(r"Azimuth $\varphi$ (deg)")
         ax.set_xlim(0, 360)
         ax.set_xticks([0, 90, 180, 270, 360])
     ax.set_ylabel(r"$g - g_\mathrm{grav}\cos\theta$  ($10^{-3}$ m/s$^2$)")
@@ -259,12 +259,8 @@ for ax, xdeg, x_sol, x_lun, x_comb, is_theta in [
 
     if is_theta:
         ax.set_xlabel(r"Zenith angle $\theta$ (deg)")
-        ax.set_xlim(0, 180)
-        ax.set_xticks([0, 45, 90, 135, 180])
     else:
         ax.set_xlabel(r"Azimuth $\varphi$ (deg)")
-        ax.set_xlim(0, 360)
-        ax.set_xticks([0, 90, 180, 270, 360])
     ax.set_ylabel(r"$g - g_0\cos\theta$  ($10^{-7}$ m/s$^2$)")
 
 # Bottom-row y-limits
@@ -296,16 +292,20 @@ ax_d.text(130, 1.5, "Solar", fontsize=6.5, color=c_sol, ha="center")
 ax_d.text(100, 5.5, "Lunar", fontsize=6.5, color=c_lun, ha="center")
 ax_d.text(55, 2.5, "Combined", fontsize=6.5, color=c_comb, ha="center")
 
-# Off-scale annotations
-offscale_text = ("Centrifugal: $10^{5}{\\times}$ off scale\n"
-                 "Sun direct: $10^{4}{\\times}$ off scale\n"
-                 "Moon direct: $30{\\times}$ off scale")
-ax_c.text(0.97, 0.05, offscale_text,
-          transform=ax_c.transAxes, fontsize=5.5, color="#888888",
-          ha="right", va="bottom", linespacing=1.4)
-ax_d.text(0.97, 0.95, offscale_text,
-          transform=ax_d.transAxes, fontsize=5.5, color="#888888",
-          ha="right", va="top", linespacing=1.4)
+# Off-scale annotations — colored to match top-panel curves
+offscale_items = [
+    (r"Centrifugal: $10^{5}{\times}$ off scale", c_cf),
+    (r"Sun direct: $10^{4}{\times}$ off scale",  c_sun),
+    (r"Moon direct: $30{\times}$ off scale",      c_moon),
+]
+for panel, x_anc, y_start, dy in [
+    (ax_c, 0.97, 0.19, -0.07),
+    (ax_d, 0.97, 0.95, -0.07),
+]:
+    for i, (txt, col) in enumerate(offscale_items):
+        panel.text(x_anc, y_start + i * dy, txt,
+                   transform=panel.transAxes, fontsize=5.5,
+                   color=col, ha="right", va="top")
 
 fig.tight_layout(h_pad=2.0, w_pad=2.5)
 
