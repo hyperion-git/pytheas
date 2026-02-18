@@ -63,7 +63,7 @@ Centrifugal deformation over geological time has shaped Earth into an **oblate e
 
 $$f = \frac{a - b}{a}$$
 
-where $a$ and $b$ are the equatorial and polar semi-axes. For the GRS80 reference ellipsoid:
+where $a$ and $b$ are the equatorial and polar semi-axes. For the WGS84 reference ellipsoid:
 
 $$f = \frac{1}{298.257} \qquad \Longrightarrow \qquad a - b \approx 21.4 \text{ km}$$
 
@@ -83,7 +83,7 @@ Computing gravity on a rotating oblate ellipsoid requires solving for the gravit
 
 ### The level ellipsoid
 
-The **GRS80 reference ellipsoid** is an equipotential surface of the combined gravitational and centrifugal potential, defined by four parameters:
+The **WGS84 reference ellipsoid** is an equipotential surface of the combined gravitational and centrifugal potential, defined by four parameters:
 - $a = 6{,}378{,}137$ m (equatorial semi-major axis)
 - $GM_E = 3.986\,004\,418 \times 10^{14}$ m$^3$ s$^{-2}$ (gravitational parameter)
 - $J_2 = 1.082\,63 \times 10^{-3}$ (dynamic form factor)
@@ -99,7 +99,7 @@ $$\gamma_0(\varphi) = \frac{\gamma_e \left(1 + k \sin^2\!\varphi\right)}{\sqrt{1
 
 where:
 
-| Symbol | Meaning | GRS80 Value |
+| Symbol | Meaning | WGS84 Value |
 |--------|---------|-------------|
 | $\gamma_e$ | Gravity at the equator | $9.780\,325\,3141\;\mathrm{m/s^2}$ |
 | $\gamma_p$ | Gravity at the pole | $9.832\,184\,9378\;\mathrm{m/s^2}$ |
@@ -124,9 +124,9 @@ $$= \frac{9.789\,776}{0.998\,325} \approx 9.806\,2 \text{ m/s}^2$$
 
 This agrees with the commonly quoted mid-latitude value.
 
-**Figure 4** compares normal gravity from equator to pole for three models: constant spherical, sphere-plus-rotation, and full GRS80 Somigliana. Rotation accounts for most of the latitude variation; the ellipsoidal shape provides a further refinement.
+**Figure 4** compares normal gravity from equator to pole for three models: constant spherical, sphere-plus-rotation, and full WGS84 Somigliana. Rotation accounts for most of the latitude variation; the ellipsoidal shape provides a further refinement.
 
-![Figure 4: Normal gravity vs. geodetic latitude comparing three models — spherical Earth (constant), rotation-corrected spherical model, and full GRS80 Somigliana formula on the oblate ellipsoid.](figures/fig04_gravity_vs_latitude.png)
+![Figure 4: Normal gravity vs. geodetic latitude comparing three models — spherical Earth (constant), rotation-corrected spherical model, and full WGS84 Somigliana formula on the oblate ellipsoid.](figures/fig04_gravity_vs_latitude.png)
 
 ---
 

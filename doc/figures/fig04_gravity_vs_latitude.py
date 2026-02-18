@@ -5,7 +5,7 @@ Single panel comparing three models of surface gravity as a function
 of geodetic latitude (0-90 degrees):
   1. Spherical approximation (constant GM/R^2)
   2. Sphere + centrifugal correction
-  3. Full GRS80 Somigliana formula
+  3. Full WGS84 Somigliana formula
 """
 
 import sys
@@ -33,7 +33,7 @@ g_sphere = np.full_like(lat_deg, GM_E / R**2)
 # Curve 2: Sphere + centrifugal
 g_rot = g_sphere - OMEGA**2 * R * np.cos(lat_rad)**2
 
-# Curve 3: Full Somigliana (GRS80)
+# Curve 3: Full Somigliana (WGS84)
 g_grs80 = np.array([pytheas.normal_gravity(lat, 0.0) for lat in lat_deg])
 
 # ---- Plot ----
@@ -44,7 +44,7 @@ ax.plot(lat_deg, g_sphere, color="gray", linestyle="--", linewidth=1.3,
 ax.plot(lat_deg, g_rot, color=COLORS["orange"], linestyle=":", linewidth=1.5,
         label="+ Rotation")
 ax.plot(lat_deg, g_grs80, color=COLORS["navy"], linestyle="-", linewidth=1.5,
-        label="GRS80 (Somigliana)")
+        label="WGS84 (Somigliana)")
 
 ax.set_xlabel("Geodetic latitude (degrees)")
 ax.set_ylabel(r"Surface gravity (m/s$^2$)")

@@ -2,14 +2,9 @@
 
 **Gravitational acceleration g(t) at a point on Earth**
 
-Named after [Pytheas of Massalia](https://en.wikipedia.org/wiki/Pytheas)
-(c. 325 BC), the Greek explorer who first systematically connected
-ocean tides to the phases of the Moon.
+Named after [Pytheas of Massalia](https://en.wikipedia.org/wiki/Pytheas) (c. 325 BC), the Greek explorer who first systematically connected ocean tides to the phases of the Moon.
 
-Pytheas computes time-dependent gravitational acceleration projected
-along an arbitrary measurement axis at any point on Earth.  A
-single-file, dependency-light tool, it targets tidal predictions for
-precision accelerometry, gravimetry, and sensor characterization.
+Pytheas computes time-dependent gravitational acceleration projected along an arbitrary measurement axis at any point on Earth. A single-file, dependency-light tool, it targets tidal predictions for precision accelerometry, gravimetry, and sensor characterization.
 
 **Dependency:** numpy only (matplotlib optional, for `--plot`).
 
@@ -44,7 +39,7 @@ pip install -e ".[test]"
 from datetime import datetime
 from pytheas import compute_g, compute_timeseries
 
-# Single epoch -- vertical sensor at Ulm, Eselsberg (620 m)
+# Ulm, Eselsberg (48.42, 9.96, 620 m): single epoch, vertical sensor
 result = compute_g(
     datetime(2025, 3, 20, 12, 0),
     lat_deg=48.42, lon_deg=9.96, alt_m=620.0,
@@ -52,7 +47,7 @@ result = compute_g(
 print(f"g       = {result['g_total']:.10f} m/s^2")  # ≈ 9.8073743815 m/s²
 print(f"g_tidal = {result['g_tidal'] * 1e6:.4f} µm/s^2")
 
-# 48-hour timeseries
+# Ulm, Eselsberg: 48-hour timeseries
 data = compute_timeseries(
     start=datetime(2025, 3, 20),
     end=datetime(2025, 3, 22),
@@ -62,10 +57,10 @@ data = compute_timeseries(
 # data['times'], data['g_total'], data['g_tidal'], ...
 ```
 
-### Tilted sensor
+### Tilted Sensor
 
 ```python
-# Sensor tilted 15 deg from vertical toward east at Ulm, Eselsberg
+# Ulm, Eselsberg: sensor tilted 15 deg from vertical toward east
 result = compute_g(
     datetime(2025, 3, 20, 12, 0),
     lat_deg=48.42, lon_deg=9.96, alt_m=620.0,
@@ -75,20 +70,16 @@ print(f"g       = {result['g_total']:.10f} m/s^2")
 print(f"g_tidal = {result['g_tidal'] * 1e6:.4f} µm/s^2")
 ```
 
-The `zenith_deg` parameter specifies the angle from vertical (0 = up,
-90 = horizontal); `azimuth_deg` specifies the bearing clockwise from
-north.  Both default to 0 (vertical sensor).  The static component
-scales as `cos(zenith)`, while the tidal projection depends on the full
-3D geometry.
+`zenith_deg` specifies the angle from vertical (0 = up, 90 = horizontal); `azimuth_deg` specifies the bearing clockwise from north. Both default to 0 (vertical sensor). The static component scales as `cos(zenith)`, while the tidal projection depends on the full 3D geometry.
 
-### Tilted sensor CSV timeseries
+### Tilted Sensor CSV Timeseries
 
 ```python
 import csv
 from datetime import datetime
 from pytheas import compute_timeseries
 
-# 7-day timeseries, sensor tilted 15 deg toward east at Ulm, Eselsberg
+# Ulm, Eselsberg: 7-day timeseries, sensor tilted 15 deg toward east
 data = compute_timeseries(
     start=datetime(2025, 3, 20),
     end=datetime(2025, 3, 27),
@@ -107,10 +98,10 @@ with open("tidal_tilted.csv", "w", newline="") as f:
                     data["g_tidal_sun"][i]])
 ```
 
-### Horizontal sensor
+### Horizontal Sensor
 
 ```python
-# North-pointing horizontal accelerometer at Ulm, Eselsberg
+# Ulm, Eselsberg: north-pointing horizontal accelerometer
 result = compute_g(
     datetime(2025, 3, 20, 12, 0),
     lat_deg=48.42, lon_deg=9.96, alt_m=620.0,
@@ -119,10 +110,10 @@ result = compute_g(
 print(f"horizontal tidal = {result['g_tidal'] * 1e6:.4f} µm/s^2")
 ```
 
-### N-sample timeseries
+### N-Sample Timeseries
 
 ```python
-# 500 evenly spaced samples over a 48-hour window at Ulm, Eselsberg
+# Ulm, Eselsberg: 500 evenly spaced samples over a 48-hour window
 data = compute_timeseries(
     start=datetime(2025, 3, 20),
     end=datetime(2025, 3, 22),
@@ -133,24 +124,23 @@ print(f"{len(data['times'])} points, dt ~ "
       f"{(data['times'][1] - data['times'][0]).total_seconds():.1f} s")
 ```
 
-When `n_samples` is given, it overrides `interval_minutes`.
-Both endpoints are included.
+When `n_samples` is given, it overrides `interval_minutes`. Both endpoints are included.
 
-### Command line
+### Command Line
 
 ```bash
-# Default: 48-hour timeseries from now, vertical axis
+# Ulm, Eselsberg (48.42, 9.96, 620 m): default 48-hour timeseries, vertical axis
 pytheas --lat 48.42 --lon 9.96 --alt 620
 
-# Specify time window
+# Ulm, Eselsberg: specify time window
 pytheas --lat 48.42 --lon 9.96 --alt 620 --start 2025-03-20 --hours 72
 
-# Horizontal axis, CSV export, plot
+# Ulm, Eselsberg: horizontal axis, CSV export, plot
 pytheas --lat 48.42 --lon 9.96 --alt 620 --zenith 90 --azimuth 0 \
         --csv output.csv --plot
 ```
 
-Or run as a module: `python -m pytheas --lat 48.42 --lon 9.96`.
+Or run as a module: `python -m pytheas --lat 48.42 --lon 9.96 --alt 620`.
 
 
 ## What It Computes
@@ -163,7 +153,7 @@ g_total(t) = g_static + delta * [a_tidal_moon(t) + a_tidal_sun(t)] . n_hat
 
 | Component | Source | Typical magnitude |
 |-----------|--------|-------------------|
-| `g_static` | GRS80 normal gravity + free-air correction | 9.78 -- 9.83 m/s² |
+| `g_static` | WGS84 normal gravity + free-air correction | 9.78 -- 9.83 m/s² |
 | `g_tidal_moon` | Exact Newtonian lunar tidal acceleration | ~1.1 µm/s² peak |
 | `g_tidal_sun` | Exact Newtonian solar tidal acceleration | ~0.5 µm/s² peak |
 | `delta` | Elastic Earth amplification (gravimetric factor) | 1.1608 |
@@ -171,18 +161,15 @@ g_total(t) = g_static + delta * [a_tidal_moon(t) + a_tidal_sun(t)] . n_hat
 
 ## Physics Model
 
-### Normal gravity
+### Normal Gravity
 
-The static gravitational acceleration on the GRS80 reference ellipsoid
-follows the Somigliana closed-form formula:
+The static gravitational acceleration on the WGS84 reference ellipsoid follows the Somigliana closed-form formula:
 
 ```
 gamma_0 = gamma_e * (1 + k * sin^2(phi)) / sqrt(1 - e^2 * sin^2(phi))
 ```
 
-where `gamma_e = 9.7803253141 m/s²` (equatorial) and
-`gamma_p = 9.8321849378 m/s²` (polar).  Altitude dependence uses the
-second-order free-air gradient:
+where `gamma_e = 9.7803253141 m/s²` (equatorial) and `gamma_p = 9.8321849378 m/s²` (polar). Altitude dependence uses the second-order free-air gradient:
 
 ```
 gamma(h) = gamma_0 * [1 - 2*(1+f+m-2f*sin^2(phi))*h/a + 3*h^2/a^2]
@@ -190,25 +177,19 @@ gamma(h) = gamma_0 * [1 - 2*(1+f+m-2f*sin^2(phi))*h/a + 3*h^2/a^2]
 
 Accuracy is <1 nGal below ~400 m altitude and <20 nGal below 1 km.
 
-### Tidal acceleration
+### Tidal Acceleration
 
-The tidal acceleration from a celestial body at position **R** on an
-observer at **r** follows the exact Newtonian expression:
+The tidal acceleration from a celestial body at position **R** on an observer at **r** follows the exact Newtonian expression:
 
 ```
 a_tidal = GM * [(R - r) / |R - r|^3  -  R / |R|^3]
 ```
 
-This computes the difference between the gravitational acceleration at
-the observer and at the Earth's center, without the tidal-tensor
-(gradient) approximation.  Using the exact formula avoids the ~2.5%
-truncation error of the first-order expansion.
+This computes the difference between the gravitational acceleration at the observer and at the Earth's center, without the tidal-tensor (gradient) approximation. Using the exact formula avoids the ~2.5% truncation error of the first-order expansion.
 
 ### Ephemerides
 
-**Sun:** Low-precision Meeus (*Astronomical Algorithms*) ephemeris.
-Ecliptic longitude accurate to ~1 arcmin; distance derived from true
-anomaly.  Tidal error contribution: <1 nGal.
+**Sun:** Low-precision Meeus (*Astronomical Algorithms*) ephemeris. Ecliptic longitude accurate to ~1 arcmin; distance derived from true anomaly. Tidal error contribution: <1 nGal.
 
 **Moon:** Truncated Meeus (ch. 47) ephemeris including:
 - 24 longitude terms (Table 47.A)
@@ -217,30 +198,21 @@ anomaly.  Tidal error contribution: <1 nGal.
 - A1, A2, A3 additive corrections
 - Eccentricity correction factor E
 
-Position accurate to ~0.1 deg; distance accurate to ~200 km.  The
-resulting tidal error is ~0.1% of the lunar signal (~1 nGal).
+Position accurate to ~0.1 deg; distance accurate to ~200 km. The resulting tidal error is ~0.1% of the lunar signal (~1 nGal).
 
-### Elastic Earth correction
+### Elastic Earth Correction
 
-The solid Earth deforms under the tidal potential, amplifying the
-surface gravity change by the gravimetric factor:
+The solid Earth deforms under the tidal potential, amplifying the surface gravity change by the gravimetric factor:
 
 ```
 delta = 1 + h2 - (3/2) * k2 = 1.1608
 ```
 
-using IERS 2010 Love numbers h2 = 0.6078, k2 = 0.2980.  This single
-frequency-independent value neglects the ~1% resonance near the K1
-frequency caused by the free core nutation (FCN), introducing up to
-~10 nGal of error at that constituent.
+using IERS 2010 Love numbers h2 = 0.6078, k2 = 0.2980. This single frequency-independent value neglects the ~1% resonance near the K1 frequency caused by the free core nutation (FCN), introducing up to ~10 nGal of error at that constituent.
 
-### Coordinate system
+### Coordinate System
 
-All calculations use ECEF (Earth-Centered, Earth-Fixed) Cartesian
-coordinates.  The ECI-to-ECEF rotation applies GMST from the IAU
-polynomial.  The measurement axis, specified by zenith angle
-(0 = up, 90 = horizontal) and azimuth (clockwise from north), is
-decomposed in the local East-North-Up frame.
+All calculations use ECEF (Earth-Centered, Earth-Fixed) Cartesian coordinates. The ECI-to-ECEF rotation applies GMST from the IAU polynomial. The measurement axis, specified by zenith angle (0 = up, 90 = horizontal) and azimuth (clockwise from north), is decomposed in the local East-North-Up frame.
 
 
 ## Accuracy Budget
@@ -253,7 +225,7 @@ For a vertical sensor at a continental (inland) site:
 | Lunar ephemeris (distance) | ~1 nGal | 200 km / 385000 km ~ 0.05% |
 | Solar ephemeris | <1 nGal | 1 arcmin, negligible |
 | Elastic Earth (no FCN) | ~10 nGal | 1% near K1 only |
-| Normal gravity | <1 nGal | GRS80 + 2nd-order free-air |
+| Normal gravity | <1 nGal | WGS84 + 2nd-order free-air |
 | Ocean loading (not modeled) | 1--3000 nGal | negligible inland, up to ~3 µGal at coast |
 | Atmospheric pressure (not modeled) | ~300 nGal/hPa | needs barometer data |
 | Polar motion (not modeled) | ~10--20 nGal | 48-hour variation; static offset ~5 µGal |
@@ -268,7 +240,7 @@ At coastal sites, unmodeled ocean loading can add up to ~3 µGal of error.
 
 ### `compute_g(dt, lat_deg, lon_deg, alt_m, zenith_deg=0, azimuth_deg=0)`
 
-Single-epoch computation.  Returns a dict with keys:
+Single-epoch computation. Returns a dict with keys:
 
 - `g_total` -- total g projected on axis (m/s²)
 - `g_static` -- normal gravity component (m/s²)
@@ -278,16 +250,13 @@ Single-epoch computation.  Returns a dict with keys:
 
 ### `compute_timeseries(start, end, lat_deg, lon_deg, alt_m, ..., n_samples=None)`
 
-Multi-epoch computation over `[start, end]`.  Default cadence is
-`interval_minutes=10.0`; pass `n_samples=N` for exactly N evenly spaced
-samples instead.  Returns the same keys as `compute_g` (each as a numpy
-array), plus `times` (list of datetime objects).
+Multi-epoch computation over `[start, end]`. Default cadence is `interval_minutes=10.0`; pass `n_samples=N` for exactly N evenly spaced samples instead. Returns the same keys as `compute_g` (each as a numpy array), plus `times` (list of datetime objects).
 
-### Building blocks
+### Building Blocks
 
 | Function | Description |
 |----------|-------------|
-| `normal_gravity(lat_deg, alt_m)` | GRS80 gravity with free-air correction |
+| `normal_gravity(lat_deg, alt_m)` | WGS84 gravity with free-air correction |
 | `sun_position_ecef(dt)` | Sun ECEF position (m) |
 | `moon_position_ecef(dt)` | Moon ECEF position (m) |
 | `geodetic_to_ecef(lat, lon, alt)` | Geodetic to Cartesian |
@@ -305,7 +274,7 @@ All physical constants are accessible as module attributes:
 import pytheas
 pytheas.GM_MOON   # 4.9028695e12  m^3/s^2
 pytheas.GM_SUN    # 1.32712440018e20 m^3/s^2
-pytheas.A_GRS80   # 6378137.0 m
+pytheas.A_WGS84   # 6378137.0 m
 pytheas.DELTA_GRAV  # 1.1608
 pytheas.H2, pytheas.K2  # Love numbers
 ```
@@ -316,7 +285,7 @@ pytheas.H2, pytheas.K2  # Love numbers
 The following effects, omitted here, would be needed for sub-10-nGal accuracy:
 
 - **Ocean tidal loading:** Requires site-specific coefficients from models
-  such as FES2014 or GOT4.10c.  Dominant at coastal sites (up to 50 nGal).
+  such as FES2014 or GOT4.10c. Dominant at coastal sites (up to 50 nGal).
 - **Atmospheric pressure loading:** ~3 nGal per hPa of barometric anomaly.
   Requires real-time barometer data.
 - **FCN Love number correction:** A frequency-dependent delta(f) table would

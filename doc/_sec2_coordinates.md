@@ -20,9 +20,9 @@ Earth's rotation produces an oblate shape, with the equatorial radius exceeding 
 
 ---
 
-## 2.2 The GRS80 Reference Ellipsoid
+## 2.2 The WGS84 Reference Ellipsoid
 
-The Geodetic Reference System 1980 (GRS80) defines Pytheas's reference ellipsoid via two parameters:
+The World Geodetic System 1984 (WGS84) defines Pytheas's reference ellipsoid via two parameters:
 
 **Semi-major axis:**
 
@@ -107,7 +107,7 @@ $$z = \bigl(N(1 - e^2) + h\bigr)\sin\varphi$$
 These three equations constitute the **geodetic-to-ECEF conversion**, implemented in Pytheas as:
 
 ```python
-N = A_GRS80 / np.sqrt(1.0 - E2 * sp ** 2)
+N = A_WGS84 / np.sqrt(1.0 - E2 * sp ** 2)
 x = (N + alt_m) * cp * np.cos(lam)
 y = (N + alt_m) * cp * np.sin(lam)
 z = (N * (1.0 - E2) + alt_m) * sp
@@ -263,7 +263,7 @@ def measurement_axis(lat_deg, lon_deg, zenith_deg=0.0, azimuth_deg=0.0):
 
 ## 2.11 Summary: The Coordinate Pipeline
 
-**Observer position.** Geodetic $(\varphi, \lambda, h)$ to ECEF via Section 2.4 (GRS80 ellipsoid):
+**Observer position.** Geodetic $(\varphi, \lambda, h)$ to ECEF via Section 2.4 (WGS84 ellipsoid):
 
 $$\vec{r}_\text{obs} = \text{geodetic\_to\_ecef}(\varphi, \lambda, h)$$
 

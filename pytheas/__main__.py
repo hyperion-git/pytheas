@@ -52,11 +52,18 @@ examples:
 
     end = start + timedelta(hours=args.hours)
 
+    # Approximate local time offset from longitude (standard timezone)
+    utc_offset_h = round(args.lon / 15.0)
+    local_dt = timedelta(hours=utc_offset_h)
+    sign = '+' if utc_offset_h >= 0 else '-'
+    utc_label = f"UTC{sign}{abs(utc_offset_h):d}"
+
     print(f"Location : {args.lat:.4f} N, {args.lon:.4f} E, {args.alt:.1f} m")
     print(f"Axis     : zenith = {args.zenith:.1f} deg, "
           f"azimuth = {args.azimuth:.1f} deg")
     print(f"Window   : {start.isoformat()} to {end.isoformat()} UTC "
           f"({args.hours:.1f} h, {args.interval:.0f} min)")
+    print(f"Local tz : {utc_label} (from longitude)")
     print()
 
     data = compute_timeseries(start, end, args.lat, args.lon, args.alt,
@@ -81,15 +88,17 @@ examples:
     elif len(times) > head:
         rows.extend(range(head, len(times)))
 
-    print(f"\n{'Time UTC':>20s}  {'g_total':>17s}  "
+    print(f"\n{'Time UTC':>20s}  {'Local (' + utc_label + ')':>20s}  {'g_total':>17s}  "
           f"{'tidal (um/s2)':>14s}  {'Moon':>10s}  {'Sun':>10s}")
-    print('-' * 78)
+    print('-' * 100)
     for idx in rows:
         if idx is None:
             print(f"{'...':>20s}")
             continue
         t = times[idx]
+        t_local = t + local_dt
         print(f"{t.strftime('%Y-%m-%d %H:%M'):>20s}  "
+              f"{t_local.strftime('%Y-%m-%d %H:%M'):>20s}  "
               f"{data['g_total'][idx]:17.10f}  "
               f"{data['g_tidal'][idx] * 1e6:14.4f}  "
               f"{data['g_tidal_moon'][idx] * 1e6:10.4f}  "
@@ -97,10 +106,13 @@ examples:
 
     if args.csv:
         with open(args.csv, 'w') as f:
-            f.write('time_utc,g_total,g_static,g_tidal,'
-                    'g_tidal_moon,g_tidal_sun\n')
+            f.write(f'time_utc,time_local_{utc_label},'
+                    'g_total_m_s2,g_static_m_s2,g_tidal_m_s2,'
+                    'g_tidal_moon_m_s2,g_tidal_sun_m_s2\n')
             for i, t in enumerate(times):
-                f.write(f"{t.isoformat()},{data['g_total'][i]:.12e},"
+                t_local = t + local_dt
+                f.write(f"{t.isoformat()},{t_local.isoformat()},"
+                        f"{data['g_total'][i]:.12e},"
                         f"{data['g_static'][i]:.12e},"
                         f"{data['g_tidal'][i]:.12e},"
                         f"{data['g_tidal_moon'][i]:.12e},"

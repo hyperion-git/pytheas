@@ -2,7 +2,7 @@
 
 ## 1.1 The Question
 
-Bolt a gravimeter to bedrock in Munich ($\varphi = 48.14^\circ$N, $\lambda = 11.58^\circ$E, $h = 500$ m above GRS80). The display settles near 9.807 m/s$^2$, but the last decimal places drift by $\sim$1 $\mu$m/s$^2$ over twelve hours, tracing a nearly sinusoidal oscillation that repeats -- not quite -- twice per day. Three contributions account for this signal:
+Bolt a gravimeter to bedrock in Munich ($\varphi = 48.14^\circ$N, $\lambda = 11.58^\circ$E, $h = 500$ m above WGS84). The display settles near 9.807 m/s$^2$, but the last decimal places drift by $\sim$1 $\mu$m/s$^2$ over twelve hours, tracing a nearly sinusoidal oscillation that repeats -- not quite -- twice per day. Three contributions account for this signal:
 
 **Static field.** Earth's gravitational attraction plus the centrifugal acceleration from rotation, determined by $\varphi$ and $h$. Time-independent; magnitude $\sim$9.8 m/s$^2$.
 **Lunar tide.** Differential gravitational pull of the Moon between observer and Earth's center. The quadrupolar (degree-2) structure produces a semi-diurnal period of $\sim$12.4 h; peak amplitude $\sim$1.1 $\mu$m/s$^2$.
@@ -16,7 +16,7 @@ The measured acceleration is their sum, with tidal terms amplified by the solid 
 
 $$\boxed{g_{\text{total}}(t) = \gamma(\varphi, h)\,(\hat{\mathbf{e}}_U \cdot \hat{\mathbf{n}}) + \delta\left[\mathbf{a}_{\text{Moon}}(t) + \mathbf{a}_{\text{Sun}}(t)\right] \cdot \hat{\mathbf{n}}} \tag{1.1}$$
 
-**$\gamma(\varphi, h)$: Normal gravity.** The static baseline set by Earth's mass and rotation. Ranges from 9.780 m/s$^2$ at the equator to 9.832 m/s$^2$ at the poles, decreasing $\sim$0.3 mGal/m with elevation. Computed via the Somigliana closed-form expression on GRS80 with a second-order free-air correction (Section 3).
+**$\gamma(\varphi, h)$: Normal gravity.** The static baseline set by Earth's mass and rotation. Ranges from 9.780 m/s$^2$ at the equator to 9.832 m/s$^2$ at the poles, decreasing $\sim$0.3 mGal/m with elevation. Computed via the Somigliana closed-form expression on WGS84 with a second-order free-air correction (Section 3).
 
 **$\mathbf{a}_{\text{Moon}}(t)$, $\mathbf{a}_{\text{Sun}}(t)$: Tidal acceleration vectors.** The difference between each body's gravitational pull at the observer and at Earth's center:
 
@@ -52,7 +52,7 @@ The 12.4 h period arises because the Moon advances $\sim 13^\circ$/day along the
 
 Evaluating equation (1.1) requires six ingredients, each developed in its own section:
 
-**Section 2 -- Coordinates.** GRS80 ellipsoid-to-ECEF conversion ($N(\varphi)$), GMST rotation between Earth-fixed and inertial frames, and the ENU basis that defines $\hat{\mathbf{n}}$.
+**Section 2 -- Coordinates.** WGS84 ellipsoid-to-ECEF conversion ($N(\varphi)$), GMST rotation between Earth-fixed and inertial frames, and the ENU basis that defines $\hat{\mathbf{n}}$.
 **Section 3 -- Normal Gravity.** $\gamma(\varphi, h)$ via the Somigliana formula with a second-order free-air expansion in $h/a$. Equator-to-pole variation $\sim$0.05 m/s$^2$.
 **Section 4 -- Lunar Position.** Meeus ephemeris: $\sim$65 perturbation terms built from five fundamental arguments. Dominant corrections: equation of center ($6.29^\circ$), evection ($1.27^\circ$), variation ($0.66^\circ$). Accuracy $\sim$10 arcsec.
 **Section 5 -- Solar Position.** Near-Keplerian orbit ($e \approx 0.017$) with a three-term equation of center from the $O(e^3)$ Kepler expansion. Accuracy $\sim$1 arcmin ($<$1 nGal).
@@ -116,7 +116,7 @@ result = compute_g(
     dt=datetime(2025, 3, 20, 12, 0, 0),  # UTC time
     lat_deg=48.14,                         # Munich latitude
     lon_deg=11.58,                         # Munich longitude
-    alt_m=500.0,                           # altitude above GRS80
+    alt_m=500.0,                           # altitude above WGS84
 )
 
 print(f"g_total  = {result['g_total']:.6f} m/s²")

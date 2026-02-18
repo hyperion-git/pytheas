@@ -57,7 +57,7 @@ See the [project README](../README.md) for full installation options and the CLI
 ### [2. Coordinate Systems](_sec2_coordinates.md)
 
 - [2.1 Geodetic Coordinates: Latitude, Longitude, Altitude](_sec2_coordinates.md#21-geodetic-coordinates-latitude-longitude-altitude)
-- [2.2 The GRS80 Reference Ellipsoid](_sec2_coordinates.md#22-the-grs80-reference-ellipsoid)
+- [2.2 The WGS84 Reference Ellipsoid](_sec2_coordinates.md#22-the-wgs84-reference-ellipsoid)
 - [2.3 Geodetic vs. Geocentric Latitude](_sec2_coordinates.md#23-geodetic-vs-geocentric-latitude)
 - [2.4 Geodetic to ECEF Conversion](_sec2_coordinates.md#24-geodetic-to-ecef-conversion)
 - [2.5 The ECI Frame (Earth-Centered Inertial)](_sec2_coordinates.md#25-the-eci-frame-earth-centered-inertial)

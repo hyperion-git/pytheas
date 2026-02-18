@@ -5,7 +5,7 @@ Named after Pytheas of Massalia (c. 325 BC), the Greek explorer who made the
 first recorded systematic observations connecting ocean tides to the Moon.
 
 Computes the total gravitational acceleration projected along an arbitrary
-measurement axis, including normal gravity (GRS80), lunar and solar tidal
+measurement axis, including normal gravity (WGS84), lunar and solar tidal
 acceleration (exact Newtonian, Meeus ephemeris), and elastic Earth
 amplification (IERS 2010 Love numbers).
 
@@ -33,9 +33,9 @@ from ._core import (
     GM_MOON,
     GM_SUN,
     GM_E,
-    A_GRS80,
-    F_GRS80,
-    B_GRS80,
+    A_WGS84,
+    F_WGS84,
+    B_WGS84,
     E2,
     OMEGA,
     AU,
@@ -61,9 +61,9 @@ __all__ = [
     "GM_MOON",
     "GM_SUN",
     "GM_E",
-    "A_GRS80",
-    "F_GRS80",
-    "B_GRS80",
+    "A_WGS84",
+    "F_WGS84",
+    "B_WGS84",
     "E2",
     "OMEGA",
     "AU",

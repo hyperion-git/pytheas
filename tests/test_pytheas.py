@@ -18,7 +18,7 @@ from pytheas import (
     gmst_rad,
     GM_MOON,
     GM_SUN,
-    A_GRS80,
+    A_WGS84,
     DELTA_GRAV,
     GAMMA_E,
     GAMMA_P,
@@ -104,14 +104,14 @@ class TestCoordinates:
     def test_ecef_equator_prime_meridian(self):
         """(0, 0, 0) -> (a, 0, 0)."""
         r = geodetic_to_ecef(0.0, 0.0, 0.0)
-        assert abs(r[0] - A_GRS80) < 1.0
+        assert abs(r[0] - A_WGS84) < 1.0
         assert abs(r[1]) < 1.0
         assert abs(r[2]) < 1.0
 
     def test_ecef_north_pole(self):
         """(90, *, 0) -> (0, 0, b)."""
         r = geodetic_to_ecef(90.0, 0.0, 0.0)
-        b = A_GRS80 * (1.0 - 1.0 / 298.257222101)
+        b = A_WGS84 * (1.0 - 1.0 / 298.257223563)
         assert abs(r[0]) < 1.0
         assert abs(r[1]) < 1.0
         assert abs(r[2] - b) < 1.0

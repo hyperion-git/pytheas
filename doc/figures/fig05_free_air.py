@@ -13,7 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import pytheas
-from pytheas import A_GRS80, F_GRS80, OMEGA, GM_E, B_GRS80
+from pytheas import A_WGS84, F_WGS84, OMEGA, GM_E, B_WGS84
 from style import apply_style, COLORS, add_dual_axis
 
 apply_style()
@@ -25,16 +25,16 @@ gamma_0 = pytheas.normal_gravity(lat, 0.0)
 # Somigliana parameters for free-air factor
 phi = np.radians(lat)
 sin2 = np.sin(phi)**2
-M_RATIO = OMEGA**2 * A_GRS80**2 * B_GRS80 / GM_E
-fac = 1.0 + F_GRS80 + M_RATIO - 2.0 * F_GRS80 * sin2
+M_RATIO = OMEGA**2 * A_WGS84**2 * B_WGS84 / GM_E
+fac = 1.0 + F_WGS84 + M_RATIO - 2.0 * F_WGS84 * sin2
 
 h = np.linspace(0, 10000, 1000)  # 0 to 10 km
 
 # First-order free-air: Delta_gamma = gamma_0 * (-2 * fac * h / a)
-delta_first = gamma_0 * (-2.0 * fac * h / A_GRS80)
+delta_first = gamma_0 * (-2.0 * fac * h / A_WGS84)
 
 # Full second-order: Delta_gamma = gamma_0 * (-2*fac*h/a + 3*h^2/a^2)
-delta_second = gamma_0 * (-2.0 * fac * h / A_GRS80 + 3.0 * h**2 / A_GRS80**2)
+delta_second = gamma_0 * (-2.0 * fac * h / A_WGS84 + 3.0 * h**2 / A_WGS84**2)
 
 # Verify against pytheas directly
 delta_full = np.array([pytheas.normal_gravity(lat, hi) - gamma_0 for hi in h])
