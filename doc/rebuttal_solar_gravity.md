@@ -126,38 +126,38 @@ $$
 The **direct pull** of each external body canceled independently. To see
 this explicitly, expand the bracket for a generic external body at
 geocentric position $\mathbf{R}$ (with $R = |\mathbf{R}|$ and
-$\hat{\mathbf{R}} = \mathbf{R}/R$) in powers of $|\mathbf{r}|/R$.
+$\mathbf{e}_{\mathbf{R}} = \mathbf{R}/R$) in powers of $|\mathbf{r}|/R$.
 
 Start with the inverse cube:
 
-$$|\mathbf{R} - \mathbf{r}|^2 = R^2\left(1 - 2\,\frac{\hat{\mathbf{R}} \cdot \mathbf{r}}{R} + \frac{r^2}{R^2}\right)$$
+$$|\mathbf{R} - \mathbf{r}|^2 = R^2\left(1 - 2\,\frac{\mathbf{e}_{\mathbf{R}} \cdot \mathbf{r}}{R} + \frac{r^2}{R^2}\right)$$
 
 so
 
-$$\frac{1}{|\mathbf{R} - \mathbf{r}|^3} = \frac{1}{R^3}\left(1 + \frac{3\,\hat{\mathbf{R}}\cdot\mathbf{r}}{R} + O\!\left(\frac{r^2}{R^2}\right)\right)$$
+$$\frac{1}{|\mathbf{R} - \mathbf{r}|^3} = \frac{1}{R^3}\left(1 + \frac{3\,\mathbf{e}_{\mathbf{R}}\cdot\mathbf{r}}{R} + O\!\left(\frac{r^2}{R^2}\right)\right)$$
 
 Multiply by $(\mathbf{R} - \mathbf{r})$ and keep first-order terms:
 
-$$\frac{\mathbf{R} - \mathbf{r}}{|\mathbf{R} - \mathbf{r}|^3} = \frac{1}{R^3}\Big[\mathbf{R} + 3(\hat{\mathbf{R}}\cdot\mathbf{r})\,\hat{\mathbf{R}} - \mathbf{r}\Big] + O\!\left(\frac{r^2}{R^4}\right)$$
+$$\frac{\mathbf{R} - \mathbf{r}}{|\mathbf{R} - \mathbf{r}|^3} = \frac{1}{R^3}\Big[\mathbf{R} + 3(\mathbf{e}_{\mathbf{R}}\cdot\mathbf{r})\,\mathbf{e}_{\mathbf{R}} - \mathbf{r}\Big] + O\!\left(\frac{r^2}{R^4}\right)$$
 
 Now subtract $\mathbf{R}/R^3$:
 
-$$\frac{\mathbf{R} - \mathbf{r}}{|\mathbf{R} - \mathbf{r}|^3} - \frac{\mathbf{R}}{R^3} = \frac{1}{R^3}\Big[\cancel{\mathbf{R}} + 3(\hat{\mathbf{R}}\cdot\mathbf{r})\,\hat{\mathbf{R}} - \mathbf{r} - \cancel{\mathbf{R}}\Big] + O\!\left(\frac{r^2}{R^4}\right)$$
+$$\frac{\mathbf{R} - \mathbf{r}}{|\mathbf{R} - \mathbf{r}|^3} - \frac{\mathbf{R}}{R^3} = \frac{1}{R^3}\Big[\cancel{\mathbf{R}} + 3(\mathbf{e}_{\mathbf{R}}\cdot\mathbf{r})\,\mathbf{e}_{\mathbf{R}} - \mathbf{r} - \cancel{\mathbf{R}}\Big] + O\!\left(\frac{r^2}{R^4}\right)$$
 
 The $\mathbf{R}/R^3$ terms — which represent the **direct gravitational
-pull** $GM/R^2$ in the direction $\hat{\mathbf{R}}$ — cancel identically.
+pull** $GM/R^2$ in the direction $\mathbf{e}_{\mathbf{R}}$ — cancel identically.
 What survives is the quadrupole (tidal) term:
 
-$$\boxed{\mathbf{a}_{\text{tidal}} = \frac{GM}{R^3}\Big[3\,(\hat{\mathbf{R}}\cdot\mathbf{r})\,\hat{\mathbf{R}} - \mathbf{r}\Big] + O\!\left(\frac{GM\,r^2}{R^4}\right)}$$
+$$\boxed{\mathbf{a}_{\text{tidal}} = \frac{GM}{R^3}\Big[3\,(\mathbf{e}_{\mathbf{R}}\cdot\mathbf{r})\,\mathbf{e}_{\mathbf{R}} - \mathbf{r}\Big] + O\!\left(\frac{GM\,r^2}{R^4}\right)}$$
 
 This is suppressed by $r/R$ relative to the direct pull. For the Sun,
 $r/R \approx 4.3 \times 10^{-5}$; for the Moon, $r/D \approx 1.7 \times 10^{-2}$.
 
 Applying to each body:
 
-$$\mathbf{a}_{\text{tidal}}^{\text{Sun}} = G M_S \left[\frac{\mathbf{R} - \mathbf{r}}{|\mathbf{R} - \mathbf{r}|^3} - \frac{\mathbf{R}}{|\mathbf{R}|^3}\right] \approx \frac{G M_S}{R^3}\Big[3\,(\hat{\mathbf{R}}\cdot\mathbf{r})\,\hat{\mathbf{R}} - \mathbf{r}\Big]$$
+$$\mathbf{a}_{\text{tidal}}^{\text{Sun}} = G M_S \left[\frac{\mathbf{R} - \mathbf{r}}{|\mathbf{R} - \mathbf{r}|^3} - \frac{\mathbf{R}}{|\mathbf{R}|^3}\right] \approx \frac{G M_S}{R^3}\Big[3\,(\mathbf{e}_{\mathbf{R}}\cdot\mathbf{r})\,\mathbf{e}_{\mathbf{R}} - \mathbf{r}\Big]$$
 
-$$\mathbf{a}_{\text{tidal}}^{\text{Moon}} = G M_M \left[\frac{\mathbf{D} - \mathbf{r}}{|\mathbf{D} - \mathbf{r}|^3} - \frac{\mathbf{D}}{|\mathbf{D}|^3}\right] \approx \frac{G M_M}{D^3}\Big[3\,(\hat{\mathbf{D}}\cdot\mathbf{r})\,\hat{\mathbf{D}} - \mathbf{r}\Big]$$
+$$\mathbf{a}_{\text{tidal}}^{\text{Moon}} = G M_M \left[\frac{\mathbf{D} - \mathbf{r}}{|\mathbf{D} - \mathbf{r}|^3} - \frac{\mathbf{D}}{|\mathbf{D}|^3}\right] \approx \frac{G M_M}{D^3}\Big[3\,(\mathbf{e}_{\mathbf{D}}\cdot\mathbf{r})\,\mathbf{e}_{\mathbf{D}} - \mathbf{r}\Big]$$
 
 The structure of the cancellation is now transparent:
 
@@ -175,45 +175,61 @@ The structure of the cancellation is now transparent:
 
 ## Step 4: What the Sensor Reads
 
-The test mass is stationary in the lab frame ($\ddot{\mathbf{r}}$ accounts
-for Earth's rotation, but the structure is the same). Setting the
-acceleration to the centripetal term from Earth's rotation and solving for
-the spring force:
+The sensor reads $\mathbf{F}_{\text{spring}}$, which already appears in
+the boxed equation from Step 3. To isolate it, we solve that equation
+for $\mathbf{F}_{\text{spring}}$ by specifying the acceleration
+$\ddot{\mathbf{r}}$ of the test mass.
 
-$$
-\mathbf{F}_{\text{spring}}
-  = m\left[
-    \frac{G M_E}{|\mathbf{r}|^3}\,\mathbf{r}
-    - \boldsymbol{\omega} \times (\boldsymbol{\omega} \times \mathbf{r})
-    - \mathbf{a}_{\text{tidal}}^{\text{Sun}}
-    - \mathbf{a}_{\text{tidal}}^{\text{Moon}}
-  \right]
-$$
+The test mass is stationary in the lab frame, which co-rotates with
+Earth at angular velocity $\boldsymbol{\omega}$. In the non-rotating
+geocentric frame used in Step 3, this corresponds to circular motion
+with centripetal acceleration:
 
-The sensor projects this onto its measurement axis $\hat{\mathbf{n}}$:
+$$\ddot{\mathbf{r}} = \boldsymbol{\omega} \times (\boldsymbol{\omega} \times \mathbf{r}) = -\omega^2\,\mathbf{r}_\perp$$
 
-$$
-g_{\text{measured}} = \frac{\mathbf{F}_{\text{spring}}}{m} \cdot \hat{\mathbf{n}}
-$$
+where $\mathbf{r}_\perp$ is the component of $\mathbf{r}$ perpendicular
+to the rotation axis (pointing outward from that axis).
+
+Substituting into the boxed equation and solving for
+$\mathbf{F}_{\text{spring}}$:
+
+$$\boldsymbol{\omega} \times (\boldsymbol{\omega} \times \mathbf{r}) = -\frac{G M_E}{|\mathbf{r}|^3}\,\mathbf{r} + \mathbf{a}_{\text{tidal}}^{\text{Sun}} + \mathbf{a}_{\text{tidal}}^{\text{Moon}} + \frac{\mathbf{F}_{\text{spring}}}{m}$$
+
+$$\mathbf{F}_{\text{spring}} = m\left[\frac{G M_E}{|\mathbf{r}|^3}\,\mathbf{r} + \boldsymbol{\omega} \times (\boldsymbol{\omega} \times \mathbf{r}) - \mathbf{a}_{\text{tidal}}^{\text{Sun}} - \mathbf{a}_{\text{tidal}}^{\text{Moon}}\right]$$
+
+The three contributions have clear physical meaning:
+
+- $GM_E\,\mathbf{r}/|\mathbf{r}|^3$: Earth's gravitational acceleration
+  (the spring supports the test mass against this).
+- $\boldsymbol{\omega}\times(\boldsymbol{\omega}\times\mathbf{r}) = -\omega^2\mathbf{r}_\perp$:
+  centripetal acceleration from Earth's rotation, which *reduces* the
+  required spring force (objects weigh less at the equator).
+- $-\mathbf{a}_{\text{tidal}}$: the tidal perturbations, acting as small
+  corrections.
+
+The sensor projects this onto its measurement axis $\mathbf{e}_{\mathbf{n}}$:
+
+$$g_{\text{measured}} = \frac{\mathbf{F}_{\text{spring}}}{m} \cdot \mathbf{e}_{\mathbf{n}}$$
 
 **Neither the direct solar acceleration** $G M_S / R^2$ **nor the direct
-lunar acceleration** $G M_M / D^2$ **appears.** Both canceled in Step 3 as
-algebraic identities — no approximation was made, and the cancellation
-holds for any $\hat{\mathbf{n}}$.
+lunar acceleration** $G M_M / D^2$ **appears.** These terms canceled in
+Step 3 before we ever solved for $\mathbf{F}_{\text{spring}}$ — the
+spring force inherits only the tidal residuals. This holds for any
+$\mathbf{e}_{\mathbf{n}}$.
 
 
 ## Step 5: Why Tilting Doesn't Help
 
 The claim implicitly assumes that tilting the sensor changes the
-projection of a body's **direct** pull onto $\hat{\mathbf{n}}$:
+projection of a body's **direct** pull onto $\mathbf{e}_{\mathbf{n}}$:
 
-$$g_{\text{claimed}}^{\text{Sun}} = \frac{G M_S}{R^2}\,(\hat{\mathbf{R}} \cdot \hat{\mathbf{n}}),
+$$g_{\text{claimed}}^{\text{Sun}} = \frac{G M_S}{R^2}\,(\mathbf{e}_{\mathbf{R}} \cdot \mathbf{e}_{\mathbf{n}}),
 \qquad
-g_{\text{claimed}}^{\text{Moon}} = \frac{G M_M}{D^2}\,(\hat{\mathbf{D}} \cdot \hat{\mathbf{n}})
+g_{\text{claimed}}^{\text{Moon}} = \frac{G M_M}{D^2}\,(\mathbf{e}_{\mathbf{D}} \cdot \mathbf{e}_{\mathbf{n}})
 \quad\longleftarrow\quad \text{these terms do not exist}$$
 
 But each was canceled by the identical projection of Earth's acceleration
-toward that body onto the same axis. Tilting $\hat{\mathbf{n}}$ rotates
+toward that body onto the same axis. Tilting $\mathbf{e}_{\mathbf{n}}$ rotates
 all projections equally, because the cancellation is **vectorial** — it
 holds component by component, in every direction simultaneously.
 

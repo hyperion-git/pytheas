@@ -14,7 +14,7 @@
 \hypersetup{colorlinks=true, linkcolor=blue!60!black, urlcolor=blue!60!black}
 
 \newcommand{\vb}[1]{\mathbf{#1}}
-\newcommand{\vu}[1]{\hat{\mathbf{#1}}}
+\newcommand{\vu}[1]{\vb{e}_{\vb{#1}}}
 
 \title{Why a Tilted Sensor Cannot Measure\\Direct Gravitational Pull}
 \author{}
@@ -271,19 +271,55 @@ The structure of the cancellation is now transparent:
 
 \section{What the Sensor Reads}
 
-The test mass is stationary in the lab frame. Setting the acceleration to
-the centripetal term from Earth's rotation and solving for the spring
-force:
+The sensor reads $\vb{F}_{\text{spring}}$, which already appears in
+Eq.~\eqref{eq:geocentric}. To isolate it, we solve that equation for
+$\vb{F}_{\text{spring}}$ by specifying the acceleration
+$\ddot{\vb{r}}$ of the test mass.
+
+The test mass is stationary in the lab frame, which co-rotates with
+Earth at angular velocity~$\boldsymbol{\omega}$. In the non-rotating
+geocentric frame used in Eq.~\eqref{eq:geocentric}, this corresponds
+to circular motion with centripetal acceleration:
 \begin{equation}
+\ddot{\vb{r}}
+  = \boldsymbol{\omega} \times (\boldsymbol{\omega} \times \vb{r})
+  = -\omega^2\,\vb{r}_\perp
+\label{eq:centripetal}
+\end{equation}
+where $\vb{r}_\perp$ is the component of~$\vb{r}$ perpendicular to the
+rotation axis (pointing outward from that axis).
+
+Substituting Eq.~\eqref{eq:centripetal} into the boxed
+equation~\eqref{eq:geocentric} and solving for
+$\vb{F}_{\text{spring}}$:
+\begin{align}
+\cancel{m}\,\boldsymbol{\omega} \times (\boldsymbol{\omega} \times \vb{r})
+  &= -\frac{G M_E\,\cancel{m}}{\lvert\vb{r}\rvert^3}\,\vb{r}
+  + \cancel{m}\,\vb{a}_{\text{tidal}}^{\text{Sun}}
+  + \cancel{m}\,\vb{a}_{\text{tidal}}^{\text{Moon}}
+  + \frac{\vb{F}_{\text{spring}}}{\cancel{m}\,} \nonumber \\[6pt]
 \vb{F}_{\text{spring}}
-  = m\left[
+  &= m\left[
     \frac{G M_E}{\lvert\vb{r}\rvert^3}\,\vb{r}
-    - \boldsymbol{\omega} \times (\boldsymbol{\omega} \times \vb{r})
+    + \boldsymbol{\omega} \times (\boldsymbol{\omega} \times \vb{r})
     - \vb{a}_{\text{tidal}}^{\text{Sun}}
     - \vb{a}_{\text{tidal}}^{\text{Moon}}
   \right]
 \label{eq:spring}
-\end{equation}
+\end{align}
+
+The three contributions have clear physical meaning:
+\begin{itemize}
+\item $G M_E\,\vb{r}/\lvert\vb{r}\rvert^3$: Earth's gravitational
+  acceleration (the spring supports the test mass against this).
+\item $\boldsymbol{\omega}\times(\boldsymbol{\omega}\times\vb{r})
+  = -\omega^2\vb{r}_\perp$: centripetal acceleration from Earth's
+  rotation, which \emph{reduces} the required spring force (objects
+  weigh less at the equator).
+\item $-\vb{a}_{\text{tidal}}$: the tidal perturbations from
+  Eqs.~\eqref{eq:tidal_sun}--\eqref{eq:tidal_moon}, acting as small
+  corrections.
+\end{itemize}
 
 The sensor projects this onto its measurement axis $\vu{n}$:
 \begin{equation}
@@ -292,9 +328,10 @@ g_{\text{measured}}
 \end{equation}
 
 \textbf{Neither the direct solar acceleration} $G M_S / R^2$ \textbf{nor
-the direct lunar acceleration} $G M_M / D^2$ \textbf{appears.} Both
-canceled in Eq.~\eqref{eq:geocentric} as algebraic identities --- no
-approximation was made, and the cancellation holds for any~$\vu{n}$.
+the direct lunar acceleration} $G M_M / D^2$ \textbf{appears.} These
+terms canceled in Eq.~\eqref{eq:geocentric} before we ever solved for
+$\vb{F}_{\text{spring}}$ --- the spring force inherits only the tidal
+residuals. This holds for any~$\vu{n}$.
 
 
 \section{Why Tilting Doesn't Help}
