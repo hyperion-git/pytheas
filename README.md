@@ -3,15 +3,13 @@
 **Gravitational acceleration g(t) at a point on Earth**
 
 Named after [Pytheas of Massalia](https://en.wikipedia.org/wiki/Pytheas)
-(c. 325 BC), the Greek explorer who sailed from the Mediterranean to
-Britain and made the first recorded systematic observations connecting
+(c. 325 BC), the Greek explorer who first systematically connected
 ocean tides to the phases of the Moon.
 
-Pytheas computes the total gravitational acceleration projected along an
-arbitrary measurement axis at any location on Earth, as a function of
-time.  It is a single-file, dependency-light tool designed for quick
-tidal predictions in precision accelerometry, gravimetry, and sensor
-characterization.
+Pytheas computes time-dependent gravitational acceleration projected
+along an arbitrary measurement axis at any point on Earth.  A
+single-file, dependency-light tool, it targets tidal predictions for
+precision accelerometry, gravimetry, and sensor characterization.
 
 **Dependency:** numpy only (matplotlib optional, for `--plot`).
 
@@ -94,10 +92,10 @@ print(f"g       = {result['g_total']:.10f} m/s^2")
 print(f"g_tidal = {result['g_tidal'] * 1e6:.4f} µm/s^2")
 ```
 
-The `zenith_deg` parameter is the angle from vertical (0 = straight up,
-90 = horizontal) and `azimuth_deg` is clockwise from north.  For a
-perfectly vertical sensor both default to 0.  The static component
-scales as `cos(zenith)` while the tidal projection depends on the full
+The `zenith_deg` parameter specifies the angle from vertical (0 = up,
+90 = horizontal); `azimuth_deg` specifies the bearing clockwise from
+north.  Both default to 0 (vertical sensor).  The static component
+scales as `cos(zenith)`, while the tidal projection depends on the full
 3D geometry.
 
 ### Horizontal sensor
@@ -126,8 +124,8 @@ print(f"{len(data['times'])} points, dt ~ "
       f"{(data['times'][1] - data['times'][0]).total_seconds():.1f} s")
 ```
 
-When `n_samples` is given it overrides the default `interval_minutes`
-cadence.  The samples are inclusive of both endpoints.
+When `n_samples` is given, it overrides `interval_minutes`.
+Both endpoints are included.
 
 ### Command line
 
@@ -166,75 +164,74 @@ g_total(t) = g_static + delta * [a_tidal_moon(t) + a_tidal_sun(t)] . n_hat
 
 ### Normal gravity
 
-The static gravitational acceleration on the GRS80 reference ellipsoid is
-computed using the Somigliana closed-form formula:
+The static gravitational acceleration on the GRS80 reference ellipsoid
+follows the Somigliana closed-form formula:
 
 ```
 gamma_0 = gamma_e * (1 + k * sin^2(phi)) / sqrt(1 - e^2 * sin^2(phi))
 ```
 
 where `gamma_e = 9.7803253141 m/s²` (equatorial) and
-`gamma_p = 9.8321849378 m/s²` (polar).  The altitude correction uses
-the second-order free-air gradient:
+`gamma_p = 9.8321849378 m/s²` (polar).  Altitude dependence uses the
+second-order free-air gradient:
 
 ```
 gamma(h) = gamma_0 * [1 - 2*(1+f+m-2f*sin^2(phi))*h/a + 3*h^2/a^2]
 ```
 
-This is accurate to <1 nGal for altitudes below ~400 m, and <20 nGal
-below 1 km.
+Accuracy is <1 nGal below ~400 m altitude and <20 nGal below 1 km.
 
 ### Tidal acceleration
 
-The tidal acceleration from a celestial body at position **R** acting on
-an observer at **r** is computed using the exact Newtonian formula:
+The tidal acceleration from a celestial body at position **R** on an
+observer at **r** follows the exact Newtonian expression:
 
 ```
 a_tidal = GM * [(R - r) / |R - r|^3  -  R / |R|^3]
 ```
 
-This is the difference between the gravitational pull at the observer's
-position and at the Earth's center.  No tidal-tensor (gradient)
-approximation is used, avoiding the ~2.5% truncation error inherent in
-the first-order expansion.
+This computes the difference between the gravitational acceleration at
+the observer and at the Earth's center, without the tidal-tensor
+(gradient) approximation.  Using the exact formula avoids the ~2.5%
+truncation error of the first-order expansion.
 
 ### Ephemerides
 
-**Sun:** Low-precision Meeus (Astronomical Algorithms) ephemeris.
-Ecliptic longitude accuracy ~1 arcmin, distance via true anomaly.
-Results in <1 nGal tidal error.
+**Sun:** Low-precision Meeus (*Astronomical Algorithms*) ephemeris.
+Ecliptic longitude accurate to ~1 arcmin; distance derived from true
+anomaly.  Tidal error contribution: <1 nGal.
 
-**Moon:** Truncated Meeus (ch. 47) ephemeris with:
+**Moon:** Truncated Meeus (ch. 47) ephemeris including:
 - 24 longitude terms (Table 47.A)
 - 23 distance terms (Table 47.A)
 - 18 latitude terms (Table 47.B)
 - A1, A2, A3 additive corrections
 - Eccentricity correction factor E
 
-Position accuracy ~0.1 deg, distance ~200 km.  The tidal acceleration
-error is ~0.1% of the lunar signal, or ~1 nGal.
+Position accurate to ~0.1 deg; distance accurate to ~200 km.  The
+resulting tidal error is ~0.1% of the lunar signal (~1 nGal).
 
 ### Elastic Earth correction
 
-The solid Earth is not rigid: it deforms under the tidal potential.  This
-amplifies the surface gravity change by the gravimetric factor:
+The solid Earth deforms under the tidal potential, amplifying the
+surface gravity change by the gravimetric factor:
 
 ```
 delta = 1 + h2 - (3/2) * k2 = 1.1608
 ```
 
-using IERS 2010 Love numbers h2 = 0.6078, k2 = 0.2980.  A single
-frequency-independent value is used; the true factor has a ~1% resonance
-near the K1 frequency due to the free core nutation (FCN), contributing
-up to ~10 nGal of error near that constituent.
+using IERS 2010 Love numbers h2 = 0.6078, k2 = 0.2980.  This single
+frequency-independent value neglects the ~1% resonance near the K1
+frequency caused by the free core nutation (FCN), introducing up to
+~10 nGal of error at that constituent.
 
 ### Coordinate system
 
-All computation is done in ECEF (Earth-Centered, Earth-Fixed) Cartesian
-coordinates.  The ECI-to-ECEF rotation uses GMST with the IAU polynomial.
-The measurement axis is specified via zenith angle (0 = vertical up,
-90 = horizontal) and azimuth (clockwise from north), decomposed into the
-local East-North-Up frame.
+All calculations use ECEF (Earth-Centered, Earth-Fixed) Cartesian
+coordinates.  The ECI-to-ECEF rotation applies GMST from the IAU
+polynomial.  The measurement axis, specified by zenith angle
+(0 = up, 90 = horizontal) and azimuth (clockwise from north), is
+decomposed in the local East-North-Up frame.
 
 
 ## Accuracy Budget
@@ -255,8 +252,7 @@ For a vertical sensor at a continental (inland) site:
 
 **Total for inland sites: ~10 nGal (1e-10 m/s²).**
 
-Coastal sites may see up to ~3 µGal additional error from unmodeled ocean
-loading.
+At coastal sites, unmodeled ocean loading can add up to ~3 µGal of error.
 
 
 ## API Reference
@@ -273,10 +269,10 @@ Single-epoch computation.  Returns a dict with keys:
 
 ### `compute_timeseries(start, end, lat_deg, lon_deg, alt_m, ..., n_samples=None)`
 
-Multi-epoch computation over `[start, end]`.  By default uses
-`interval_minutes=10.0` cadence; pass `n_samples=N` to get exactly N
-evenly spaced samples instead.  Returns the same keys as `compute_g`,
-each as a numpy array, plus `times` (list of datetime objects).
+Multi-epoch computation over `[start, end]`.  Default cadence is
+`interval_minutes=10.0`; pass `n_samples=N` for exactly N evenly spaced
+samples instead.  Returns the same keys as `compute_g` (each as a numpy
+array), plus `times` (list of datetime objects).
 
 ### Building blocks
 
@@ -308,17 +304,16 @@ pytheas.H2, pytheas.K2  # Love numbers
 
 ## Limitations
 
-Effects **not** included that would be needed for sub-10-nGal accuracy:
+The following effects, omitted here, would be needed for sub-10-nGal accuracy:
 
-- **Ocean tidal loading:** Requires site-specific loading coefficients from
-  models like FES2014 or GOT4.10c.  Dominant at coastal sites (up to 50 nGal).
-- **Atmospheric pressure loading:** ~3 nGal per hPa of barometric pressure
-  anomaly.  Requires real-time barometer data.
-- **FCN Love number correction:** The gravimetric factor has a ~1% resonance
-  near the K1 tidal frequency.  A frequency-dependent delta(f) table would
-  reduce this error.
-- **JPL planetary ephemeris:** Using DE440/DE441 instead of Meeus would give
-  sub-arcsecond positions, reducing ephemeris error to <0.01 nGal.
+- **Ocean tidal loading:** Requires site-specific coefficients from models
+  such as FES2014 or GOT4.10c.  Dominant at coastal sites (up to 50 nGal).
+- **Atmospheric pressure loading:** ~3 nGal per hPa of barometric anomaly.
+  Requires real-time barometer data.
+- **FCN Love number correction:** A frequency-dependent delta(f) table would
+  capture the ~1% gravimetric resonance near K1.
+- **JPL planetary ephemeris:** DE440/DE441 would provide sub-arcsecond
+  positions, reducing ephemeris error to <0.01 nGal.
 - **Polar motion and LOD:** Earth orientation parameters from IERS bulletins.
 
 
