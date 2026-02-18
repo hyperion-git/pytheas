@@ -121,12 +121,55 @@ m\,\ddot{\mathbf{r}}
 $$
 
 
-### What Happened
+### Exact cancellation of the direct pull
 
-The **direct pull** of each external body canceled independently. To see
-this explicitly, expand the bracket for a generic external body at
-geocentric position $\mathbf{R}$ (with $R = |\mathbf{R}|$ and
-$\mathbf{e}_{\mathbf{R}} = \mathbf{R}/R$) in powers of $|\mathbf{r}|/R$.
+Consider the Sun's contribution to the boxed equation. It arose from
+subtracting Earth's acceleration (Step 2) from the test mass acceleration
+(Step 1). Tracing the Sun's terms through the subtraction:
+
+**From the test mass** (Step 1), the Sun contributes an acceleration:
+
+$$-\frac{G M_S}{|\mathbf{x} - \mathbf{R}_S|^3}(\mathbf{x} - \mathbf{R}_S)$$
+
+**From Earth's center** (Step 2), subtracted via
+$\ddot{\mathbf{r}} = \ddot{\mathbf{x}} - \ddot{\mathbf{R}}_E$:
+
+$$+\frac{G M_S}{|\mathbf{R}_E - \mathbf{R}_S|^3}(\mathbf{R}_E - \mathbf{R}_S)$$
+
+Substituting $\mathbf{x} - \mathbf{R}_S = \mathbf{r} - \mathbf{R}$ and
+$\mathbf{R}_E - \mathbf{R}_S = -\mathbf{R}$, their sum becomes:
+
+$$G M_S \underbrace{\left[\frac{\mathbf{R} - \mathbf{r}}{|\mathbf{R} - \mathbf{r}|^3} - \frac{\mathbf{R}}{R^3}\right]}_{\equiv\;\mathbf{f}(\mathbf{r})}$$
+
+This expression $\mathbf{f}(\mathbf{r})$ is the difference of the Sun's
+gravitational field evaluated at two points: the test mass location
+($\mathbf{r}$ from Earth's center) and Earth's center itself ($\mathbf{r}=0$).
+By construction:
+
+$$\mathbf{f}(\mathbf{0}) = \frac{\mathbf{R}}{R^3} - \frac{\mathbf{R}}{R^3} = \mathbf{0} \qquad\text{(exactly)}$$
+
+This is the exact cancellation. The "direct pull" —
+$G M_S\,\mathbf{R}/R^3 = (G M_S / R^2)\,\mathbf{e}_{\mathbf{R}}$ — is the
+value of the Sun's field at Earth's center. It appears with opposite signs
+in the test mass and Earth equations and cancels identically, without
+approximation. What remains,
+$\mathbf{f}(\mathbf{r}) = \mathbf{f}(\mathbf{r}) - \mathbf{f}(\mathbf{0})$,
+is purely the *variation* of the field across the distance $\mathbf{r}$ —
+the tidal acceleration.
+
+The identical cancellation occurs for the Moon, with $\mathbf{D}$ replacing
+$\mathbf{R}$. The result generalises to any number of external bodies: for
+each, the direct pull is common to test mass and Earth, and subtracts out
+exactly.
+
+
+### Taylor expansion: identifying the surviving term
+
+To determine the magnitude and structure of what survives, expand
+$\mathbf{f}(\mathbf{r})$ for a generic body at geocentric position
+$\mathbf{R}$ (with $R = |\mathbf{R}|$ and
+$\mathbf{e}_{\mathbf{R}} = \mathbf{R}/R$) in powers of the small
+parameter $|\mathbf{r}|/R$.
 
 Start with the inverse cube:
 
@@ -159,18 +202,18 @@ $$\mathbf{a}_{\text{tidal}}^{\text{Sun}} = G M_S \left[\frac{\mathbf{R} - \mathb
 
 $$\mathbf{a}_{\text{tidal}}^{\text{Moon}} = G M_M \left[\frac{\mathbf{D} - \mathbf{r}}{|\mathbf{D} - \mathbf{r}|^3} - \frac{\mathbf{D}}{|\mathbf{D}|^3}\right] \approx \frac{G M_M}{D^3}\Big[3\,(\mathbf{e}_{\mathbf{D}}\cdot\mathbf{r})\,\mathbf{e}_{\mathbf{D}} - \mathbf{r}\Big]$$
 
-The structure of the cancellation is now transparent:
+To summarise:
 
-- The **zeroth-order** term ($\mathbf{R}/R^3$) is the direct pull — the
-  $GM/R^2$ acceleration toward the external body. It appears identically
-  in the expansion and in the subtracted term, so it cancels exactly.
-- The **first-order** term ($\propto r/R^3$) is the tidal acceleration.
-  It has quadrupolar structure: stretching along the Earth–body axis,
-  compression perpendicular, trace-free.
-- The cancellation is **exact** in the full (unexpanded) bracket. The
-  Taylor expansion is shown only to identify which term cancels and which
-  survives — the boxed equation above requires no expansion and is used
-  in the code.
+- The **exact cancellation** ($\mathbf{f}(\mathbf{0}) = \mathbf{0}$) is
+  algebraic: the direct pull drops out of $\mathbf{f}(\mathbf{r})$ because
+  $\mathbf{f}(\mathbf{0}) = \mathbf{0}$ by construction. No expansion is needed.
+- The **zeroth-order** term in the Taylor expansion ($\mathbf{R}/R^3$)
+  confirms this: it cancels identically against the subtracted
+  $\mathbf{R}/R^3$.
+- The **first-order** term ($\propto r/R^3$) is the leading surviving
+  contribution — the tidal acceleration with quadrupolar structure:
+  stretching along the Earth–body axis, compression perpendicular,
+  trace-free.
 
 
 ## Step 4: What the Sensor Reads
@@ -381,7 +424,7 @@ the tidal part.
 A Fabry-Perot cavity has $f = mc/(2L)$. The spacer length $L$ is set by
 electromagnetic bond forces. The Sun's uniform field accelerates every
 atom equally — no deformation. Only the tidal gradient across $L$ would
-stretch it: $\delta L/L \sim 10^{-26}$ — unmeasurable.
+stretch it: $\delta L/L \sim (GM_S/R^3)\,L^2/(E/\rho) \sim 10^{-23}$ — unmeasurable.
 
 ### The beat note
 

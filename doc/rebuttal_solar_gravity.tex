@@ -141,21 +141,78 @@ m\,\ddot{\vb{r}}
 \label{eq:geocentric}
 \end{equation}
 
-\subsection*{What happened}
+\subsection*{Exact cancellation of the direct pull}
 
-The \textbf{direct pull} of each external body canceled independently.
-To see this explicitly, expand the bracket for a generic external body at
-geocentric position~$\vb{R}$ (with $R = \lvert\vb{R}\rvert$ and
-$\vu{R} = \vb{R}/R$) in powers of the small parameter
-$\lvert\vb{r}\rvert / R$:
+Consider the Sun's contribution to Eq.~\eqref{eq:geocentric}. It arose
+from subtracting Earth's acceleration (Eq.~\ref{eq:earth}) from the test
+mass acceleration (Eq.~\ref{eq:inertial}). Tracing the Sun's terms
+through the subtraction:
 
+\medskip
+\noindent
+\textbf{From the test mass} (Eq.~\ref{eq:inertial}), the Sun contributes
+an acceleration:
 \begin{equation}
-\frac{\vb{R} - \vb{r}}{\lvert\vb{R} - \vb{r}\rvert^3}
-  - \frac{\vb{R}}{R^3}
-\label{eq:bracket}
+-\frac{G M_S}{\lvert\vb{x} - \vb{R}_S\rvert^3}
+  (\vb{x} - \vb{R}_S)
+\label{eq:sun_test}
 \end{equation}
 
 \noindent
+\textbf{From Earth's center} (Eq.~\ref{eq:earth}), subtracted via
+$\ddot{\vb{r}} = \ddot{\vb{x}} - \ddot{\vb{R}}_E$:
+\begin{equation}
++\frac{G M_S}{\lvert\vb{R}_E - \vb{R}_S\rvert^3}
+  (\vb{R}_E - \vb{R}_S)
+\label{eq:sun_earth}
+\end{equation}
+
+\noindent
+Substituting $\vb{x} - \vb{R}_S = \vb{r} - \vb{R}$ and
+$\vb{R}_E - \vb{R}_S = -\vb{R}$, their sum becomes:
+\begin{equation}
+G M_S \underbrace{\left[
+  \frac{\vb{R} - \vb{r}}{\lvert\vb{R} - \vb{r}\rvert^3}
+  - \frac{\vb{R}}{R^3}
+\right]}_{\displaystyle\equiv\;\vb{f}(\vb{r})}
+\label{eq:bracket}
+\end{equation}
+
+This expression $\vb{f}(\vb{r})$ is the difference of the Sun's
+gravitational field evaluated at two points: the test mass location
+($\vb{r}$ from Earth's center) and Earth's center itself ($\vb{r}=0$).
+By construction:
+\begin{equation}
+\vb{f}(\vb{0})
+  = \frac{\vb{R}}{R^3} - \frac{\vb{R}}{R^3}
+  = \vb{0}
+  \qquad\text{(exactly)}
+\label{eq:exact_cancel}
+\end{equation}
+
+This is the exact cancellation. The ``direct pull'' ---
+$G M_S\,\vb{R}/R^3 = (G M_S / R^2)\,\vu{R}$ --- is the value of
+the Sun's field at Earth's center. It appears with opposite signs in
+Eqs.~\eqref{eq:sun_test} and~\eqref{eq:sun_earth} and cancels
+identically, without approximation. What remains,
+$\vb{f}(\vb{r}) = \vb{f}(\vb{r}) - \vb{f}(\vb{0})$, is purely the
+\emph{variation} of the field across the distance~$\vb{r}$ --- the tidal
+acceleration.
+
+The identical cancellation occurs for the Moon, with $\vb{D}$ replacing
+$\vb{R}$. The result generalises to any number of external bodies: for
+each, the direct pull is common to test mass and Earth, and subtracts out
+exactly.
+
+
+\subsection*{Taylor expansion: identifying the surviving term}
+
+To determine the magnitude and structure of what survives, expand
+$\vb{f}(\vb{r})$ for a generic body at geocentric position~$\vb{R}$
+(with $R = \lvert\vb{R}\rvert$ and $\vu{R} = \vb{R}/R$) in powers of
+the small parameter $\lvert\vb{r}\rvert / R$.
+
+\medskip\noindent
 Start with the inverse cube:
 \begin{equation}
 \lvert\vb{R} - \vb{r}\rvert^2
@@ -251,21 +308,18 @@ Applying Eq.~\eqref{eq:tidal_approx} to each body:
 \label{eq:tidal_moon}
 \end{align}
 
-The structure of the cancellation is now transparent:
+To summarise:
 \begin{itemize}
-\item The \textbf{zeroth-order} term ($\vb{R}/R^3$) is the direct pull ---
-  the $GM/R^2$ acceleration toward the external body. It appears
-  identically in the expansion of $(\vb{R}-\vb{r})/\lvert\vb{R}-\vb{r}\rvert^3$
-  and in the subtracted $\vb{R}/R^3$, so it cancels exactly
-  (Eq.~\ref{eq:cancel}).
-\item The \textbf{first-order} term ($\propto r/R^3$) is the tidal
-  acceleration. It has the quadrupolar structure
-  $3(\vu{R}\cdot\vb{r})\,\vu{R} - \vb{r}$: stretching along the
-  Earth--body axis, compression perpendicular to it, trace-free.
-\item The cancellation is \textbf{exact} in the full (unexpanded) bracket.
-  The Taylor expansion is shown only to identify which term cancels and
-  which survives --- the boxed equation in~\eqref{eq:geocentric} requires
-  no expansion and is used in the code.
+\item The \textbf{exact cancellation} (Eq.~\ref{eq:exact_cancel}) is
+  algebraic: the direct pull drops out of $\vb{f}(\vb{r})$ because
+  $\vb{f}(\vb{0}) = \vb{0}$ by construction. No expansion is needed.
+\item The \textbf{zeroth-order} term in the Taylor expansion
+  ($\vb{R}/R^3$, Eq.~\ref{eq:cancel}) confirms this: it cancels
+  identically against the subtracted $\vb{R}/R^3$.
+\item The \textbf{first-order} term ($\propto r/R^3$,
+  Eq.~\ref{eq:tidal_approx}) is the leading surviving contribution ---
+  the tidal acceleration with quadrupolar structure: stretching along the
+  Earth--body axis, compression perpendicular, trace-free.
 \end{itemize}
 
 
@@ -527,8 +581,8 @@ equally --- no differential stress, no deformation. Only the tidal
 gradient across the cavity length~$L$ would deform it:
 \begin{equation}
 \frac{\delta L}{L}
-  \sim \frac{GM_S}{R^3}\,\frac{L}{E/\rho}
-  \sim 10^{-26}
+  \sim \frac{GM_S}{R^3}\,\frac{L^2}{E/\rho}
+  \sim 10^{-23}
 \end{equation}
 which is unmeasurable.
 
