@@ -1,0 +1,1657 @@
+\documentclass[aps,prx,onecolumn,superscriptaddress,nofootinbib]{revtex4-2}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+
+\hypersetup{colorlinks=true, linkcolor=blue!60!black, urlcolor=blue!60!black}
+
+\newtheorem{theorem}{Theorem}
+
+\newcommand{\vb}[1]{\mathbf{#1}}
+\newcommand{\vu}[1]{\vb{e}_{\vb{#1}}}
+
+\begin{document}
+
+\title{Falling Together: Why Springs Can't See the Sun}
+\author{Alexander Friedrich}
+\affiliation{DLR Institute of Quantum Technologies, Wilhelm-Runge-Str.\ 10, 89081 Ulm, Germany}
+\date{\today}
+
+\begin{abstract}
+A common claim holds that a spring-based sensor can detect the
+direct gravitational pull of the Sun
+(${\sim}\,6 \times 10^{-3}$~m/s$^2$) or the Moon
+(${\sim}\,3.3 \times 10^{-5}$~m/s$^2$) as a time-varying signal.
+This is incorrect. We prove the following:
+\emph{The spring force on a test mass held at rest near the Earth
+contains no contribution from the direct gravitational pull
+$GM/R^2$ of any external body; the direct pull cancels exactly
+against the free-fall acceleration of the laboratory, leaving only
+the tidal residual of order $GM\,r_\oplus/R^3$ --- regardless of
+sensor orientation.}
+The proof uses only Newtonian point-mass mechanics in an inertial
+frame where no terms are hidden. The result is then transformed to
+the rotating laboratory frame, where the only surviving terms ---
+Earth's gravity, centrifugal correction, and tidal residuals ---
+are fully consistent with standard terrestrial gravimetry.
+\end{abstract}
+
+\maketitle
+
+
+\section{Introduction}
+\label{sec:frames}
+
+Can a spring-based accelerometer measure the Sun's direct
+gravitational pull on its test mass? This note shows that the
+answer is \textbf{no} --- not because the pull is too small, but
+because the equivalence principle forbids it. The Sun pulls
+the sensor housing and the test mass by exactly the same amount;
+the spring connecting them cannot register a force that acts
+identically on both ends.
+
+The difficulty in seeing this lies in the choice of reference
+frame. A laboratory on Earth's surface is non-inertial for two
+reasons:
+
+\begin{enumerate}
+\item \textbf{Earth rotates}, producing centrifugal and Coriolis
+  pseudo-accelerations (${\sim}\,0.03$~m/s$^2$ at the equator).
+
+\item \textbf{Earth freely falls toward the Sun and Moon.} The
+  sensor housing is rigidly attached to the Earth's crust; it
+  shares the Earth's free-fall acceleration toward the Sun
+  ($GM_S/R^2 \approx 5.93 \times 10^{-3}$~m/s$^2$) and Moon
+  ($GM_M/D^2 \approx 3.32 \times 10^{-5}$~m/s$^2$) exactly.
+  The test mass, connected only by a spring, is the one body
+  free to deviate --- but gravity accelerates it by the same
+  amount, so the spring registers no difference.
+\end{enumerate}
+
+\noindent
+The second point is the origin of the cancellation. When one
+writes equations of motion in the lab frame, the free-fall
+acceleration toward the Sun has already been subtracted from every
+term. A spring-based sensor physically implements this
+subtraction: both ends share the same gravitational acceleration,
+so the spring reads zero from that field. Only the tiny
+\emph{gradient} of the field across the sensor --- the tidal
+term --- survives.
+
+The same principle applies to quantum systems: Asenbaum, Overstreet,
+and Kasevich~\cite{asenbaum2024} have shown that matter-wave
+interferometers and optical clocks are likewise insensitive to
+uniform gravitational fields, with all observable effects arising
+from non-gravitational accelerations. The present paper arrives
+at the same conclusion from the classical side, addresses the
+specific misconception about tilted spring sensors, and provides
+a detailed coordinate-system analysis.
+
+To make this cancellation explicit rather than hidden, we begin in
+a true inertial frame and carry every term (Sec.~\ref{sec:proof}).
+We then transform to the rotating laboratory
+(Sec.~\ref{sec:lab}), project onto an arbitrary sensor axis
+(Sec.~\ref{sec:orientation}), and compare the magnitudes of all
+surviving terms (Sec.~\ref{sec:observable}).
+Section~\ref{sec:ep} places the result in the context of the
+equivalence principle.
+
+
+\section{The Proof}
+\label{sec:proof}
+
+\subsection{Setup}
+
+Four point masses in an inertial frame (Fig.~\ref{fig:setup}).
+The test mass is connected to the sensor by a spring (or equivalent
+restoring mechanism). The sensor housing is rigidly attached to the
+Earth. The sensor reads the spring force~$\vb{F}_{\text{spring}}$ ---
+the non-gravitational force required to keep the test mass co-moving
+with the lab.
+
+\begin{figure}[h]
+\centering
+\begin{minipage}[c]{0.30\columnwidth}
+\centering
+\begin{tabular}{lll}
+\toprule
+Body & Mass & Position \\
+\midrule
+Sun       & $M_S$ & $\vb{R}_S(t)$ \\
+Moon      & $M_M$ & $\vb{R}_M(t)$ \\
+Earth     & $M_E$ & $\vb{R}_E(t)$ \\
+Test mass & $m$   & $\vb{x}(t)$ \\
+\bottomrule
+\end{tabular}
+\end{minipage}%
+\hfill
+\begin{minipage}[c]{0.67\columnwidth}
+\centering
+\includegraphics[width=\linewidth]{figures/setup_schematic.pdf}
+\end{minipage}
+\caption{Four-body setup. \emph{Left}: masses and inertial-frame
+positions. \emph{Right}: schematic geometry. Gray dashed arrows:
+position vectors $\vb{R}_S$, $\vb{R}_E$, $\vb{R}_M$,
+and~$\vb{x}$ from the inertial origin. Red solid arrows:
+geocentric vectors $\vb{R} = \vb{R}_S - \vb{R}_E$,
+$\vb{D} = \vb{R}_M - \vb{R}_E$, and
+$\vb{r} = \vb{x} - \vb{R}_E$. The spring connects the test
+mass~$m$ to the Earth-fixed sensor housing.}
+\label{fig:setup}
+\end{figure}
+
+\subsection{Test mass equation of motion}
+
+In the inertial frame, Newton's second law for the test mass:
+\begin{equation}
+m\,\ddot{\vb{x}}
+  = -\frac{G M_E\, m}{\lvert\vb{x} - \vb{R}_E\rvert^3}
+    (\vb{x} - \vb{R}_E)
+  \;-\frac{G M_S\, m}{\lvert\vb{x} - \vb{R}_S\rvert^3}
+    (\vb{x} - \vb{R}_S)
+  \;-\frac{G M_M\, m}{\lvert\vb{x} - \vb{R}_M\rvert^3}
+    (\vb{x} - \vb{R}_M)
+  \;+\; \vb{F}_{\text{spring}}
+\label{eq:test}
+\end{equation}
+
+\subsection{Earth's equation of motion}
+
+Earth's center accelerates toward the Sun, Moon, and test mass:
+\begin{equation}
+M_E\,\ddot{\vb{R}}_E
+  = -\frac{G M_S\, M_E}{\lvert\vb{R}_E - \vb{R}_S\rvert^3}
+    (\vb{R}_E - \vb{R}_S)
+  \;-\; \frac{G M_M\, M_E}{\lvert\vb{R}_E - \vb{R}_M\rvert^3}
+    (\vb{R}_E - \vb{R}_M)
+  \;-\; \frac{G\, m\, M_E}{\lvert\vb{R}_E - \vb{x}\rvert^3}
+    (\vb{R}_E - \vb{x})
+\label{eq:earth}
+\end{equation}
+
+The common factor~$M_E$ divides out of every term, so Earth's
+acceleration is independent of its own mass --- as guaranteed by the
+equivalence principle. The last term is the gravitational back-reaction
+of the test mass; after dividing by~$M_E$ it contributes an acceleration
+$Gm/r^2 \sim 10^{-26}$~m/s$^2$ for $m \sim 1$~kg, negligible compared
+to all other terms. It will produce a correction of order
+$m/M_E \sim 10^{-25}$ in the relative equation of motion
+[Eq.~\eqref{eq:relative}] that we drop hereafter. Every object rigidly
+attached to the Earth --- including the sensor housing --- shares this
+acceleration.
+
+\subsection{Subtract to get the relative motion}
+
+Define $\vb{r} \equiv \vb{x} - \vb{R}_E$ and the geocentric positions
+$\vb{R} \equiv \vb{R}_S - \vb{R}_E$,
+$\vb{D} \equiv \vb{R}_M - \vb{R}_E$. Then
+$\ddot{\vb{r}} = \ddot{\vb{x}} - \ddot{\vb{R}}_E$ gives:
+\begin{equation}
+m\,\ddot{\vb{r}}
+  = -\frac{G(M_E + m)\, m}{\lvert\vb{r}\rvert^3}\,\vb{r}
+  \;+\; G M_S\, m \left[
+    \frac{\vb{R} - \vb{r}}{\lvert\vb{R} - \vb{r}\rvert^3}
+    - \frac{\vb{R}}{R^3}
+  \right]
+  \;+\; G M_M\, m \left[
+    \frac{\vb{D} - \vb{r}}{\lvert\vb{D} - \vb{r}\rvert^3}
+    - \frac{\vb{D}}{D^3}
+  \right]
+  \;+\; \vb{F}_{\text{spring}}
+\label{eq:relative}
+\end{equation}
+
+The back-reaction noted after Eq.~\eqref{eq:earth} appears only in the
+first term, replacing $M_E \to M_E + m$. Since
+$m/M_E \sim 10^{-25}$, we set $M_E + m \approx M_E$ hereafter. The
+bracketed tidal terms are entirely unaffected.
+
+\subsection{The cancellation}
+
+Each bracketed term has the form
+\begin{equation}
+\vb{f}(\vb{r})
+  = \frac{\vb{R} - \vb{r}}{\lvert\vb{R} - \vb{r}\rvert^3}
+  - \frac{\vb{R}}{R^3}
+\end{equation}
+
+This is the Sun's gravitational field at the test mass \emph{minus} the
+field at Earth's center. At $\vb{r} = \vb{0}$:
+\begin{equation}
+\vb{f}(\vb{0})
+  = \frac{\vb{R}}{R^3} - \frac{\vb{R}}{R^3}
+  = \vb{0}
+  \qquad\text{(exactly)}
+\label{eq:cancel}
+\end{equation}
+
+The direct pull --- $GM_S\,\vb{R}/R^3$, the uniform field that
+accelerates the entire Earth at $5.93 \times 10^{-3}$~m/s$^2$ ---
+appears with equal magnitude and opposite sign in
+Eqs.~\eqref{eq:test} and~\eqref{eq:earth}, and cancels identically.
+No approximation is involved. The same holds for the Moon with $\vb{D}$
+replacing~$\vb{R}$.
+
+What survives is $\vb{f}(\vb{r}) - \vb{f}(\vb{0})$: the
+\emph{variation} of the gravitational field across the
+baseline~$\vb{r}$ --- the \textbf{tidal acceleration}. To leading order
+in $r/R$:
+\begin{equation}
+\vb{a}_{\text{tidal}}
+  = \frac{GM}{R^3}\Big[
+    3\,(\vu{R}\cdot\vb{r})\,\vu{R} - \vb{r}
+  \Big]
+  + O\!\left(\frac{GM\,r^2}{R^4}\right)
+\label{eq:tidal}
+\end{equation}
+
+This is suppressed by a factor $r/R$ relative to the direct pull.
+
+\subsection{Derivation of Eq.~\eqref{eq:tidal}}
+
+Expand $\lvert\vb{R} - \vb{r}\rvert^{-3}$ for $r \ll R$. Write
+\begin{equation}
+\lvert\vb{R} - \vb{r}\rvert^2
+  = R^2\!\left(1
+    - 2\,\frac{\vu{R}\cdot\vb{r}}{R}
+    + \frac{r^2}{R^2}\right)
+  \equiv R^2(1 - \epsilon)
+\end{equation}
+with $\epsilon = 2\,\vu{R}\cdot\vb{r}/R - r^2/R^2 = O(r/R)$. Then
+\begin{equation}
+\frac{1}{\lvert\vb{R} - \vb{r}\rvert^3}
+  = \frac{1}{R^3}(1-\epsilon)^{-3/2}
+  = \frac{1}{R^3}\!\left(1
+    + \frac{3\,\vu{R}\cdot\vb{r}}{R}
+    + O\!\left(\frac{r^2}{R^2}\right)\right)
+\end{equation}
+
+Multiply by $(\vb{R} - \vb{r})$ and keep terms through first order:
+\begin{equation}
+\frac{\vb{R} - \vb{r}}{\lvert\vb{R} - \vb{r}\rvert^3}
+  = \frac{1}{R^3}\Big[
+    \vb{R} + 3(\vu{R}\cdot\vb{r})\,\vu{R} - \vb{r}
+  \Big]
+  + O\!\left(\frac{r^2}{R^4}\right)
+\end{equation}
+
+Subtract $\vb{R}/R^3$:
+\begin{equation}
+\vb{f}(\vb{r})
+  = \frac{\vb{R} - \vb{r}}{\lvert\vb{R} - \vb{r}\rvert^3}
+  - \frac{\vb{R}}{R^3}
+  = \frac{1}{R^3}\Big[
+    3(\vu{R}\cdot\vb{r})\,\vu{R} - \vb{r}
+  \Big]
+  + O\!\left(\frac{r^2}{R^4}\right)
+\end{equation}
+
+The $\vb{R}/R^3$ terms cancel identically --- confirming that the
+direct pull drops out --- and the leading surviving term is the tidal
+quadrupole, Eq.~\eqref{eq:tidal}.\hfill$\square$
+
+\medskip
+
+We summarize the result of this section as a general theorem.
+
+\begin{theorem}[Cancellation of direct gravitational pull]
+\label{thm:cancel}
+Let a test mass at position~$\vb{x}$ be subject to the gravitational
+fields of the Earth~($M_E$) and an external body~($M$, at geocentric
+distance $R \gg r$) together with a non-gravitational spring
+force~$\vb{F}_{\emph{spring}}$. In the geocentric frame, the spring
+force required to keep the test mass at rest is
+\begin{equation*}
+\frac{\vb{F}_{\emph{spring}}}{m}
+  = \frac{GM_E}{r^2}\,\hat{\vb{r}}
+  - \vb{a}_{\emph{tidal}}
+\end{equation*}
+where $\vb{a}_{\emph{tidal}} = (GM/R^3)[3(\hat{\vb{R}}\cdot\vb{r})
+\hat{\vb{R}} - \vb{r}] + O(r^2/R^4)$ is the tidal acceleration.
+The direct pull $GM/R^2$ of the external body does not appear: it
+cancels exactly against the free-fall acceleration of the laboratory.
+This holds for any measurement axis~$\hat{\vb{n}}$, any number of
+external bodies, and to all orders in $r/R$.
+\end{theorem}
+
+The remainder of this paper verifies that rotating-frame corrections, sensor orientation, and all other terrestrial effects leave this conclusion intact.
+
+\section{Transformation to the Laboratory Frame}
+\label{sec:lab}
+
+Equation~\eqref{eq:relative} is written in the non-rotating geocentric
+frame. The laboratory rotates with the Earth at angular
+velocity~$\boldsymbol{\omega}$. This is a second source of
+non-inertiality (see Sec.~\ref{sec:frames}).
+
+\subsection{Rotating-frame equation of motion}
+
+Let $\vb{r}'$ be the test mass position in the lab frame, related to
+its geocentric position by
+$\vb{r} = \mathcal{R}(t)\,\vb{r}'$
+where $\mathcal{R}(t)$ is the time-dependent rotation matrix. For
+uniform rotation about axis
+$\hat{\vb{n}} = \boldsymbol{\omega}/\omega$ at angular
+rate $\omega = \lvert\boldsymbol{\omega}\rvert$, it takes the
+Rodrigues form
+\begin{equation}
+\mathcal{R}(t)
+  = \vb{I}\cos\omega t
+  + (1 - \cos\omega t)\,\hat{\vb{n}}\,\hat{\vb{n}}^T
+  + \sin\omega t\;[\hat{\vb{n}}]_\times
+\label{eq:rodrigues}
+\end{equation}
+where $[\hat{\vb{n}}]_\times$ is the skew-symmetric matrix whose
+action on any vector~$\vb{v}$ is
+$[\hat{\vb{n}}]_\times\vb{v} = \hat{\vb{n}} \times \vb{v}$
+--- i.e.\ the matrix representation of the cross product. Its time
+derivative satisfies
+\begin{equation}
+\dot{\mathcal{R}}(t)
+  = [\boldsymbol{\omega}]_\times\;\mathcal{R}(t)
+\label{eq:Rdot}
+\end{equation}
+so that
+$\dot{\mathcal{R}}\,\vb{v}
+  = \boldsymbol{\omega} \times (\mathcal{R}\,\vb{v})$
+for every vector~$\vb{v}$. Each time derivative
+of~$\mathcal{R}$ thus generates a cross product
+with~$\boldsymbol{\omega}$.
+
+Differentiating $\vb{r} = \mathcal{R}\,\vb{r}'$ twice using
+Eq.~\eqref{eq:Rdot}:
+\begin{equation}
+\ddot{\vb{r}}
+  = \ddot{\vb{r}}'
+  + 2\,\boldsymbol{\omega} \times \dot{\vb{r}}'
+  + \boldsymbol{\omega} \times (\boldsymbol{\omega} \times \vb{r}')
+\label{eq:kinematic}
+\end{equation}
+(the Euler term $\dot{\boldsymbol{\omega}} \times \vb{r}'$ vanishes for
+uniform rotation). Note that $\boldsymbol{\omega}$ carries no prime:
+$\mathcal{R}(t)$ is a rotation \emph{about}~$\boldsymbol{\omega}$,
+so $\mathcal{R}^{-1}\boldsymbol{\omega} = \boldsymbol{\omega}$ ---
+the rotation vector is invariant under the rotation it generates.
+Substituting into Eq.~\eqref{eq:relative} and
+expressing all vectors in the lab basis:
+\begin{equation}
+\ddot{\vb{r}}'
+  = \underbrace{-\frac{G M_E}{\lvert\vb{r}'\rvert^3}\,\vb{r}'
+    }_{\text{Earth's gravity}}
+  \;+\; \underbrace{\vb{a}_{\text{tidal}}'
+    }_{\text{tidal}}
+  \;\underbrace{-\; \boldsymbol{\omega}
+    \times (\boldsymbol{\omega} \times \vb{r}')
+    }_{\text{centrifugal}}
+  \;\underbrace{-\; 2\,\boldsymbol{\omega}
+    \times \dot{\vb{r}}'
+    }_{\text{Coriolis}}
+  \;+\; \frac{\vb{F}_{\text{spring}}'}{m}
+\label{eq:lab}
+\end{equation}
+
+The direct solar and lunar pulls do \textbf{not} reappear --- they
+canceled in Eq.~\eqref{eq:relative} before the frame change, and
+rotating the coordinate basis cannot restore a term that is already
+zero.
+
+\subsection{What the sensor reads}
+
+The sensor housing is held in place by the laboratory floor, which
+provides whatever normal force~$\vb{N}$ is required to prevent
+acceleration. This constraint force acts on the housing, not on the
+test mass, and therefore does not appear in Eq.~\eqref{eq:lab}. Its
+effect enters through the spring: the housing end of the spring
+follows the Earth's motion, so the spring
+force~$\vb{F}_{\text{spring}}'$ adjusts to keep the test mass
+co-moving.
+
+The spring force is thus entirely \emph{caused by} the constraint.
+The floor holds the housing fixed; the spring transmits that
+constraint to the test mass. This is the equivalence principle in
+action: if the floor were removed and the entire apparatus fell
+freely, housing and test mass would share the same gravitational
+acceleration. The spring would relax and
+$\vb{F}_{\text{spring}}' \to \vb{0}$ --- precisely because no
+constraint force distinguishes the housing from the test mass.
+A spring-based sensor can only measure accelerations that
+\emph{differ} between its two ends, i.e.\ tidal effects and
+non-gravitational forces.
+
+The test mass is thus at rest in the lab:
+$\dot{\vb{r}}' = \ddot{\vb{r}}' = \vb{0}$. The Coriolis term
+vanishes. Setting the left-hand side of Eq.~\eqref{eq:lab} to zero
+determines the spring force --- the quantity the sensor reads:
+\begin{equation}
+\frac{\vb{F}_{\text{spring}}'}{m}
+  = \frac{G M_E}{\lvert\vb{r}'\rvert^3}\,\vb{r}'
+  + \boldsymbol{\omega} \times (\boldsymbol{\omega} \times \vb{r}')
+  - \vb{a}_{\text{tidal}}'
+\label{eq:spring}
+\end{equation}
+
+The sensor projects this onto its measurement axis~$\vu{n}$:
+\begin{equation}
+g_{\text{measured}}
+  = \frac{\vb{F}_{\text{spring}}'}{m} \cdot \vu{n}
+\end{equation}
+
+The three contributions are:
+\begin{itemize}
+\item $G M_E\,\vb{r}'/\lvert\vb{r}'\rvert^3$: Earth's gravity (the
+  dominant, static term).
+\item $\boldsymbol{\omega}\times(\boldsymbol{\omega}\times\vb{r}')
+  = -\omega^2\vb{r}'_\perp$: the centrifugal reduction (objects weigh
+  less at the equator by ${\sim}\,0.3\%$).
+\item $-\vb{a}_{\text{tidal}}'$: the tidal perturbation from Sun and
+  Moon, of order $10^{-7}$~m/s$^2$.
+\end{itemize}
+
+\noindent
+The direct pull $GM_S/R^2$ and $GM_M/D^2$ appear nowhere. This holds
+for any~$\vu{n}$.
+
+\subsection{Size of each term}
+
+Table~\ref{tab:terms} lists every acceleration that enters
+Eq.~\eqref{eq:spring}, together with the two direct pulls that
+cancel before reaching it.
+
+\begin{table}[h]
+\caption{Magnitude of each acceleration term at Earth's surface,
+ordered by size. The grayed-out rows --- the direct gravitational
+pulls --- cancel exactly (Sec.~\ref{sec:proof}) and do not appear in
+the sensor reading [Eq.~\eqref{eq:spring}]. The last column gives
+the ratio of each term to the solar tidal residual
+($5.0 \times 10^{-7}$~m/s$^2$); for the canceled rows it is the
+ratio of direct pull to corresponding tidal residual ($11{,}700\times$
+for the Sun, $30\times$ for the Moon).}
+\label{tab:terms}
+\begin{ruledtabular}
+\begin{tabular}{llrrr}
+\textsc{Term} & \textsc{Expression}
+  & \textsc{Magnitude} (m/s$^2$)
+  & \textsc{Daily variation} (m/s$^2$)
+  & \textsc{Ratio} \\
+\hline
+Earth's gravity
+  & $GM_E/r_\oplus^2$
+  & $9.82$
+  & static
+  & $2 \times 10^7$ \\
+Centrifugal ($\lambda\!=\!48.4°$)
+  & $\omega^2 r_\oplus \cos^2\!\lambda$
+  & $3.4 \times 10^{-2}\cos^2\!\lambda$
+  & static
+  & $7 \times 10^{4}\cos^2\!\lambda$ \\
+\textcolor{gray}{Solar direct pull (canceled)}
+  & \textcolor{gray}{$GM_S / R^2$}
+  & \textcolor{gray}{$5.93 \times 10^{-3}$}
+  & \textcolor{gray}{---}
+  & \textcolor{gray}{$11{,}700\times$} \\
+\textcolor{gray}{Lunar direct pull (canceled)}
+  & \textcolor{gray}{$GM_M / D^2$}
+  & \textcolor{gray}{$3.32 \times 10^{-5}$}
+  & \textcolor{gray}{---}
+  & \textcolor{gray}{$30\times$} \\
+Lunar tide
+  & $GM_M\, r_\oplus / D^3$
+  & $1.1 \times 10^{-6}$
+  & ${\lesssim}\; 2 \times 10^{-6}$
+  & --- \\
+Solar tide
+  & $GM_S\, r_\oplus / R^3$
+  & $5.0 \times 10^{-7}$
+  & ${\lesssim}\; 8 \times 10^{-7}$
+  & --- \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+The hierarchy is striking. Earth's gravity dominates at
+${\sim}\,10$~m/s$^2$. The centrifugal correction is four orders of
+magnitude smaller (${\sim}\,10^{-2}$~m/s$^2$), yet still measurable ---
+it is the reason objects weigh less at the equator than at the poles.
+The tidal accelerations are smaller still, at $10^{-6}$--$10^{-7}$~m/s$^2$,
+but are routinely detected by superconducting gravimeters and satellite
+missions such as GRACE.
+
+The canceled direct pulls occupy a revealing intermediate scale.
+The Sun's direct pull ($5.93 \times 10^{-3}$~m/s$^2$) is
+$180\times$ stronger than the Moon's ($3.32 \times 10^{-5}$~m/s$^2$),
+yet its tidal effect is $2.2\times$ \emph{weaker}
+($1/R^3$ vs.\ $1/R^2$ scaling). This inversion --- the Sun pulls
+harder but tidally disturbs less --- is a direct signature of the
+cancellation. If direct pulls were observable, the Sun would dominate
+the signal by two orders of magnitude. Instead, the Moon dominates
+the tidal signal, exactly as observed.
+
+The sensor reads a superposition of the four non-grayed terms in
+Table~\ref{tab:terms}. The direct pulls have been subtracted out by
+the physics of the measurement: the lab accelerates with the Earth,
+and the spring cannot see it.
+
+
+\section{Why Sensor Orientation Is Irrelevant}
+\label{sec:orientation}
+
+The cancellation in Eq.~\eqref{eq:cancel} is \textbf{vectorial}: the
+direct pull vanishes as a three-component vector, not as a particular
+scalar projection. Projecting onto any measurement axis~$\vu{n}$:
+\begin{equation}
+\vu{n} \cdot \vb{f}(\vb{0}) = \vu{n} \cdot \vb{0} = 0
+  \qquad\text{for all } \vu{n}
+\end{equation}
+
+Tilting the sensor changes~$\vu{n}$ but cannot make zero non-zero.
+The spring force along any axis contains only the tidal terms from
+Eq.~\eqref{eq:tidal}.
+
+Physically: the sensor housing and the test mass both accelerate at
+$GM_S/R^2$ toward the Sun. The spring connecting them measures only the
+\emph{difference} between the accelerations of its two endpoints. A
+uniform field produces no difference, regardless of the spring's
+orientation.
+
+\subsection{Sweeping the sensor orientation}
+
+Parameterise the measurement axis by zenith angle~$\theta$ and
+azimuth~$\varphi$:
+\begin{equation}
+\vu{n}(\theta,\varphi)
+  = \sin\theta\cos\varphi\;\vu{E}
+  + \sin\theta\sin\varphi\;\vu{N}
+  + \cos\theta\;\vu{U}
+\end{equation}
+where $\vu{E}$, $\vu{N}$, $\vu{U}$ are the local East--North--Up
+unit vectors defined relative to the \emph{geodetic} vertical.
+Projecting Eq.~\eqref{eq:spring} onto $\vu{n}(\theta,\varphi)$
+and writing each term explicitly:
+\begin{align}
+g(\theta,\varphi)
+  &= \underbrace{\frac{GM_E}{r_\oplus^2}\cos\theta
+       \;+\; \bigl[\boldsymbol{\omega}\times
+       (\boldsymbol{\omega}\times\vb{r}')\bigr]
+       \cdot\vu{n}}_{\text{gravity + centrifugal}}
+  \;+\; \underbrace{(-2\boldsymbol{\omega}
+       \times\dot{\vb{r}}')\cdot\vu{n}}_{=\,0\;\text{(static)}}
+  \;-\; \vb{a}_{\text{tidal}}'\cdot\vu{n}
+  \notag \\[6pt]
+  &= g_0\cos\theta
+  \;-\; a_E'\sin\theta\cos\varphi
+  \;-\; a_N'\sin\theta\sin\varphi
+  \;-\; a_U'\cos\theta
+\label{eq:sweep}
+\end{align}
+In the first line, the gravitational and centrifugal projections
+combine into a single $\cos\theta$ term because both point along
+the geodetic vertical~$\vu{U}$ (see Appendix~\ref{app:coordinates}
+for a detailed discussion of why the centrifugal term has no
+azimuthal component in this frame), and the Coriolis term vanishes
+for a stationary test mass ($\dot{\vb{r}}' = \vb{0}$). The result defines the effective
+gravity $g_0 \equiv GM_E/r_\oplus^2
+- \omega^2 r_\oplus\cos^2\!\lambda$ (where $\lambda$ is the geodetic
+latitude), absorbing the centrifugal correction into the amplitude.
+
+We now trace each contribution through this projection.
+
+\textbf{Earth's gravity and centrifugal ($g_0\cos\theta$).}
+The effective gravity
+$\vb{g}_{\text{eff}} = g_0\,\vu{U}$ points purely along the
+geodetic vertical by definition.
+Its projection onto the sensor axis is $g_0\cos\theta$: it reads
+the full $g_0 \approx 9.81$~m/s$^2$ when the sensor is vertical
+($\theta = 0$), vanishes when horizontal ($\theta = 90°$), and
+reverses when inverted ($\theta = 180°$). The centrifugal correction
+modifies~$g_0$ by at most $0.3\%$ (latitude-dependent) but
+introduces no separate angular signature --- it is entirely absorbed
+into the amplitude of the $\cos\theta$ term. There is no
+``rotational residual'' in the sweep.
+
+\textbf{Solar and lunar tides ($a_E'$, $a_N'$, $a_U'$).}
+The tidal accelerations from Eq.~\eqref{eq:tidal} decompose into
+East, North, and Up components. The horizontal components $a_E'$
+and $a_N'$ enter through $\sin\theta\cos\varphi$ and
+$\sin\theta\sin\varphi$: they vanish for a vertical sensor and are
+maximized for a horizontal one pointed in the appropriate direction.
+The vertical component $a_U'$ enters as $\cos\theta$, superimposed
+on the much larger $g_0\cos\theta$. Representative combined
+amplitudes (from Sec.~\ref{sec:lab}): solar tidal
+${\sim}\,5.0 \times 10^{-7}$~m/s$^2$, lunar tidal
+${\sim}\,1.1 \times 10^{-6}$~m/s$^2$. These are the only
+time-varying signals in the sweep.
+
+\textbf{Direct solar pull (canceled).}
+Were the direct pull $GM_S/R^2$ not canceled by Earth's free fall,
+it would project as
+$a_\odot\sin\theta\cos(\varphi - \varphi_\odot)$
+with amplitude $a_\odot \approx 5.93 \times 10^{-3}$~m/s$^2$ ---
+four orders of magnitude above the tidal terms. As shown in
+Fig.~\ref{fig:sweep}, no such signal exists at any orientation.
+An angular scan therefore confirms the cancellation directly: one
+measures $g_0\cos\theta$ plus tidal corrections of order
+$10^{-7}$~m/s$^2$, with no $10^{-3}$~m/s$^2$ sinusoidal component.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/orientation_sweep.pdf}
+\caption{Residual acceleration $g - g_\mathrm{grav}\cos\theta$ as a function of
+sensor orientation, where $g_\mathrm{grav}$ is the pure gravitational
+acceleration (without centrifugal). Left column: sweep over zenith
+angle~$\theta$ at fixed azimuth $\varphi = 0°$ (East). Right column:
+sweep over azimuth~$\varphi$ at fixed $\theta = 45°$.
+\textbf{Top row}~(a,\,b): $10^{-3}$~m/s$^2$ scale.
+Solid blue: centrifugal correction
+($\omega^2 r_\oplus \cos^2\!\lambda \approx 1.7 \times 10^{-2}$~m/s$^2$
+at Ulm, $\lambda = 48.4°$);
+red dashed: hypothetical Sun direct pull
+($5.93 \times 10^{-3}$~m/s$^2$);
+orange dashed: hypothetical Moon direct pull
+($3.3 \times 10^{-5}$~m/s$^2$);
+blue solid: combined tidal residual (indistinguishable from zero at this
+scale). The centrifugal term is the largest non-gravitational contribution
+and exceeds even the (canceled) Sun direct pull.
+\textbf{Bottom row}~(c,\,d): $10^{-7}$~m/s$^2$ scale, zoomed to the
+actual tidal signals. Teal: solar tidal; magenta: lunar tidal;
+blue: combined. The centrifugal ($10^5\times$), canceled direct Sun
+($10^4\times$), and Moon ($30\times$) pulls are all off this scale.
+No orientation reveals the claimed $10^{-3}$~m/s$^2$ signal.}
+\label{fig:sweep}
+\end{figure}
+
+
+\section{What IS Observable}
+\label{sec:observable}
+
+Given that the direct pulls cancel, what \emph{does} a tilted
+sensor actually measure? From Eq.~\eqref{eq:sweep}, the sensor
+reading decomposes into three physically distinct contributions.
+Each responds differently to changes in orientation and time.
+
+\subsection{Static baseline: gravity and centrifugal}
+
+The dominant term $g_0\cos\theta$ is the projection of the
+effective gravity onto the measurement axis. It is entirely static
+--- independent of time, the positions of Sun and Moon, or
+anything else in the sky. Tilting the sensor from vertical
+($\theta = 0$) to horizontal ($\theta = 90°$) sweeps this term
+from $g_0 \approx 9.81$~m/s$^2$ through zero.
+
+Embedded within $g_0$ is the centrifugal correction, which at Ulm
+amounts to $\omega^2 r_\oplus\cos^2\!\lambda \approx
+1.5 \times 10^{-2}$~m/s$^2$. It projects as
+$1.5 \times 10^{-2}\cos\theta$~m/s$^2$ and is visible in
+Fig.~\ref{fig:sweep} (panels~a,\,b) as the solid blue curve.
+This is the largest non-gravitational contribution the sensor
+can detect --- it exceeds even the (canceled) solar direct pull
+by a factor of~$2.5$. Unlike the tidal terms, however, it carries
+no time dependence: it is a fixed geometric projection that shifts
+the baseline reading as the sensor is tilted.
+
+\subsection{Time-varying signals: tidal components}
+
+The only orientation-dependent terms that vary in time are the
+tidal projections $a_E'\sin\theta\cos\varphi$,
+$a_N'\sin\theta\sin\varphi$, and $a_U'\cos\theta$. These
+encode the three components of the tidal acceleration vector
+in the geodetic frame:
+
+\begin{itemize}
+\item A vertical sensor ($\theta = 0$) measures $a_U'$, the
+  vertical tidal component (${\sim}\,5.0 \times 10^{-7}$~m/s$^2$,
+  semi-diurnal with ${\sim}\,12$~h period).
+\item A horizontal sensor ($\theta = 90°$) pointing East
+  ($\varphi = 0$) measures $a_E'$; pointing North
+  ($\varphi = 90°$) it measures $a_N'$. These horizontal
+  components are diurnal (${\sim}\,24$~h period).
+\item Three non-coplanar sensors reconstruct the full tidal
+  acceleration vector and, in principle, the tidal tensor.
+\end{itemize}
+
+\noindent
+The lunar tidal signal (${\sim}\,1.1 \times 10^{-6}$~m/s$^2$) is
+roughly twice the solar (${\sim}\,5.0 \times 10^{-7}$~m/s$^2$),
+consistent with the $1/R^3$ scaling that favors the nearby Moon
+over the distant Sun. Superconducting gravimeters routinely resolve
+these signals; they are the standard observable in terrestrial
+tidal gravimetry.
+
+\subsection{What is absent}
+
+Conspicuously absent from Eq.~\eqref{eq:sweep} are two terms
+that would dominate the reading if direct gravitational pulls
+were not canceled:
+
+\begin{itemize}
+\item A \textbf{solar} term of order
+  $5.93 \times 10^{-3}$~m/s$^2$, projecting as
+  $a_\odot\sin\theta\cos(\varphi - \varphi_\odot)$ with a
+  diurnal period (${\sim}\,24$~h). This would exceed the
+  actual tidal signals by four orders of magnitude.
+\item A \textbf{lunar} term of order
+  $3.32 \times 10^{-5}$~m/s$^2$, projecting as
+  $a_M\sin\theta\cos(\varphi - \varphi_M)$
+  with a period of ${\sim}\,24.8$~h. Smaller than the solar
+  term by a factor of~$180$, but still $30\times$ larger than
+  the lunar tidal signal it would accompany.
+\end{itemize}
+
+\noindent
+Figure~\ref{fig:sweep} confirms their absence directly: the top
+panels show both hypothetical direct pulls as dashed curves that
+dwarf the actual tidal residual (blue, indistinguishable from
+zero at this scale). The bottom panels zoom into the
+$10^{-7}$~m/s$^2$ scale where the real tidal signals live ---
+orders of magnitude below either claimed effect.
+
+All orientation-dependent signals the sensor can detect ---
+centrifugal and tidal --- are real and well understood.
+None is a direct gravitational pull.
+
+
+\section{The Equivalence Principle}
+\label{sec:ep}
+
+The cancellation derived in Sec.~\ref{sec:proof} is not a
+calculational coincidence. It is the equivalence principle.
+
+Einstein's key insight was that a uniform gravitational field is
+locally indistinguishable from an accelerating reference frame.
+No experiment confined to a sufficiently small laboratory can
+determine whether the laboratory is at rest in a gravitational
+field or accelerating through empty space. This means that a
+freely falling observer cannot detect the uniform component of any
+gravitational field --- only its \emph{gradient} (the tidal part)
+is locally measurable.
+
+The Earth, together with the sensor, the laboratory, and the
+observer, is in free fall in the Sun's gravitational field. The
+entire system accelerates at $GM_S/R^2$ toward the Sun. A
+spring-based sensor measures the force difference between its two
+endpoints. Because both endpoints share the same free-fall
+acceleration, the spring is blind to the Sun's uniform pull. Only
+the \emph{non-uniformity} of the field across the sensor ---
+the tidal term, of order $GM_S\,r_\oplus/R^3$ --- can produce a
+differential signal.
+
+In the language of general relativity, the Earth follows a geodesic
+in the Sun's spacetime. Along a geodesic, no proper acceleration
+is felt --- the ``force of gravity'' is replaced by the geometry
+of spacetime. What remains observable is geodesic deviation: nearby
+geodesics converge or diverge due to spacetime curvature. This is
+the tidal acceleration of Eq.~\eqref{eq:tidal}, encoded in the
+Riemann tensor. The direct pull $GM_S/R^2$ has no counterpart in
+this description; it is an artifact of the Newtonian decomposition
+into ``gravitational force'' and ``inertial motion,'' a
+decomposition that the equivalence principle declares unphysical.
+
+This is why no adjustment of sensor orientation, no change of
+measurement axis, and no increase in sensitivity can reveal a
+$5.93 \times 10^{-3}$~m/s$^2$ signal from the Sun. The signal does
+not exist at the sensor because the equivalence principle forbids
+it. What the sensor can measure --- and what is measured routinely
+--- are tidal effects at $10^{-7}$--$10^{-6}$~m/s$^2$, four orders
+of magnitude below the direct pull. The proof in
+Sec.~\ref{sec:proof} is the Newtonian statement of this principle;
+the equivalence principle elevates it from a property of gravity to
+a law of nature.
+
+\appendix
+
+\section{Three-point formulation: housing as a separate body}
+\label{app:three-point}
+
+The main text treats the sensor housing as coincident with Earth's
+center. Here we promote the housing to a separate coordinate and
+show that no new physics arises.
+
+\subsection{Setup}
+
+A real sensor does not sit at Earth's center; it is bolted to the
+crust at some location on the surface. One might therefore ask
+whether the cancellation of Sec.~\ref{sec:proof} relies on the
+idealisation of a test mass at $\vb{R}_E$. To address this, we
+introduce three distinct positions in the inertial frame:
+\begin{itemize}
+\item Earth's center: $\vb{R}_E(t)$, whose motion is governed by
+  the combined gravitational attraction of all external bodies.
+\item Housing (spring attachment point):
+  $\vb{R}_H(t) = \vb{R}_E(t) + \vb{d}(t)$,
+  where $\lvert\vb{d}\rvert = r_\oplus$ and $\vb{d}$ is fixed in
+  the rotating frame. The housing is rigidly attached to the
+  crust (Born rigidity): it co-rotates with the Earth and is held
+  in place by internal stresses rather than orbiting freely.
+\item Test mass: $\vb{x}(t)$, connected to the housing by a spring
+  of rest length~$\ell$.
+\end{itemize}
+
+\noindent
+The key dynamical variable is the \emph{spring extension},
+\begin{equation}
+\vb{s} \;\equiv\; \vb{x} - \vb{R}_H,
+\label{eq:spring-ext}
+\end{equation}
+with $\lvert\vb{s}\rvert \sim \text{cm}$. This is the vector that the
+spring force acts along, and it is the quantity that the sensor
+ultimately transduces into a reading. Everything the sensor can
+measure must be encoded in~$\vb{s}$ and its time derivatives.
+
+\subsection{Equations of motion}
+
+We now write Newton's second law for both the test mass and the
+housing separately. This is the crucial difference from the main
+text, where both were lumped at Earth's center. We denote the
+external body's mass by~$M$ and its inertial position
+by~$\vb{R}_B(t)$.
+
+\textbf{Test mass.} The test mass is subject to gravitational
+attraction from the Earth and the external body, plus the spring force.
+Its equation of motion is identical to Eq.~\eqref{eq:test}:
+\begin{equation}
+m\,\ddot{\vb{x}}
+  = -\frac{G M_E\, m}{\lvert\vb{x} - \vb{R}_E\rvert^3}
+    (\vb{x} - \vb{R}_E)
+  - \frac{G M\, m}{\lvert\vb{x} - \vb{R}_B\rvert^3}
+    (\vb{x} - \vb{R}_B)
+  + \vb{F}_{\text{spring}}
+\label{eq:app-test}
+\end{equation}
+(the lunar term is omitted for brevity; it enters identically).
+
+\textbf{Housing.} Unlike the test mass, the housing is not free:
+it is a rigid extension of the Earth's crust. It feels gravity from
+the Earth, the external body, and the test mass, together with the
+reaction force of the spring (Newton's third law) and a constraint
+(normal) force~$\vb{N}$ exerted by the crust:
+\begin{equation}
+m_H\,\ddot{\vb{R}}_H
+  = -\frac{G M_E\, m_H}{\lvert\vb{d}\rvert^3}\,\vb{d}
+  - \frac{G M\, m_H}{\lvert\vb{R}_H - \vb{R}_B\rvert^3}
+    (\vb{R}_H - \vb{R}_B)
+  + \frac{G\, m\, m_H}{\lvert\vb{s}\rvert^3}\,\vb{s}
+  + \vb{N}
+  - \vb{F}_{\text{spring}}
+\label{eq:app-housing}
+\end{equation}
+The third term is the gravitational back-reaction of the test mass on
+the housing (it pulls the housing toward the test mass along~$\vb{s}$).
+Dividing by~$m_H$, this contributes an acceleration $Gm/s^2$; for
+$m \sim 1$~kg and $s \sim 1$~cm this is ${\sim}\,7 \times 10^{-7}$~m/s$^2$
+--- a static correction to the spring equilibrium, independent of any
+external body, that is absorbed into the sensor calibration. We retain
+it in Eq.~\eqref{eq:app-rel} to confirm it does not affect the
+cancellation, and drop it thereafter.
+
+The constraint force~$\vb{N}$ is whatever is required to enforce
+$\vb{d} = \text{const}$ in the rotating frame --- it is the
+mechanical reaction of the ground on the sensor mount. Note that
+$\vb{N}$ encodes the full weight of the housing in Earth's gravity
+field, including the tidal gradient across $r_\oplus$. This will
+become important in Sec.~\ref{app:why-main}.
+
+\subsection{Subtraction: equation for the spring extension}
+
+The sensor measures the spring extension~$\vb{s}$, not the absolute
+position of either endpoint. To obtain the equation governing~$\vb{s}$,
+we subtract the housing equation~\eqref{eq:app-housing} (divided
+by~$m_H$) from the test-mass equation~\eqref{eq:app-test} (divided
+by~$m$). Using $\ddot{\vb{s}} = \ddot{\vb{x}} - \ddot{\vb{R}}_H$ and
+writing $\vb{R} = \vb{R}_B - \vb{R}_E$:
+\begin{align}
+m\,\ddot{\vb{s}}
+  &= -\frac{G M_E\, m}{\lvert\vb{d} + \vb{s}\rvert^3}
+      (\vb{d} + \vb{s})
+    + \frac{G M_E\, m}{d^3}\,\vb{d}
+  \notag \\
+  &\quad + G M\, m \left[
+    \frac{\vb{R} - \vb{d} - \vb{s}}
+         {\lvert\vb{R} - \vb{d} - \vb{s}\rvert^3}
+    - \frac{\vb{R} - \vb{d}}
+         {\lvert\vb{R} - \vb{d}\rvert^3}
+  \right]
+  \notag \\
+  &\quad - \frac{G\, m^2}{\lvert\vb{s}\rvert^3}\,\vb{s}
+  \;+\; \left(1 + \frac{m}{m_H}\right)\vb{F}_{\text{spring}}
+    + \frac{m}{m_H}\,\vb{N}
+\label{eq:app-rel}
+\end{align}
+
+The $Gm^2/s^3$ term is the self-gravity between the test mass and the
+housing. It is directed along the spring, static, and independent of
+the external body~--- it involves only $m$ and $\vb{s}$, not $M$
+or~$\vb{R}$. It therefore cannot affect the cancellation of the
+direct pull. Its magnitude ($Gm/s^2 \sim 10^{-7}$~m/s$^2$ for
+$m \sim 1$~kg, $s \sim 1$~cm) is absorbed into the spring equilibrium
+and the sensor calibration. We drop it hereafter.
+
+\subsection{The cancellation}
+
+The key question is whether the external body's direct gravitational pull
+$GM/R'^2$ survives in the equation for $\vb{s}$. Examine the
+external-body term in Eq.~\eqref{eq:app-rel}. It has the same
+structure as Eq.~\eqref{eq:relative} of the main text:
+\begin{equation}
+\vb{g}(\vb{s})
+  = \frac{\vb{R}' - \vb{s}}{\lvert\vb{R}' - \vb{s}\rvert^3}
+  - \frac{\vb{R}'}{R'^3}
+\label{eq:app-tidal}
+\end{equation}
+where $\vb{R}' \equiv \vb{R} - \vb{d}$ is the external body's position relative
+to the \emph{housing} (not Earth's center). Evaluating at
+$\vb{s} = \vb{0}$ (i.e.\ when the test mass sits exactly at the
+housing):
+\begin{equation}
+\vb{g}(\vb{0}) = \vb{0}
+  \qquad\text{(exactly)}
+\end{equation}
+
+This is the same cancellation as in Sec.~\ref{sec:proof}, but now
+its physical meaning is sharper: the direct pull $GM/R'^2$ on the
+test mass cancels against the direct pull on the housing --- not
+against Earth's center, but against the other end of the spring.
+Both spring endpoints are pulled toward the external body by the same
+acceleration (to leading order in $s/R'$), so the spring itself
+cannot detect it. The cancellation is local: it occurs at the
+sensor, between its two endpoints.
+
+\subsection{What survives: tidal across the spring}
+
+With the direct pull gone, what remains? Expanding
+Eq.~\eqref{eq:app-tidal} to leading order in $s/R'$ (with
+$R' \approx R$ since $d \ll R$):
+\begin{equation}
+\vb{a}_{\text{tidal}}^{(\text{spring})}
+  = \frac{GM}{R'^3}\Big[
+    3\,(\hat{\vb{R}}'\cdot\vb{s})\,\hat{\vb{R}}' - \vb{s}
+  \Big]
+  + O\!\left(\frac{s^2}{R'^4}\right)
+\label{eq:app-tidal-spring}
+\end{equation}
+
+This is the tidal acceleration across the \emph{spring baseline}
+$\vb{s}$, not across $r_\oplus$. The tidal field is a gradient:
+it stretches space differentially, and the effect scales linearly
+with the baseline length. For a spring of length
+$\ell \sim 1$~cm, the ratio to the Earth-radius tidal signal is:
+\begin{equation}
+\frac{a_{\text{tidal}}^{(\text{spring})}}{a_{\text{tidal}}^{(r_\oplus)}}
+  \;\sim\; \frac{\ell}{r_\oplus}
+  \;\sim\; \frac{10^{-2}}{6.4 \times 10^6}
+  \;\sim\; 1.6 \times 10^{-9}
+\end{equation}
+
+The tidal acceleration across the spring is therefore
+${\sim}\,5 \times 10^{-7} \times 1.6 \times 10^{-9}
+\approx 10^{-15}$~m/s$^2$ --- unmeasurably small by any current
+technology. This is the \emph{only} external-body signal intrinsic to the
+spring in the three-point formulation. If a gravimeter observes
+tidal signals at $10^{-7}$~m/s$^2$, the signal must originate
+elsewhere. As the next subsection shows, it is transmitted
+through the constraint force~$\vb{N}$.
+
+\subsection{Why the main text uses Earth's center}
+\label{app:why-main}
+
+The reason gravimeters observe tidal signals at
+$10^{-7}$~m/s$^2$ and not at $10^{-15}$~m/s$^2$ is that
+the \emph{constraint force}~$\vb{N}$ in
+Eq.~\eqref{eq:app-rel} transmits Earth's gravity gradient
+across the full radius~$r_\oplus$ to the housing. The spring
+then measures the difference between Earth's gravity at
+$\vb{d} + \vb{s}$ and at $\vb{d}$, which includes the
+$r_\oplus$-scale tidal contribution already encoded in~$\vb{N}$.
+
+Absorbing $\vb{N}$ and the Earth gravity terms into the
+effective gravity $g_0$ at the housing reproduces
+Eq.~\eqref{eq:spring} of the main text. The three-point
+formulation thus reduces to the two-point formulation: no
+information is lost and no new signal appears. The direct
+pull $GM/R^2$ cancels in both formulations, for
+the same reason --- the housing and the test mass share
+the same free-fall acceleration.
+
+The rotating-frame corrections of Sec.~\ref{sec:lab} carry over
+unchanged. Transforming to the co-rotating frame introduces
+centrifugal and Coriolis terms for both the test mass and the
+housing. In the equation for $\vb{s}$, these fictitious forces
+appear as the \emph{difference} between their values at
+$\vb{R}_H + \vb{s}$ and at $\vb{R}_H$. Since both vary smoothly
+on the scale of $r_\oplus$, their difference across the spring
+baseline $\lvert\vb{s}\rvert \sim \ell$ is suppressed by the same
+factor $\ell/r_\oplus \sim 10^{-9}$ as the tidal terms --- negligible.
+The Coriolis force $-2m\,\boldsymbol{\omega}\times\dot{\vb{s}}$
+vanishes identically for a static test mass ($\dot{\vb{s}} = \vb{0}$),
+just as in the main text. The full centrifugal correction at the
+housing location is, once again, absorbed into~$\vb{N}$ and hence
+into~$g_0$. No new rotational effect emerges in the three-point
+formulation.
+
+\subsection{Uniaxial sensor constraint}
+
+A real spring-based sensor constrains the test mass to move along a
+single axis~$\hat{\vb{n}}$, the measurement direction. A guide rail
+(or equivalent mechanism), rigidly attached to the housing, provides a
+constraint force~$\vb{F}_\perp$ perpendicular to~$\hat{\vb{n}}$ that
+prevents lateral displacement. The spring extension is then
+$\vb{s} = s\,\hat{\vb{n}}$, and only the component
+$s = \vb{s}\cdot\hat{\vb{n}}$ is transduced into a reading.
+
+This constraint adds a term to the test-mass equation of
+motion~\eqref{eq:app-test}:
+\begin{equation}
+m\,\ddot{\vb{x}}
+  = [\text{gravitational terms}]
+  + \vb{F}_{\text{spring}}
+  + \vb{F}_\perp,
+\label{eq:app-constraint}
+\end{equation}
+where, by construction,
+$\vb{F}_\perp \cdot \hat{\vb{n}} = 0$.
+Projecting the equation for $\vb{s}$ onto the measurement axis
+therefore eliminates~$\vb{F}_\perp$ entirely. The scalar equation
+governing the sensor reading is
+\begin{equation}
+m\,\ddot{s}
+  = \hat{\vb{n}}\cdot[\text{all gravitational terms}]
+  + F_{\text{spring}},
+\label{eq:app-projected}
+\end{equation}
+which is identical to projecting the unconstrained three-dimensional
+equation onto~$\hat{\vb{n}}$. The constraint force has dropped out.
+
+The cancellation of the direct pull is unaffected because it is a
+vectorial identity: $\vb{g}(\vb{0}) = \vb{0}$
+(Eq.~\ref{eq:app-tidal} at $\vb{s} = \vb{0}$). The projection of
+the zero vector onto any axis vanishes ---
+$\hat{\vb{n}} \cdot \vb{0} = 0$ --- regardless of the sensor
+orientation.
+
+One might worry that the guide rail introduces a new channel for
+external-body forces. It does not: the guide rail is rigidly attached
+to the housing, which shares the Earth's free-fall acceleration toward
+the external body. The constraint force~$\vb{F}_\perp$ therefore
+undergoes the same cancellation as all other housing-attached
+components. It contains no direct-pull contribution from external
+bodies, only tidal corrections perpendicular to~$\hat{\vb{n}}$, which
+do not enter the measurement.
+
+In summary, the one-dimensional constraint introduces no new terms in
+the sensor reading. The spring measures the
+$\hat{\vb{n}}$-component of the force balance, and the cancellation
+of the direct pull --- being a vectorial identity --- holds for every
+projection.
+
+
+\section{Coordinate systems and the centrifugal projection}
+\label{app:coordinates}
+
+Section~\ref{sec:orientation} states that the centrifugal
+contribution to the sensor reading has no azimuthal dependence:
+it enters purely as a correction to~$g_0\cos\theta$, with no
+$\sin\theta\sin\varphi$ or $\sin\theta\cos\varphi$ term. This
+is not obvious \emph{a priori}~--- the centrifugal acceleration
+has a horizontal component that could, in principle, project
+differently for different azimuths. The resolution lies in the
+choice of coordinate system: the ENU frame used in the main text
+is \emph{geodetic}, not geocentric, and the geodetic vertical
+absorbs the horizontal centrifugal component by definition. This
+appendix makes the argument explicit.
+
+\subsection{The inertial (geocentric) frame}
+
+We begin in a non-rotating frame centered on the Earth, using
+spherical coordinates aligned with the rotation axis. At a point~P
+on the surface at geocentric colatitude~$\Theta$ (i.e.\
+geocentric latitude $\lambda' = 90° - \Theta$), define a
+local geocentric triad:
+\begin{align}
+\hat{\vb{U}}' &= \hat{\vb{r}} &&\text{(radially outward from
+  Earth's center)} \notag \\
+\hat{\vb{N}}' &= -\hat{\boldsymbol{\Theta}}
+  &&\text{(northward along the meridian)} \notag \\
+\hat{\vb{E}}' &= \hat{\boldsymbol{\varphi}}_{\!\text{long}}
+  &&\text{(eastward)}
+\label{eq:geocentric-triad}
+\end{align}
+In this frame, the gravitational acceleration of a spherically
+symmetric Earth is purely radial:
+\begin{equation}
+\vb{g}_{\text{grav}} = -g_{\text{grav}}\;\hat{\vb{U}}'
+\label{eq:ggrav}
+\end{equation}
+with $g_{\text{grav}} = GM_E/r_\oplus^2 \approx 9.82$~m/s$^2$.
+There is no horizontal gravitational component: $\vb{g}_{\text{grav}}$
+has no $\hat{\vb{N}}'$ or $\hat{\vb{E}}'$ projection.
+
+The centrifugal acceleration at~P points radially outward from
+the rotation axis (not from Earth's center). The rotation axis
+lies in the local meridional plane, so the centrifugal vector
+has no eastward component but decomposes into radial and
+meridional parts:
+\begin{equation}
+\vb{a}_{\text{cf}}
+  = \omega^2 r_\oplus\cos^2\!\lambda'\;\hat{\vb{U}}'
+  \;-\; \omega^2 r_\oplus\cos\lambda'\sin\lambda'\;\hat{\vb{N}}'
+\label{eq:acf-geocentric}
+\end{equation}
+The first term ($\hat{\vb{U}}'$) reduces the apparent weight;
+the second ($\hat{\vb{N}}'$) pushes equatorward. At
+$\lambda' = 48.4°$ (Ulm), the horizontal component has magnitude
+$\omega^2 r_\oplus\cos\lambda'\sin\lambda' \approx 0.017$~m/s$^2$
+--- small compared to $g_{\text{grav}}$ but three times larger
+than the Sun's direct pull $a_\odot \approx 5.93 \times 10^{-3}$~m/s$^2$.
+
+\textbf{Effective gravity in the geocentric frame.}
+Combining Eqs.~\eqref{eq:ggrav} and~\eqref{eq:acf-geocentric}:
+\begin{equation}
+\vb{g}_{\text{eff}}
+  = -(g_{\text{grav}}
+      - \omega^2 r_\oplus\cos^2\!\lambda')\;\hat{\vb{U}}'
+  \;-\; \omega^2 r_\oplus\cos\lambda'\sin\lambda'\;\hat{\vb{N}}'
+\label{eq:geff-geocentric}
+\end{equation}
+
+This vector does \emph{not} point along $\hat{\vb{U}}'$: it is
+tilted toward the equator. If we were to project
+$\vb{g}_{\text{eff}}$ onto a sensor axis parameterised in the
+geocentric triad,
+$\hat{\vb{n}}'(\theta,\varphi)
+= \sin\theta\cos\varphi\;\hat{\vb{E}}'
++ \sin\theta\sin\varphi\;\hat{\vb{N}}'
++ \cos\theta\;\hat{\vb{U}}'$,
+we would find:
+\begin{equation}
+\vb{g}_{\text{eff}}\cdot\hat{\vb{n}}'
+  = -(g_{\text{grav}}
+      - \omega^2 r_\oplus\cos^2\!\lambda')\,\cos\theta
+  \;-\; \omega^2 r_\oplus\cos\lambda'\sin\lambda'
+        \,\sin\theta\sin\varphi
+\label{eq:sweep-geocentric}
+\end{equation}
+
+The $\sin\theta\sin\varphi$ term is the azimuthal centrifugal
+projection. It is largest when the sensor points North
+($\varphi = 90°$, $\theta = 90°$) and vanishes when pointing
+East ($\varphi = 0°$) or vertically ($\theta = 0$). Its amplitude
+($\approx 0.017$~m/s$^2$) would be clearly visible in any
+orientation sweep if the geocentric frame were used.
+
+\subsection{The rotating (geodetic) frame}
+
+A laboratory on Earth's surface does not use geocentric
+coordinates. The plumb line defines the local vertical, and
+instruments are levelled relative to it. The plumb line hangs
+along the direction of $\vb{g}_{\text{eff}}$, not along
+$\hat{\vb{r}}$. This motivates the geodetic triad:
+\begin{align}
+\hat{\vb{U}} &= -\frac{\vb{g}_{\text{eff}}}
+  {\lvert\vb{g}_{\text{eff}}\rvert}
+  &&\text{(along the plumb line, upward)} \notag \\
+\hat{\vb{N}} &\perp \hat{\vb{U}},\;\text{in the meridional plane}
+  &&\text{(geodetic northward)} \notag \\
+\hat{\vb{E}} &= \hat{\vb{E}}'
+  &&\text{(eastward, unchanged)}
+\label{eq:geodetic-triad}
+\end{align}
+
+By construction, $\vb{g}_{\text{eff}}$ is purely along
+$-\hat{\vb{U}}$:
+\begin{equation}
+\vb{g}_{\text{eff}} = -g_0\;\hat{\vb{U}}
+\label{eq:geff-geodetic}
+\end{equation}
+where $g_0 = \lvert\vb{g}_{\text{eff}}\rvert$. The horizontal
+centrifugal component has been absorbed into the \emph{direction}
+of $\hat{\vb{U}}$ (tilted by the angle~$\alpha$ from the
+geocentric radial) and into the \emph{magnitude}~$g_0$.
+
+The tilt angle between the geodetic and geocentric verticals is:
+\begin{equation}
+\alpha \approx
+  \frac{\omega^2 r_\oplus\cos\lambda'\sin\lambda'}{g_{\text{grav}}}
+  \approx 0.10°
+  \quad\text{at } \lambda' = 45°
+\label{eq:vertical-deflection}
+\end{equation}
+
+This is the well-known \emph{deflection of the vertical} due to
+Earth's rotation.
+
+\textbf{Sensor projection in the geodetic frame.}
+Parameterising the sensor axis in the geodetic triad,
+$\hat{\vb{n}}(\theta,\varphi)
+= \sin\theta\cos\varphi\;\hat{\vb{E}}
++ \sin\theta\sin\varphi\;\hat{\vb{N}}
++ \cos\theta\;\hat{\vb{U}}$,
+the projection is simply:
+\begin{equation}
+\vb{g}_{\text{eff}}\cdot\hat{\vb{n}}
+  = -g_0\,\cos\theta
+\label{eq:sweep-geodetic}
+\end{equation}
+
+No azimuthal dependence survives. The centrifugal contribution is
+entirely contained in~$g_0$ and appears only through $\cos\theta$.
+
+\subsection{Reconciling the two frames}
+
+Equations~\eqref{eq:sweep-geocentric} and~\eqref{eq:sweep-geodetic}
+describe the same physics in different coordinates. They are
+related by a rotation of the local triad by the angle~$\alpha$
+about the East axis:
+\begin{equation}
+\begin{pmatrix} \hat{\vb{U}} \\ \hat{\vb{N}} \end{pmatrix}
+= \begin{pmatrix}
+  \cos\alpha & \sin\alpha \\
+  -\sin\alpha & \cos\alpha
+\end{pmatrix}
+\begin{pmatrix} \hat{\vb{U}}' \\ \hat{\vb{N}}' \end{pmatrix}
+\end{equation}
+
+The angles $\theta$ and $\varphi$ defined relative to the geodetic
+triad differ from those defined relative to the geocentric triad
+by corrections of order~$\alpha \sim 10^{-3}$~rad ($\sim 0.1°$).
+In the geodetic frame, the horizontal centrifugal component
+vanishes identically, not approximately: it is absorbed exactly
+into the definition of the vertical. In the geocentric frame, the
+same information appears as an explicit $\sin\theta\sin\varphi$
+term. The physics is identical; only the bookkeeping differs.
+
+\subsection{Why the geodetic frame is natural}
+
+Every laboratory-based sensor defines its orientation relative to
+the plumb line. A tiltmeter measures deviation from the geodetic
+vertical; a gravimeter is levelled to the plumb line; an
+accelerometer's ``zero'' is set by the local~$g_0$. The geodetic
+ENU frame is therefore the natural coordinate system for the
+orientation sweep of Sec.~\ref{sec:orientation}.
+
+In this frame, the centrifugal acceleration produces no azimuthal
+signature. It is absorbed completely into the magnitude~$g_0$ that
+multiplies $\cos\theta$. The only azimuth-dependent terms in the
+sensor reading, Eq.~\eqref{eq:sweep}, are the tidal
+components~$a_E'$ and~$a_N'$, at the $10^{-7}$~m/s$^2$ level.
+The centrifugal horizontal component ($\approx 0.017$~m/s$^2$)
+is real, but it is not a separate signal: it defines the direction
+the sensor calls ``up.''
+
+
+\section{Implications for atomic transitions and mass defect}
+\label{app:mass-defect}
+
+The cancellation theorem of Sec.~\ref{sec:proof} was derived for a
+classical spring sensor. Here we show that the same cancellation
+extends to quantum systems --- in particular to atomic transitions,
+where the mass--energy equivalence $E = mc^2$ ties internal energy
+directly to gravitational coupling.
+
+\subsection{Mass defect, recoil, and gravitational coupling}
+
+An atomic transition changes both the internal state and the
+external momentum of the atom. Consider an atom initially at rest
+in the lab frame that absorbs a photon of wave vector~$\vb{k}$.
+After the transition:
+
+\textbf{Internal state.}
+The atom's rest mass increases by the mass defect
+\begin{equation}
+\Delta m = \frac{E_e - E_g}{c^2}
+         = \frac{h\nu_0}{c^2}
+\label{eq:mass-defect}
+\end{equation}
+where $\nu_0$ is the transition frequency.
+
+\textbf{External state.}
+The atom acquires a recoil momentum $\Delta\vb{p} = \hbar\vb{k}$,
+producing a recoil velocity
+\begin{equation}
+\vb{v}_r = \frac{\hbar\vb{k}}{m_e}
+\label{eq:recoil}
+\end{equation}
+where $m_e = m_g + h\nu_0/c^2$ is the excited-state mass.
+The recoil velocity is state-dependent through~$m_e$: compared
+to the ground-state value $\hbar k/m_g$, it differs by the
+fractional amount $h\nu_0/(m_g c^2) \sim 10^{-10}$ for typical
+optical transitions.
+
+Both changes couple to gravity. By the equivalence principle, the
+gravitational force on an atom in state~$n$ with total mass--energy
+$m_n = m_0 + E_n/c^2$ is
+\begin{equation}
+\vb{F}_{\text{grav}}^{(n)}
+  = -m_n\,\nabla\Phi
+  = -\left(m_0 + \frac{E_n}{c^2}\right)\nabla\Phi
+\label{eq:grav-internal}
+\end{equation}
+where $\Phi$ is the gravitational potential. The internal energy
+$E_n$ enters the equation of motion on exactly the same
+footing as the rest mass~$m_0$. Meanwhile, after the recoil, the
+atom follows a trajectory governed by the same gravitational
+acceleration~$-\nabla\Phi$ regardless of its internal state ---
+only the initial velocity~$\vb{v}_r$ differs. Both the mass defect
+(what the atom weighs) and the recoil (where the atom goes) are
+subject to the same gravitational field.
+
+\subsection{Cancellation for internal and external degrees of freedom}
+
+Consider an atom at position~$\vb{x}$ in the field of the Earth
+and a distant external body of mass~$M$ at position~$\vb{R}_B$. By Eq.~\eqref{eq:grav-internal}, the gravitational
+acceleration is
+\begin{equation}
+\vb{a}_{\text{grav}}
+  = -\nabla\Phi
+  = -\frac{GM_E}{r^2}\,\hat{\vb{r}}
+    - \frac{GM}{\lvert\vb{x} - \vb{R}_B\rvert^3}\,
+      (\vb{x} - \vb{R}_B)
+    + \cdots
+\end{equation}
+Crucially, this acceleration is \emph{independent of} $m_n$: the
+factor $m_n$ in the gravitational force~\eqref{eq:grav-internal}
+cancels against the $m_n$ in Newton's second law, $\vb{F} = m_n\,\vb{a}$.
+This is the equivalence principle at work. An excited atom and a
+ground-state atom fall with the same acceleration --- their
+different masses do not produce different trajectories.
+
+The cancellation theorem of Sec.~\ref{sec:proof} therefore applies
+to both degrees of freedom changed by a transition:
+
+\textbf{Mass defect (internal).}
+The direct pull $GM/R^2$ of the external body vanishes from the relative
+acceleration between the atom and its environment (trap, lattice,
+or mirror), regardless of the internal state. The mass defect
+$\Delta m$ couples to the same gravitational field as the rest
+mass, and that field undergoes the same cancellation.
+
+\textbf{Recoil trajectory (external).}
+After absorbing a photon, the atom follows a parabolic arc
+$\vb{x}(t) = \vb{x}_0 + \vb{v}_r\, t + \tfrac{1}{2}\vb{g}\, t^2$
+in the gravitational field. The acceleration~$\vb{g}$ governing
+this arc is $g_0\,\hat{z} + \vb{a}_{\text{tidal}}$ --- it does not
+include the direct pull $GM/R^2$, because the laboratory
+(and hence the laser source that defined~$\vb{v}_r$) shares the
+same free-fall acceleration. The recoil sets the initial
+velocity; gravity steers the subsequent trajectory; and the
+cancellation theorem ensures that both are referenced to~$g_0$
+and tidal corrections only.
+
+\subsection{Gravitational redshift as the surviving effect}
+
+Although the direct pull cancels, the gravitational \emph{potential}
+does affect the transition frequency. An atom at height~$h$ above
+a reference point experiences a gravitational redshift:
+\begin{equation}
+\frac{\Delta\nu}{\nu_0}
+  = \frac{\Phi(h) - \Phi(0)}{c^2}
+  = \frac{g_0\, h}{c^2}
+\label{eq:redshift}
+\end{equation}
+This is the standard result confirmed by Pound and Rebka (1960) and
+measured to parts in $10^{18}$ by modern optical lattice clocks.
+The gravitational acceleration entering Eq.~\eqref{eq:redshift}
+is~$g_0$ --- the effective gravity including the centrifugal
+correction, but \emph{not} the direct pull of the external body. The external body's
+potential $\Phi_{\text{ext}} = -GM/R$ can be enormous
+(e.g.\ $\Phi_{\text{ext}}/c^2 \approx -10^{-8}$ for the Sun), but it is spatially uniform
+across any terrestrial laboratory and therefore contributes no
+measurable frequency difference between two clocks at different
+heights.
+
+The only contribution of the external body to the redshift is tidal. At a
+fixed location on Earth's surface, the tidal potential of the external body
+oscillates semi-diurnally with amplitude
+\begin{equation}
+\frac{\delta\Phi_{\text{tidal}}}{c^2}
+  \sim \frac{GM\, r_\oplus^2}{R^3\, c^2}
+  \sim 2 \times 10^{-17}
+\label{eq:tidal-redshift}
+\end{equation}
+as the Earth rotates through the tidal bulge. This is within
+reach of the best optical lattice clocks
+(${\sim}\,10^{-18}$ fractional uncertainty) and must be corrected
+for in high-precision clock comparisons. A further contribution
+of similar magnitude arises from the solid Earth tide, which
+physically displaces the clock by ${\sim}\,30$~cm vertically,
+shifting its position in Earth's own potential by
+$g_0 \times 0.3\;\text{m}/c^2 \sim 3 \times 10^{-17}$.
+Both effects are routinely modeled as systematic corrections in
+precision metrology.
+
+For a lab-scale height difference~$h$, the tidal redshift is
+far smaller: $GM\, r_\oplus\, h / (R^3\, c^2)
+\sim 3 \times 10^{-24}(h/1\;\text{m})$ --- well beyond current
+sensitivity.
+
+In all cases, the tidal redshift is the spectroscopic counterpart
+of the tidal acceleration in Eq.~\eqref{eq:tidal}; the direct
+pull $GM/R^2$ has no counterpart, for the same reason as in the
+classical case.
+
+\subsection{Implications for precision measurements}
+
+The cancellation has concrete consequences for precision
+experiments that use atoms as test masses. In each case, the
+sensor realises the three-point geometry of
+Appendix~\ref{app:three-point}, so the direct pull
+$GM/R^2$ of the external body drops out of the observable; only $g_0$ and tidal
+terms survive.
+
+\textbf{Optical lattice clocks.}
+No state-dependent force from the external body perturbs the transition frequency.
+The lattice clock maps directly onto the three-point formulation:
+housing $=$ lattice mirrors, spring $=$ trapping potential, test
+mass $=$ atom. The oscillation amplitude
+$\Delta x \sim 10$--$100$~nm suppresses tidal effects by
+$\Delta x / r_\oplus \sim 10^{-14}$ relative to the
+$r_\oplus$-scale signal, and the mass defect
+$\Delta m = h\nu/c^2$ couples only to this already-negligible
+residual.
+
+\textbf{Atom interferometers.}
+The measured acceleration $g$ in
+$\Delta\phi = k_{\text{eff}}\, g\, T^2$ does not contain
+$GM/R^2$. The atom is in free fall while the retroreflection
+mirror is fixed to the ground --- a three-point geometry with no
+spring. Each beam-splitter pulse imparts recoil
+$\hbar\vb{k}_{\text{eff}}$ and changes the internal state,
+creating two trajectories that share the same acceleration
+$g_0 + a_{\text{tidal}}$. The mass defect enters through the
+state-dependent recoil, Eq.~\eqref{eq:recoil}: the two arms
+carry momenta $\hbar k_{\text{eff}} / m_g$ vs.\
+$\hbar k_{\text{eff}} / m_e$, producing a differential phase of
+order $h\nu / (m\, c^2) \sim 10^{-10}$ per fringe that couples
+to $g_0$ alone and has been used to test $E = mc^2$ at the
+atomic scale.
+
+\textbf{Tests of the equivalence principle.}
+An equivalence-principle violation at level~$\eta$ would couple
+internal energy to gravity differently from rest mass, producing a
+state-dependent frequency shift modulated at the orbital period.
+For the Sun, Earth's orbital eccentricity ($e \approx 0.017$) varies the
+external-body potential by
+$\delta\Phi_{\text{ext}}/c^2 \sim e\, GM/(R\,c^2) \approx 1.7 \times 10^{-10}$,
+so a violation would appear as a fractional frequency modulation
+$\sim \eta \cdot 1.7 \times 10^{-10}$. Multi-year comparisons of
+different atomic species (Rb/Cs microwave fountains, Sr and Yb
+optical lattice clocks) have searched for this annual modulation
+and currently constrain $\eta \lesssim 10^{-6}$--$10^{-7}$,
+confirming that the mass defect gravitates universally at this
+level. Next-generation optical clocks at $10^{-19}$ stability
+could push toward $\eta \sim 10^{-9}$.
+
+\subsection{Summary}
+
+The cancellation of the direct gravitational pull is not limited
+to classical springs. It extends to any local measurement of
+gravitational coupling, including atomic transitions. Both
+consequences of a transition --- the mass defect
+$\Delta m = h\nu/c^2$ (internal) and the recoil
+$\Delta\vb{p} = \hbar\vb{k}$ (external) --- couple to gravity
+through the same field that undergoes cancellation.
+Both internal states fall identically in the external body's field, recoiling
+atoms follow arcs governed by $g_0$ alone, and no local
+experiment --- spring, clock, or interferometer --- can
+detect the direct pull $GM/R^2$. What survives, as in the
+classical case, is the tidal field and the gravitational redshift
+due to the local potential gradient~$g_0$. The equivalence
+principle ensures that these are the only gravitational effects
+accessible to a terrestrial laboratory.
+
+
+\section{Frame hierarchy: what can be transformed away}
+\label{app:frames}
+
+The cancellation of the direct pull of external bodies (Theorem~\ref{thm:cancel})
+removes $GM/R^2$ from the sensor reading. But it is natural to
+ask: is this the end of the story, or can further gravitational
+contributions be eliminated by an appropriate choice of reference
+frame? The answer reveals a hierarchy of physical content.
+
+\subsection{Three levels of elimination}
+
+Consider a test mass at position~$\vb{r}$ relative to Earth's
+center, subject to the local effective gravity~$g_0$ and the
+tidal field~$\vb{a}_{\text{tidal}}$. Different frame choices
+strip away different layers of the gravitational environment:
+
+\textbf{Level 1: Geocentric frame.}
+Transforming from the inertial frame to one co-moving with
+Earth's center eliminates the direct pull $GM/R^2$ of any external body.
+This is the cancellation of Sec.~\ref{sec:proof}. What
+remains: $g_0$ (Earth's gravity plus centrifugal) and the tidal
+field from all external bodies.
+
+\textbf{Level 2: Freely falling frame at the test mass.}
+Transforming to a frame in free fall at the test mass location
+further eliminates~$g_0$ itself. In this frame, the
+``gravitational force'' $m g_0$ disappears --- it was a
+fictitious force arising from the non-inertial character of
+the laboratory. What remains: only the tidal field, i.e.\ the
+gradient of gravity across the finite extent of the apparatus.
+
+\textbf{Level 3: No further elimination.}
+The tidal field cannot be removed by any local frame choice.
+It is encoded in the Riemann curvature tensor $R^\mu{}_{\nu\rho\sigma}$,
+which is a tensor: if it is nonzero in one frame, it is nonzero
+in all frames. Tidal effects are the irreducible gravitational
+observable.
+
+This hierarchy is the equivalence principle expressed operationally.
+Each level eliminates a uniform contribution by recognizing it as
+indistinguishable from an acceleration. Only the non-uniform
+part --- curvature --- is frame-independent and therefore physical.
+
+\subsection{Spring-based sensors}
+
+A spring sensor holds the test mass at rest in the laboratory.
+The test mass is \emph{not} freely falling: the spring force
+provides a proper acceleration~$g_0$ that keeps it off its natural
+geodesic. The sensor reading is precisely this proper acceleration.
+
+In the freely falling frame (Level~2), the physics is transparent:
+the laboratory accelerates upward at~$g_0$ and drags the spring
+mount with it. The test mass, if released, would remain at rest
+(on a geodesic). The spring force is what prevents this. It
+measures the non-gravitational acceleration of the housing, not a
+``gravitational pull'' on the mass. The only gravitational
+information accessible to the spring is the tidal correction ---
+the difference in free-fall acceleration between the housing and
+the test mass location.
+
+\subsection{Optical lattice clocks}
+
+An atom trapped in a lattice potential is the quantum analog of
+the spring sensor. The atom is held off its geodesic by the
+trapping potential, which provides a proper acceleration~$g_0$.
+In the freely falling frame at the atom, $g_0$ vanishes and the
+lattice potential simply confines the atom in a non-gravitational
+well.
+
+The transition frequency is affected by gravity through the
+redshift $\Delta\nu/\nu = g_0\, h/c^2$, where $h$ is the
+height within the lattice. In the freely falling frame, this
+redshift is reinterpreted as a Doppler shift: the lattice
+(co-accelerating with the lab) moves relative to the local
+inertial frame, producing the same frequency difference. The
+physics is identical; only the description changes. The tidal
+contribution to the redshift
+($\sim GM\, r_\oplus^2 / R^3 c^2 \sim 10^{-17}$) survives
+in all frames.
+
+\subsection{Atom interferometers}
+
+Atom interferometers occupy a unique position in this hierarchy:
+the atom \emph{is} in free fall between laser pulses. It follows
+a geodesic. In its rest frame (Level~2), the atom feels no
+gravitational force at all --- neither $GM/R^2$ (eliminated at
+Level~1) nor $g_0$ (eliminated at Level~2).
+
+The interferometer phase $\Delta\phi = k_{\text{eff}}\, g\, T^2$
+does not arise from a force on the atom. It arises because the
+\emph{mirror} is not in free fall: the mirror accelerates at
+$g_0$ upward (held by the Earth's crust), and each successive
+laser pulse is emitted from a different position in the atom's
+freely falling frame. The accumulated phase shift encodes the
+relative acceleration between the freely falling atom and the
+non-inertial mirror. In this picture, $g$ is the proper
+acceleration of the mirror, not a force on the
+atom~\cite{asenbaum2024}.
+
+The tidal field enters as a correction: the atom's geodesic and
+the mirror's worldline are separated by a distance that grows
+during the interrogation time, and the tidal gradient across this
+baseline produces a small deviation from the ideal
+$k_{\text{eff}}\, g\, T^2$ scaling. For current atom
+interferometers with baselines of order meters, this tidal
+correction is of order $a_{\text{tidal}} \cdot T^2 \sim 10^{-7}
+\times T^2$~m --- detectable in principle with long interrogation
+times but far below the dominant $g_0\, T^2$ signal.
+
+\subsection{Summary: what is real}
+
+\begin{center}
+\begin{tabular}{lcc}
+\hline\hline
+Contribution & Eliminated by & Physical? \\
+\hline
+Direct pull $GM/R^2$
+  & Geocentric frame & No \\
+Local gravity $g_0$
+  & Freely falling frame & No$^*$ \\
+Tidal field $\vb{a}_{\text{tidal}}$
+  & Nothing (curvature) & Yes \\
+\hline\hline
+\end{tabular}
+\end{center}
+
+\noindent
+${}^*$The reading $g_0$ of a spring sensor or lattice clock is
+real as a measurement of proper acceleration (the sensor's
+deviation from geodesic motion), but it is not a measurement of
+a gravitational field. A freely falling observer at the same
+location would measure zero. Only the tidal field is
+unambiguously gravitational: it cannot be mimicked or removed by
+any choice of motion.
+
+This hierarchy underscores the central message: the direct
+pull of a distant body is not merely ``canceled'' by a fortunate subtraction. It is
+\emph{unphysical} in the same sense that $g_0$ is unphysical ---
+both are frame-dependent artifacts that can be transformed away.
+The only difference is that $g_0$ requires a freely falling frame
+to eliminate, while the direct pull is already absent in the
+geocentric frame. What remains in all frames and for all
+sensors --- spring, clock, or interferometer --- is the tidal
+field, the sole irreducible gravitational observable.
+
+\begin{thebibliography}{9}
+
+\bibitem{asenbaum2024}
+P.~Asenbaum, C.~Overstreet, and M.~A.~Kasevich,
+``Matter waves and clocks do not observe uniform gravitational fields,''
+Phys.\ Scr.\ \textbf{99}, 046103 (2024).
+
+\end{thebibliography}
+
+\end{document}
