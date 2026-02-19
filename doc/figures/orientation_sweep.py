@@ -156,7 +156,7 @@ c_cf = "#1c809e"       # blueberry — centrifugal
 
 # --- Figure: 2×2 grid with shared x-axes per column ---
 fig, axes = plt.subplots(2, 2, figsize=(6.5, 5.0),
-                         sharex="col")
+                         sharex="col", sharey="row")
 (ax_a, ax_b), (ax_c, ax_d) = axes
 
 # ============================================================
@@ -188,7 +188,8 @@ for ax, xdeg, x_sun, x_moon, x_tidal, x_cf, is_theta in [
     else:
         ax.set_xlim(0, 360)
         ax.set_xticks([0, 90, 180, 270, 360])
-    ax.set_ylabel(r"$g - g_\mathrm{grav}\cos\theta$  ($10^{-3}$ m/s$^2$)")
+    if is_theta:
+        ax.set_ylabel(r"$g - g_\mathrm{grav}\cos\theta$  ($10^{-3}$ m/s$^2$)")
 
 # Top-row y-limits (expanded to fit centrifugal ~ ±17)
 ymax_top = 20
@@ -214,13 +215,13 @@ ax_a.text(65, -15.0, "Centrifugal", fontsize=6.5,
           color=c_cf, ha="center")
 ax_a.text(95, -10.5, "Sun direct\n(canceled)", fontsize=6.5,
           color=c_sun, ha="center", style="italic")
-ax_a.text(35, 2.5, "Combined tidal", fontsize=6, color=c_comb,
+ax_a.text(35, -3.5, "Combined tidal", fontsize=6, color=c_comb,
           ha="center")
 # Lunar direct annotation with arrow (curve is tiny at this scale)
 moon_peak_a = claimed_moon_theta.min() * 1e3  # negative peak
 ax_a.annotate("Lunar direct (canceled)", xy=(90, moon_peak_a),
               xytext=(110, 15.0), fontsize=6, color=c_moon,
-              style="italic", ha="center",
+              style="italic", ha="center", zorder=10,
               arrowprops=dict(arrowstyle="->", color=c_moon,
                               linewidth=0.5))
 
@@ -230,12 +231,12 @@ ax_b.text(50, cf_val_b - 3.0, "Centrifugal", fontsize=6.5,
           color=c_cf, ha="center")
 ax_b.text(180, -7.5, "Sun direct\n(canceled)", fontsize=6.5,
           color=c_sun, ha="center", style="italic")
-ax_b.text(50, 2.5, "Combined tidal", fontsize=6, color=c_comb,
+ax_b.text(50, -3.5, "Combined tidal", fontsize=6, color=c_comb,
           ha="center")
 moon_peak_b = claimed_moon_phi.min() * 1e3
 ax_b.annotate("Lunar direct (canceled)", xy=(200, moon_peak_b),
               xytext=(220, 15.0), fontsize=6, color=c_moon,
-              style="italic", ha="center",
+              style="italic", ha="center", zorder=10,
               arrowprops=dict(arrowstyle="->", color=c_moon,
                               linewidth=0.5))
 
@@ -261,7 +262,8 @@ for ax, xdeg, x_sol, x_lun, x_comb, is_theta in [
         ax.set_xlabel(r"Zenith angle $\theta$ (deg)")
     else:
         ax.set_xlabel(r"Azimuth $\varphi$ (deg)")
-    ax.set_ylabel(r"$g - g_0\cos\theta$  ($10^{-7}$ m/s$^2$)")
+    if is_theta:
+        ax.set_ylabel(r"$g - g_0\cos\theta$  ($10^{-7}$ m/s$^2$)")
 
 # Bottom-row y-limits
 ymax_bot = 12
