@@ -15,6 +15,7 @@ Dependencies: numpy only.
 """
 
 import numpy as np
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 
 # =============================================================================
@@ -432,6 +433,348 @@ def tidal_acceleration(r, R, GM):
     """
     d = R - r
     return GM * (d / np.linalg.norm(d) ** 3 - R / np.linalg.norm(R) ** 3)
+
+
+# =============================================================================
+# Lab-Frame Helpers
+# =============================================================================
+
+def _omega_enu(lat_deg):
+    """Earth rotation vector in ENU coordinates.
+
+    Parameters
+    ----------
+    lat_deg : float
+        Geodetic latitude in degrees.
+
+    Returns
+    -------
+    numpy.ndarray
+        (3,) rotation vector [East, North, Up] in rad/s.
+    """
+    phi = np.radians(lat_deg)
+    return np.array([0.0, OMEGA * np.cos(phi), OMEGA * np.sin(phi)])
+
+
+def _ecef_to_enu_vector(v_ecef, enu):
+    """Rotate a vector from ECEF to ENU.
+
+    Parameters
+    ----------
+    v_ecef : numpy.ndarray
+        (3,) vector in ECEF.
+    enu : tuple of numpy.ndarray
+        (e_east, e_north, e_up) basis vectors from enu_basis().
+
+    Returns
+    -------
+    numpy.ndarray
+        (3,) vector in ENU.
+    """
+    R = np.array(enu)  # (3,3) rows = E, N, U in ECEF
+    return R @ v_ecef
+
+
+def _ecef_to_enu_tensor(T_ecef, enu):
+    """Rotate a rank-2 tensor from ECEF to ENU.
+
+    Parameters
+    ----------
+    T_ecef : numpy.ndarray
+        (3,3) tensor in ECEF.
+    enu : tuple of numpy.ndarray
+        (e_east, e_north, e_up) basis vectors from enu_basis().
+
+    Returns
+    -------
+    numpy.ndarray
+        (3,3) tensor in ENU.
+    """
+    R = np.array(enu)  # (3,3) rows = E, N, U in ECEF
+    return R @ T_ecef @ R.T
+
+
+def _tidal_gradient_tensor(r, R, GM):
+    """Tidal gravity gradient tensor in ECEF.
+
+    Computes  T_ij = GM * [-delta_ij/|d|^3 + 3 d_i d_j/|d|^5]
+    where d = R - r.  Symmetric and traceless (Laplace equation in vacuum).
+
+    Parameters
+    ----------
+    r : numpy.ndarray
+        Observer position in ECEF (meters).
+    R : numpy.ndarray
+        Celestial body position in ECEF (meters).
+    GM : float
+        Gravitational parameter of the body (m^3/s^2).
+
+    Returns
+    -------
+    numpy.ndarray
+        (3,3) tidal gradient tensor in ECEF (s^-2).
+    """
+    d = R - r
+    d_norm = np.linalg.norm(d)
+    d3 = d_norm ** 3
+    d5 = d_norm ** 5
+    return GM * (-np.eye(3) / d3 + 3.0 * np.outer(d, d) / d5)
+
+
+def _earth_gradient_tensor(lat_deg, alt_m):
+    """Earth gravity gradient tensor in ENU (diagonal approximation).
+
+    Uses the free-air gradient from Somigliana for T_UU and the Poisson
+    trace condition Tr(T) = -2*Omega^2 for the horizontal components.
+    Off-diagonal O(f) terms are deferred.
+
+    Parameters
+    ----------
+    lat_deg : float
+        Geodetic latitude in degrees.
+    alt_m : float
+        Altitude above the WGS84 ellipsoid in meters.
+
+    Returns
+    -------
+    numpy.ndarray
+        (3,3) gravity gradient tensor in ENU (s^-2).
+    """
+    phi = np.radians(lat_deg)
+    sin2 = np.sin(phi) ** 2
+
+    # Normal gravity on the ellipsoid
+    gamma_0 = GAMMA_E * (1.0 + K_SOM * sin2) / np.sqrt(1.0 - E2 * sin2)
+
+    # Vertical gradient: d(gamma)/dh from free-air correction
+    fac = 1.0 + F_WGS84 + M_RATIO - 2.0 * F_WGS84 * sin2
+    T_UU = gamma_0 * (-2.0 * fac / A_WGS84 + 6.0 * alt_m / A_WGS84 ** 2)
+
+    # Poisson trace condition: T_EE + T_NN + T_UU = -2*Omega^2
+    T_horiz = (-2.0 * OMEGA ** 2 - T_UU) / 2.0
+
+    T = np.diag([T_horiz, T_horiz, T_UU])
+    return T
+
+
+# =============================================================================
+# GravityField
+# =============================================================================
+
+@dataclass(frozen=True)
+class GravityField:
+    """Full gravity field at a lab-frame origin.
+
+    All vectors and tensors are in the local ENU (East-North-Up) frame.
+
+    Attributes
+    ----------
+    g : numpy.ndarray
+        (3,) gravity vector [m/s^2].  Convention: g points downward,
+        so g[2] < 0 for a surface lab.
+    omega : numpy.ndarray
+        (3,) Earth rotation vector [rad/s].
+    T : numpy.ndarray
+        (3,3) gravity gradient tensor [s^-2].
+    g_normal : float
+        Normal gravity magnitude [m/s^2] (always positive).
+    g_tidal_moon : numpy.ndarray
+        (3,) lunar tidal acceleration in ENU [m/s^2].
+    g_tidal_sun : numpy.ndarray
+        (3,) solar tidal acceleration in ENU [m/s^2].
+    """
+    g: np.ndarray
+    omega: np.ndarray
+    T: np.ndarray
+    g_normal: float
+    g_tidal_moon: np.ndarray
+    g_tidal_sun: np.ndarray
+
+    def at(self, offset):
+        """Gravity at a displacement from the lab origin.
+
+        Parameters
+        ----------
+        offset : array_like
+            (3,) displacement in ENU [meters].
+
+        Returns
+        -------
+        numpy.ndarray
+            (3,) gravity vector at the offset [m/s^2].
+        """
+        return self.g + self.T @ np.asarray(offset, dtype=float)
+
+    def reading(self, axis, offset=None):
+        """Projected gravity reading along a measurement axis.
+
+        Parameters
+        ----------
+        axis : array_like
+            (3,) unit vector in ENU defining the measurement direction.
+        offset : array_like, optional
+            (3,) displacement from the lab origin [meters].
+
+        Returns
+        -------
+        float
+            Gravity component along *axis* [m/s^2].
+        """
+        g_local = self.at(offset) if offset is not None else self.g
+        return float(np.dot(g_local, np.asarray(axis, dtype=float)))
+
+    def eom(self, dx, v):
+        """Equation of motion in the rotating lab frame.
+
+        Returns  g + T @ dx - 2 * (omega x v).
+
+        Centrifugal acceleration is already captured in g (Somigliana)
+        and T (Poisson trace condition), so only Coriolis appears explicitly.
+
+        Parameters
+        ----------
+        dx : array_like
+            (3,) displacement from lab origin [meters].
+        v : array_like
+            (3,) velocity in the lab frame [m/s].
+
+        Returns
+        -------
+        numpy.ndarray
+            (3,) acceleration [m/s^2].
+        """
+        dx = np.asarray(dx, dtype=float)
+        v = np.asarray(v, dtype=float)
+        return self.g + self.T @ dx - 2.0 * np.cross(self.omega, v)
+
+
+# =============================================================================
+# LabFrame
+# =============================================================================
+
+class LabFrame:
+    """Rotating laboratory frame on Earth's surface.
+
+    Precomputes static quantities (position, ENU basis, normal gravity,
+    rotation vector, Earth gradient tensor) at construction time.  The
+    ``field()`` method adds time-dependent tidal contributions and returns
+    a full :class:`GravityField`.
+
+    Parameters
+    ----------
+    lat_deg : float
+        Geodetic latitude in degrees.
+    lon_deg : float
+        Geodetic longitude in degrees (east positive).
+    alt_m : float, optional
+        Altitude above the WGS84 ellipsoid in meters (default 0).
+    """
+
+    def __init__(self, lat_deg, lon_deg, alt_m=0.0):
+        self.lat_deg = lat_deg
+        self.lon_deg = lon_deg
+        self.alt_m = alt_m
+
+        # Static quantities
+        self._r = geodetic_to_ecef(lat_deg, lon_deg, alt_m)
+        self._enu = enu_basis(lat_deg, lon_deg)
+        self._g_normal = normal_gravity(lat_deg, alt_m)
+        self._omega = _omega_enu(lat_deg)
+        self._T_earth = _earth_gradient_tensor(lat_deg, alt_m)
+
+    def field(self, dt, order=1):
+        """Compute the gravity field at a given time.
+
+        Parameters
+        ----------
+        dt : datetime
+            UTC date and time.
+        order : int, optional
+            Expansion order: 0 = gravity vector only (T is Earth-only),
+            1 = include tidal gradient tensor (default).
+
+        Returns
+        -------
+        GravityField
+            Full gravity field at the lab origin.
+        """
+        # Tidal accelerations in ECEF
+        R_moon = moon_position_ecef(dt)
+        R_sun = sun_position_ecef(dt)
+        a_moon_ecef = DELTA_GRAV * tidal_acceleration(self._r, R_moon, GM_MOON)
+        a_sun_ecef = DELTA_GRAV * tidal_acceleration(self._r, R_sun, GM_SUN)
+
+        # Rotate tidal vectors to ENU
+        a_moon_enu = _ecef_to_enu_vector(a_moon_ecef, self._enu)
+        a_sun_enu = _ecef_to_enu_vector(a_sun_ecef, self._enu)
+
+        # Total gravity vector: normal (down) + tidal
+        g = np.array([0.0, 0.0, -self._g_normal]) + a_moon_enu + a_sun_enu
+
+        # Gradient tensor
+        if order >= 1:
+            T_moon = DELTA_GRAV * _tidal_gradient_tensor(
+                self._r, R_moon, GM_MOON)
+            T_sun = DELTA_GRAV * _tidal_gradient_tensor(
+                self._r, R_sun, GM_SUN)
+            T_tidal_enu = (_ecef_to_enu_tensor(T_moon, self._enu)
+                           + _ecef_to_enu_tensor(T_sun, self._enu))
+            T = self._T_earth + T_tidal_enu
+        else:
+            T = self._T_earth
+
+        return GravityField(
+            g=g,
+            omega=self._omega,
+            T=T,
+            g_normal=self._g_normal,
+            g_tidal_moon=a_moon_enu,
+            g_tidal_sun=a_sun_enu,
+        )
+
+    def timeseries(self, start, end, interval_minutes=10.0, n_samples=None,
+                   order=1):
+        """Compute a timeseries of gravity fields.
+
+        Parameters
+        ----------
+        start : datetime
+            Start time (UTC).
+        end : datetime
+            End time (UTC).
+        interval_minutes : float, optional
+            Time step in minutes (default 10).  Ignored if *n_samples* is set.
+        n_samples : int, optional
+            Number of evenly spaced samples (inclusive).
+        order : int, optional
+            Expansion order passed to :meth:`field` (default 1).
+
+        Returns
+        -------
+        dict
+            times  : list of datetime objects
+            fields : list of GravityField objects
+        """
+        if n_samples is not None:
+            if n_samples < 1:
+                raise ValueError("n_samples must be >= 1")
+            total_sec = (end - start).total_seconds()
+            if n_samples == 1:
+                times = [start]
+            else:
+                step_sec = total_sec / (n_samples - 1)
+                times = [start + timedelta(seconds=i * step_sec)
+                         for i in range(n_samples)]
+        else:
+            step = timedelta(minutes=interval_minutes)
+            times = []
+            t = start
+            while t <= end:
+                times.append(t)
+                t += step
+
+        fields = [self.field(t, order=order) for t in times]
+        return dict(times=times, fields=fields)
 
 
 # =============================================================================

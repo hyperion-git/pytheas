@@ -19,6 +19,9 @@ from ._core import (
     # Main API
     compute_g,
     compute_timeseries,
+    # Lab frame
+    GravityField,
+    LabFrame,
     # Building blocks
     normal_gravity,
     sun_position_ecef,
@@ -49,6 +52,8 @@ from ._core import (
 __all__ = [
     "compute_g",
     "compute_timeseries",
+    "GravityField",
+    "LabFrame",
     "normal_gravity",
     "sun_position_ecef",
     "moon_position_ecef",
