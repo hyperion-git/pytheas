@@ -119,7 +119,7 @@ result = compute_g(
     alt_m=500.0,                           # altitude above WGS84
 )
 
-print(f"g_total  = {result['g_total']:.6f} m/s²")
-print(f"g_static = {result['g_static']:.6f} m/s²")
-print(f"g_tidal  = {result['g_tidal'] * 1e6:.3f} μm/s²")
+print(f"g_total  = {result.g_total:.6f} m/s²")
+print(f"g_static = {result.g_static:.6f} m/s²")
+print(f"g_tidal  = {result.g_tidal * 1e6:.3f} μm/s²")
 ```

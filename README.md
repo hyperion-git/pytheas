@@ -44,8 +44,8 @@ result = compute_g(
     datetime(2025, 3, 20, 12, 0),
     lat_deg=48.42, lon_deg=9.96, alt_m=620.0,
 )
-print(f"g       = {result['g_total']:.10f} m/s^2")  # ≈ 9.8073743815 m/s²
-print(f"g_tidal = {result['g_tidal'] * 1e6:.4f} µm/s^2")
+print(f"g       = {result.g_total:.10f} m/s^2")  # ≈ 9.8073743815 m/s²
+print(f"g_tidal = {result.g_tidal * 1e6:.4f} µm/s^2")
 
 # Ulm, Eselsberg: 48-hour timeseries
 data = compute_timeseries(
@@ -54,7 +54,7 @@ data = compute_timeseries(
     lat_deg=48.42, lon_deg=9.96, alt_m=620.0,
     interval_minutes=10.0,
 )
-# data['times'], data['g_total'], data['g_tidal'], ...
+# data.times, data.g_total, data.g_tidal, ...
 ```
 
 ### Tilted Sensor
@@ -66,8 +66,8 @@ result = compute_g(
     lat_deg=48.42, lon_deg=9.96, alt_m=620.0,
     zenith_deg=15.0, azimuth_deg=90.0,
 )
-print(f"g       = {result['g_total']:.10f} m/s^2")
-print(f"g_tidal = {result['g_tidal'] * 1e6:.4f} µm/s^2")
+print(f"g       = {result.g_total:.10f} m/s^2")
+print(f"g_tidal = {result.g_tidal * 1e6:.4f} µm/s^2")
 ```
 
 `zenith_deg` specifies the angle from vertical (0 = up, 90 = horizontal); `azimuth_deg` specifies the bearing clockwise from north. Both default to 0 (vertical sensor). The static component scales as `cos(zenith)`, while the tidal projection depends on the full 3D geometry.
@@ -92,10 +92,10 @@ with open("tidal_tilted.csv", "w", newline="") as f:
     w = csv.writer(f)
     w.writerow(["time_utc", "g_total", "g_static", "g_tidal",
                 "g_tidal_moon", "g_tidal_sun"])
-    for i, t in enumerate(data["times"]):
-        w.writerow([t.isoformat(), data["g_total"][i], data["g_static"][i],
-                    data["g_tidal"][i], data["g_tidal_moon"][i],
-                    data["g_tidal_sun"][i]])
+    for i, t in enumerate(data.times):
+        w.writerow([t.isoformat(), data.g_total[i], data.g_static[i],
+                    data.g_tidal[i], data.g_tidal_moon[i],
+                    data.g_tidal_sun[i]])
 ```
 
 ### Horizontal Sensor
@@ -107,7 +107,7 @@ result = compute_g(
     lat_deg=48.42, lon_deg=9.96, alt_m=620.0,
     zenith_deg=90.0, azimuth_deg=0.0,
 )
-print(f"horizontal tidal = {result['g_tidal'] * 1e6:.4f} µm/s^2")
+print(f"horizontal tidal = {result.g_tidal * 1e6:.4f} µm/s^2")
 ```
 
 ### N-Sample Timeseries
@@ -120,8 +120,8 @@ data = compute_timeseries(
     lat_deg=48.42, lon_deg=9.96, alt_m=620.0,
     n_samples=500,
 )
-print(f"{len(data['times'])} points, dt ~ "
-      f"{(data['times'][1] - data['times'][0]).total_seconds():.1f} s")
+print(f"{len(data.times)} points, dt ~ "
+      f"{(data.times[1] - data.times[0]).total_seconds():.1f} s")
 ```
 
 When `n_samples` is given, it overrides `interval_minutes`. Both endpoints are included.
@@ -240,17 +240,21 @@ At coastal sites, unmodeled ocean loading can add up to ~3 µGal of error.
 
 ### `compute_g(dt, lat_deg, lon_deg, alt_m, zenith_deg=0, azimuth_deg=0)`
 
-Single-epoch computation. Returns a dict with keys:
+Single-epoch computation. Returns a `GravityResult` (frozen dataclass) with attributes:
 
 - `g_total` -- total g projected on axis (m/s²)
 - `g_static` -- normal gravity component (m/s²)
+- `g_normal` -- normal gravity magnitude (m/s²)
+- `cos_zenith` -- projection factor
 - `g_tidal` -- total tidal perturbation (m/s²)
 - `g_tidal_moon` -- lunar tidal contribution (m/s²)
 - `g_tidal_sun` -- solar tidal contribution (m/s²)
 
+Use `dataclasses.asdict(result)` if you need a dict.
+
 ### `compute_timeseries(start, end, lat_deg, lon_deg, alt_m, ..., n_samples=None)`
 
-Multi-epoch computation over `[start, end]`. Default cadence is `interval_minutes=10.0`; pass `n_samples=N` for exactly N evenly spaced samples instead. Returns the same keys as `compute_g` (each as a numpy array), plus `times` (list of datetime objects).
+Multi-epoch computation over `[start, end]`. Default cadence is `interval_minutes=10.0`; pass `n_samples=N` for exactly N evenly spaced samples instead. Returns a `TimeSeries` (frozen dataclass) with the same attributes as `GravityResult` (array-valued), plus `times` (list of datetime objects).
 
 ### Building Blocks
 
