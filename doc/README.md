@@ -120,6 +120,13 @@ See the [project README](../README.md) for full installation options and the CLI
 - [8.8 Conclusion](_sec8_gr_tidal.md#88-conclusion)
 - [8.9 Computational Verification](_sec8_gr_tidal.md#89-computational-verification)
 
+### [9. The Covariant Taylor Expansion and the Lab Frame](_sec9_lab_frame.md)
+
+- [9.1 The Bitensor Framework](_sec9_lab_frame.md#91-the-bitensor-framework)
+- [9.2 The Rotating Lab Frame](_sec9_lab_frame.md#92-the-rotating-lab-frame)
+- [9.3 Equation of Motion and Identities](_sec9_lab_frame.md#93-equation-of-motion-and-identities)
+- [9.4 From Bitensors to Code](_sec9_lab_frame.md#94-from-bitensors-to-code)
+
 ---
 
 ## Figures
@@ -140,3 +147,4 @@ See the [project README](../README.md) for full installation options and the CLI
 | 12 | Anatomy of $g(t)$: static, lunar, and solar components | [fig12](figures/fig12_anatomy.png) |
 | 13 | Error budget summary | [fig13](figures/fig13_error_budget.png) |
 | 14 | Hierarchy of corrections from Fermi frame analysis | [fig14](figures/fig14_gr_corrections.png) |
+| 15 | Conceptual hierarchy: bitensor expansion to LabFrame code | [fig15](figures/fig15_lab_frame_hierarchy.png) |
