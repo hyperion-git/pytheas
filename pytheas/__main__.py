@@ -69,16 +69,16 @@ examples:
     data = compute_timeseries(start, end, args.lat, args.lon, args.alt,
                               args.zenith, args.azimuth, args.interval)
 
-    g_s = data['g_static'][0]
-    g_t = data['g_tidal']
+    g_s = data.g_static[0]
+    g_t = data.g_tidal
     print(f"Static g on axis   : {g_s:.8f} m/s^2")
     print(f"Tidal peak-to-peak : {np.ptp(g_t) * 1e6:.4f} um/s^2")
     print(f"Tidal RMS          : {np.std(g_t) * 1e6:.4f} um/s^2")
-    print(f"g_total range      : [{np.min(data['g_total']):.8f}, "
-          f"{np.max(data['g_total']):.8f}] m/s^2")
+    print(f"g_total range      : [{np.min(data.g_total):.8f}, "
+          f"{np.max(data.g_total):.8f}] m/s^2")
 
     # Sample table
-    times = data['times']
+    times = data.times
     head = min(5, len(times))
     tail = min(3, len(times))
     rows = list(range(head))
@@ -99,10 +99,10 @@ examples:
         t_local = t + local_dt
         print(f"{t.strftime('%Y-%m-%d %H:%M'):>20s}  "
               f"{t_local.strftime('%Y-%m-%d %H:%M'):>20s}  "
-              f"{data['g_total'][idx]:17.10f}  "
-              f"{data['g_tidal'][idx] * 1e6:14.4f}  "
-              f"{data['g_tidal_moon'][idx] * 1e6:10.4f}  "
-              f"{data['g_tidal_sun'][idx] * 1e6:10.4f}")
+              f"{data.g_total[idx]:17.10f}  "
+              f"{data.g_tidal[idx] * 1e6:14.4f}  "
+              f"{data.g_tidal_moon[idx] * 1e6:10.4f}  "
+              f"{data.g_tidal_sun[idx] * 1e6:10.4f}")
 
     if args.csv:
         with open(args.csv, 'w') as f:
@@ -112,11 +112,11 @@ examples:
             for i, t in enumerate(times):
                 t_local = t + local_dt
                 f.write(f"{t.isoformat()},{t_local.isoformat()},"
-                        f"{data['g_total'][i]:.12e},"
-                        f"{data['g_static'][i]:.12e},"
-                        f"{data['g_tidal'][i]:.12e},"
-                        f"{data['g_tidal_moon'][i]:.12e},"
-                        f"{data['g_tidal_sun'][i]:.12e}\n")
+                        f"{data.g_total[i]:.12e},"
+                        f"{data.g_static[i]:.12e},"
+                        f"{data.g_tidal[i]:.12e},"
+                        f"{data.g_tidal_moon[i]:.12e},"
+                        f"{data.g_tidal_sun[i]:.12e}\n")
         print(f"\nSaved: {args.csv}")
 
     if args.plot:
@@ -131,18 +131,18 @@ examples:
 
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
 
-        ax1.plot(hours, data['g_total'], 'k-', lw=0.7)
+        ax1.plot(hours, data.g_total, 'k-', lw=0.7)
         ax1.set_ylabel('g_total (m/s$^2$)')
         ax1.set_title(f'g(t) at ({args.lat:.2f}$\\degree$N, {args.lon:.2f}$\\degree$E, '
                       f'{args.alt:.0f} m)')
         ax1.ticklabel_format(useOffset=True, axis='y')
         ax1.grid(True, alpha=0.3)
 
-        ax2.plot(hours, data['g_tidal_moon'] * 1e6, 'C0-', lw=0.7,
+        ax2.plot(hours, data.g_tidal_moon * 1e6, 'C0-', lw=0.7,
                  label='Moon', alpha=0.8)
-        ax2.plot(hours, data['g_tidal_sun'] * 1e6, 'C1-', lw=0.7,
+        ax2.plot(hours, data.g_tidal_sun * 1e6, 'C1-', lw=0.7,
                  label='Sun', alpha=0.8)
-        ax2.plot(hours, data['g_tidal'] * 1e6, 'k-', lw=0.9,
+        ax2.plot(hours, data.g_tidal * 1e6, 'k-', lw=0.9,
                  label='Total')
         ax2.set_ylabel('Tidal perturbation ($\\mu$m/s$^2$)')
         ax2.set_xlabel(f'Hours since {start.strftime("%Y-%m-%d %H:%M")} UTC')

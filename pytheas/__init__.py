@@ -13,12 +13,14 @@ Accuracy: ~10-100 nGal (1e-10 to 1e-9 m/s^2) for inland sites.
 Dependency: numpy only.
 """
 
-__version__ = "3.2.0"
+__version__ = "3.3.0"
 
 from ._core import (
     # Main API
     compute_g,
     compute_timeseries,
+    GravityResult,
+    TimeSeries,
     # Lab frame
     GravityField,
     LabFrame,
@@ -52,6 +54,8 @@ from ._core import (
 __all__ = [
     "compute_g",
     "compute_timeseries",
+    "GravityResult",
+    "TimeSeries",
     "GravityField",
     "LabFrame",
     "normal_gravity",

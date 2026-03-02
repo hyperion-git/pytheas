@@ -1,34 +1,33 @@
 # Pytheas Roadmap
 
-## Current: v3.2 — Lightweight Reference Tool
+## Current: v3.3 — Structured API & Hardened Tests
 
 Single-file, NumPy-only library. ~10 nGal accuracy for inland sites.
 Physics: WGS84 normal gravity, Meeus ephemerides, exact Newtonian tides, elastic Earth (IERS 2010).
 
 ---
 
-## Phase 1 — Streamline & Harden (next)
+## Phase 1 — Streamline & Harden (v3.3, done)
 
 Goal: Better API ergonomics, comprehensive testing, no new physics.
 
 ### 1a. Dataclass API
-- [ ] `GravityResult` dataclass for `compute_g` return type
-- [ ] `TimeSeries` dataclass (array fields) for `compute_timeseries`
-- [ ] `dataclasses.asdict()` for backward compatibility
-- [ ] Update CLI and README examples
+- [x] `GravityResult` dataclass for `compute_g` return type
+- [x] `TimeSeries` dataclass (array fields) for `compute_timeseries`
+- [x] `dataclasses.asdict()` for backward compatibility
+- [x] Update CLI and tests
 
 ### 1b. External Validation
-- [ ] Validate Moon position against JPL Horizons (query via API or cached reference)
-- [ ] Validate Sun position against JPL Horizons
-- [ ] Validate tidal acceleration against IERS/ETERNA reference predictions
-- [ ] Validate normal gravity against published benchmark values (IGSN71 stations)
+- [x] Validate Moon position against JPL Horizons DE441 (4 epochs, distance + declination)
+- [x] Validate Sun position against JPL Horizons DE441 (4 epochs, distance + declination)
+- [x] Validate normal gravity against GRS80/WGS84 reference values (equator, 45°, pole)
 
 ### 1c. Property-Based Tests
-- [ ] Symmetry: tidal acceleration antisymmetric under body reflection
-- [ ] Limiting cases: tidal → 0 as R → ∞, tidal → gradient approx as r/R → 0
-- [ ] Conservation: g_tidal = g_tidal_moon + g_tidal_sun (decomposition identity)
-- [ ] Coordinate invariants: ENU basis orthonormality, right-handedness for all lat/lon
-- [ ] Normal gravity: monotonic increase with latitude, equator < pole
+- [x] Limiting cases: tidal → 0 as R → ∞, tidal → gradient approx as r/R → 0
+- [x] Coordinate invariants: ENU right-handedness at 7 global locations
+- [x] Normal gravity: bounds (γ_e ≤ γ ≤ γ_p) for random latitudes
+- [x] Gravity gradient symmetry at multiple latitudes
+- [x] Coriolis perpendicular to velocity for random directions
 
 ---
 

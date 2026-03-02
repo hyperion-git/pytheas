@@ -15,8 +15,9 @@ Dependencies: numpy only.
 """
 
 import numpy as np
-from dataclasses import dataclass
+from dataclasses import dataclass, field as dc_field
 from datetime import datetime, timedelta
+from typing import List
 
 # =============================================================================
 # Physical Constants
@@ -778,6 +779,43 @@ class LabFrame:
 
 
 # =============================================================================
+# Structured Return Types
+# =============================================================================
+
+@dataclass(frozen=True)
+class GravityResult:
+    """Result of a single-epoch gravity computation.
+
+    Returned by :func:`compute_g`.  For dict access use
+    ``dataclasses.asdict(result)``.
+    """
+    g_total: float       # total g on axis [m/s²]
+    g_static: float      # normal gravity projected on axis [m/s²]
+    g_normal: float      # normal gravity magnitude [m/s²]
+    cos_zenith: float    # projection factor
+    g_tidal: float       # elastic-Earth tidal perturbation on axis [m/s²]
+    g_tidal_moon: float  # lunar contribution on axis [m/s²]
+    g_tidal_sun: float   # solar contribution on axis [m/s²]
+
+
+@dataclass(frozen=True)
+class TimeSeries:
+    """Result of a timeseries gravity computation.
+
+    Returned by :func:`compute_timeseries`.  For dict access use
+    ``dataclasses.asdict(result)``.
+    """
+    times: List[datetime]
+    g_total: np.ndarray
+    g_static: np.ndarray
+    g_normal: float
+    cos_zenith: float
+    g_tidal: np.ndarray
+    g_tidal_moon: np.ndarray
+    g_tidal_sun: np.ndarray
+
+
+# =============================================================================
 # Main API
 # =============================================================================
 
@@ -802,14 +840,10 @@ def compute_g(dt, lat_deg, lon_deg, alt_m,
 
     Returns
     -------
-    dict
-        g_total      : total g on axis (m/s^2)
-        g_static     : normal gravity projected on axis (m/s^2)
-        g_normal     : normal gravity magnitude (m/s^2), axis-independent
-        cos_zenith   : projection factor (g_static = g_normal * cos_zenith)
-        g_tidal      : elastic-Earth tidal perturbation on axis (m/s^2)
-        g_tidal_moon : lunar contribution on axis (m/s^2)
-        g_tidal_sun  : solar contribution on axis (m/s^2)
+    GravityResult
+        Frozen dataclass with fields: g_total, g_static, g_normal,
+        cos_zenith, g_tidal, g_tidal_moon, g_tidal_sun.
+        Use ``dataclasses.asdict(result)`` for dict access.
     """
     g0    = normal_gravity(lat_deg, alt_m)
     n_hat = measurement_axis(lat_deg, lon_deg, zenith_deg, azimuth_deg)
@@ -825,10 +859,10 @@ def compute_g(dt, lat_deg, lon_deg, alt_m,
     gs = np.dot(a_sun,  n_hat)
     gt = gm + gs
 
-    return dict(g_total=g_static + gt,
-                g_static=g_static, g_normal=g0, cos_zenith=cos_z,
-                g_tidal=gt,
-                g_tidal_moon=gm, g_tidal_sun=gs)
+    return GravityResult(g_total=g_static + gt,
+                         g_static=g_static, g_normal=g0, cos_zenith=cos_z,
+                         g_tidal=gt,
+                         g_tidal_moon=gm, g_tidal_sun=gs)
 
 
 def compute_timeseries(start, end, lat_deg, lon_deg, alt_m,
@@ -860,15 +894,10 @@ def compute_timeseries(start, end, lat_deg, lon_deg, alt_m,
 
     Returns
     -------
-    dict
-        times        : list of datetime objects
-        g_total      : numpy array (m/s^2)
-        g_static     : numpy array (m/s^2)
-        g_normal     : float, normal gravity magnitude (m/s^2)
-        cos_zenith   : float, projection factor
-        g_tidal      : numpy array (m/s^2)
-        g_tidal_moon : numpy array (m/s^2)
-        g_tidal_sun  : numpy array (m/s^2)
+    TimeSeries
+        Frozen dataclass with fields: times, g_total, g_static, g_normal,
+        cos_zenith, g_tidal, g_tidal_moon, g_tidal_sun.
+        Use ``dataclasses.asdict(result)`` for dict access.
     """
     g0    = normal_gravity(lat_deg, alt_m)
     n_hat = measurement_axis(lat_deg, lon_deg, zenith_deg, azimuth_deg)
@@ -909,8 +938,8 @@ def compute_timeseries(start, end, lat_deg, lon_deg, alt_m,
         g_tidal[i]      = g_tidal_moon[i] + g_tidal_sun[i]
         g_total[i]      = g_static_val + g_tidal[i]
 
-    return dict(times=times, g_total=g_total,
-                g_static=np.full(n, g_static_val),
-                g_normal=g0, cos_zenith=cos_z,
-                g_tidal=g_tidal,
-                g_tidal_moon=g_tidal_moon, g_tidal_sun=g_tidal_sun)
+    return TimeSeries(times=times, g_total=g_total,
+                      g_static=np.full(n, g_static_val),
+                      g_normal=g0, cos_zenith=cos_z,
+                      g_tidal=g_tidal,
+                      g_tidal_moon=g_tidal_moon, g_tidal_sun=g_tidal_sun)
