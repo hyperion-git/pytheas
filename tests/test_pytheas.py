@@ -51,6 +51,15 @@ class TestConstants:
     def test_polar_gravity(self):
         assert abs(GAMMA_P - 9.8321849378) < 1e-8
 
+    def test_k_som_self_consistent(self):
+        """K_SOM derived from gamma_e, gamma_p reproduces both exactly."""
+        from pytheas._core import K_SOM, B_WGS84, E2
+        # gamma(0) = gamma_e by inspection (sin^2=0)
+        # gamma(90) = gamma_e * (1+k) / sqrt(1-e2) must equal gamma_p
+        gamma_p_check = GAMMA_E * (1 + K_SOM) / np.sqrt(1 - E2)
+        assert abs(gamma_p_check - GAMMA_P) < 1e-14, (
+            f"K_SOM inconsistent: gamma(90) = {gamma_p_check} vs GAMMA_P = {GAMMA_P}")
+
 
 # =========================================================================
 # Normal gravity
@@ -658,12 +667,14 @@ class TestExternalValidation:
         (datetime(2025, 9, 23, 0, 0, 0),   150130470.991, 129666.881),
     ]
 
-    # GRS80/WGS84 normal gravity on the ellipsoid (h=0)
+    # WGS84 normal gravity on the ellipsoid (h=0)
+    # 0 and 90 are exact boundary values (gamma_e, gamma_p).
+    # 45 deg computed from WGS84 Somigliana with self-consistent k.
     GRAVITY_REFS = [
         # (lat_deg, gamma_m_s2)
-        (0.0,  9.7803253141),   # equatorial (exact GRS80)
-        (45.0, 9.8061992032),   # mid-latitude (Somigliana)
-        (90.0, 9.8321849378),   # polar (exact GRS80)
+        (0.0,  9.7803253141),   # equatorial (exact WGS84)
+        (45.0, 9.8061977584255),# mid-latitude (WGS84 Somigliana)
+        (90.0, 9.8321849378),   # polar (exact WGS84)
     ]
 
     @pytest.mark.parametrize("dt,ref_dist_km,ref_z_km", MOON_REFS,
@@ -723,11 +734,11 @@ class TestExternalValidation:
     @pytest.mark.parametrize("lat_deg,ref_gamma", GRAVITY_REFS,
                              ids=["equator", "45deg", "pole"])
     def test_normal_gravity(self, lat_deg, ref_gamma):
-        """Normal gravity matches GRS80 reference to < 1 mGal."""
+        """Normal gravity matches WGS84 Somigliana to < 1 nGal."""
         gamma = normal_gravity(lat_deg, 0.0)
-        assert abs(gamma - ref_gamma) < 1e-5, (
-            f"gamma({lat_deg}) = {gamma:.10f} vs {ref_gamma:.10f} "
-            f"(err = {abs(gamma - ref_gamma) * 1e6:.2f} uGal)")
+        assert abs(gamma - ref_gamma) < 1e-11, (
+            f"gamma({lat_deg}) = {gamma:.12f} vs {ref_gamma:.12f} "
+            f"(err = {abs(gamma - ref_gamma) * 1e11:.2f} nGal)")
 
 
 # =========================================================================
