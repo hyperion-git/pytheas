@@ -215,15 +215,15 @@ $$\nabla^2\!\left(-\tfrac{1}{2}|\boldsymbol{\Omega}\times\mathbf{x}|^2\right) = 
 
 Since $T_{ii} = -\nabla^2\Phi_\text{eff}$:
 
-$$\boxed{\operatorname{Tr}(\mathbf{T}) = -4\pi G\rho + 2\Omega^2} \tag{5.5}$$
+$$\boxed{\mathrm{Tr}(\mathbf{T}) = -4\pi G\rho + 2\Omega^2} \tag{5.5}$$
 
-In vacuum ($\rho = 0$) outside the Earth: $\operatorname{Tr}(\mathbf{T}) = 2\Omega^2 \approx 1.06 \times 10^{-8}$ s$^{-2}$ (~10.6 Eotvos).  This is the mathematically consistent acceleration-gradient convention used in Eqs. (4.7) and (5.3); the current Pytheas static Earth approximation is discussed separately in [Implementation](implementation.md).
+In vacuum ($\rho = 0$) outside the Earth: $\mathrm{Tr}(\mathbf{T}) = 2\Omega^2 \approx 1.06 \times 10^{-8}$ s$^{-2}$ (~10.6 Eotvos).  This is the mathematically consistent acceleration-gradient convention used in Eqs. (4.7) and (5.3); the current Pytheas static Earth approximation is discussed separately in [Implementation](implementation.md).
 
 ### Tidal tracelessness
 
 The tidal gradient tensor from an external body (Moon, Sun) is symmetric and traceless:
 
-$$T^\text{tidal}_{ij} = T^\text{tidal}_{ji}, \qquad \operatorname{Tr}(\mathbf{T}_\text{tidal}) = 0 \tag{5.6}$$
+$$T^\text{tidal}_{ij} = T^\text{tidal}_{ji}, \qquad \mathrm{Tr}(\mathbf{T}_\text{tidal}) = 0 \tag{5.6}$$
 
 Symmetry follows from $\partial_i\partial_j = \partial_j\partial_i$.  Tracelessness follows from the Laplace equation: the tidal potential is harmonic in the vacuum exterior, so $\nabla^2\Phi_\text{tidal} = 0$.
 
@@ -237,7 +237,7 @@ manifestly traceless ($-1-1+2=0$), reflecting the quadrupolar stretching-compres
 
 | Limit | Behaviour |
 |-------|-----------|
-| $\Omega \to 0$ | $\ddot{\mathbf{x}} = \mathbf{g} + \mathbf{T}\cdot\delta\mathbf{x}$ (non-rotating geodesic deviation); $\operatorname{Tr}(\mathbf{T}) = -4\pi G\rho$ |
+| $\Omega \to 0$ | $\ddot{\mathbf{x}} = \mathbf{g} + \mathbf{T}\cdot\delta\mathbf{x}$ (non-rotating geodesic deviation); $\mathrm{Tr}(\mathbf{T}) = -4\pi G\rho$ |
 | $M_\text{ext} \to 0$ | All tidal terms vanish; gravimeter reads constant $\gamma(\varphi,h)$ |
 | Poles ($\varphi = 90^\circ$) | $\boldsymbol{\Omega} = (0,0,\Omega)$ purely vertical; centrifugal vanishes at origin |
 | Flat spacetime | $R_{\alpha\beta\gamma\delta} = 0$, no tidal forces; rotating-frame mechanics only |

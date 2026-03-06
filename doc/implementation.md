@@ -246,7 +246,7 @@ Rank-2 tensors transform as $T_\text{ENU} = R\,T_\text{ECEF}\,R^T$.
 
 The static Earth gradient tensor is diagonal in ENU:
 
-$$T_\text{Earth} = \operatorname{diag}(T_H,\ T_H,\ T_{UU})$$
+$$T_\text{Earth} = \mathrm{diag}(T_H,\ T_H,\ T_{UU})$$
 
 where $T_{UU} = \partial g_U/\partial h = -\partial\gamma/\partial h > 0$ near sea level (gravity weakens going up), consistent with the acceleration-gradient convention used by the tidal tensor and [Theory](theory.md) Eq. (5.3).  The horizontal components satisfy the vacuum Poisson trace condition:
 
