@@ -9,7 +9,8 @@ measurement axis, as a function of time.  The model includes:
   - Solar tidal acceleration (exact Newtonian formula, Meeus ephemeris)
   - Elastic Earth amplification via IERS 2010 Love numbers
 
-Accuracy: ~10-100 nGal (1e-10 to 1e-9 m/s^2) for inland sites.
+Accuracy: sub-uGal (~200-1000 nGal) for inland sites, dominated by
+ephemeris precision and frequency-independent Love numbers.
 
 Dependencies: numpy only.
 """
@@ -547,12 +548,13 @@ def _earth_gradient_tensor(lat_deg, alt_m):
     # Normal gravity on the ellipsoid
     gamma_0 = GAMMA_E * (1.0 + K_SOM * sin2) / np.sqrt(1.0 - E2 * sin2)
 
-    # Vertical gradient: d(gamma)/dh from free-air correction
+    # Vertical gradient: T_UU = d(g_U)/dh = -d(gamma)/dh
+    # (positive near sea level since gamma decreases with altitude)
     fac = 1.0 + F_WGS84 + M_RATIO - 2.0 * F_WGS84 * sin2
-    T_UU = gamma_0 * (-2.0 * fac / A_WGS84 + 6.0 * alt_m / A_WGS84 ** 2)
+    T_UU = -gamma_0 * (-2.0 * fac / A_WGS84 + 6.0 * alt_m / A_WGS84 ** 2)
 
-    # Poisson trace condition: T_EE + T_NN + T_UU = -2*Omega^2
-    T_horiz = (-2.0 * OMEGA ** 2 - T_UU) / 2.0
+    # Vacuum Poisson trace: T_EE + T_NN + T_UU = 2*Omega^2
+    T_horiz = (2.0 * OMEGA ** 2 - T_UU) / 2.0
 
     T = np.diag([T_horiz, T_horiz, T_UU])
     return T

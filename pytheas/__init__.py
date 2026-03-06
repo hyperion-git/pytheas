@@ -9,7 +9,8 @@ measurement axis, including normal gravity (WGS84), lunar and solar tidal
 acceleration (exact Newtonian, Meeus ephemeris), and elastic Earth
 amplification (IERS 2010 Love numbers).
 
-Accuracy: ~10-100 nGal (1e-10 to 1e-9 m/s^2) for inland sites.
+Accuracy: sub-uGal (~200-1000 nGal) for inland sites, dominated by
+ephemeris precision and frequency-independent Love numbers.
 Dependency: numpy only.
 """
 

@@ -56,40 +56,40 @@ print("\n=== 1. T_UU at 45 deg sea level ===")
 T45 = _earth_gradient_tensor(45.0, 0.0)
 T_UU_45 = T45[2, 2]
 
-# Published free-air gradient: -3.086 uGal/m = -3.086e-6 s^-2 = -3086 E
-published_fag = -3.086e-6  # s^-2
+# T_UU = -d(gamma)/dh ~ +3.086e-6 s^-2 = +3086 E (acceleration gradient)
+published_fag = 3.086e-6  # s^-2 (positive: gravity weakens going up)
 rel_err = abs(T_UU_45 - published_fag) / abs(published_fag)
 
 print(f"  T_UU(45 deg, h=0) = {T_UU_45:.6e} s^-2")
-print(f"  Published FAG     = {published_fag:.6e} s^-2")
+print(f"  Published |FAG|   = {published_fag:.6e} s^-2")
 print(f"  Relative error    = {rel_err:.4e}")
 check("T_UU matches published FAG to 0.1%", rel_err < 1e-3,
       f"rel_err = {rel_err:.2e}")
 
-# Also verify the formula: T_UU = gamma_0 * (-2*fac/a) at h=0
+# Also verify the formula: T_UU = -gamma_0 * (-2*fac/a) at h=0
 phi = np.radians(45.0)
 sin2 = np.sin(phi) ** 2
 gamma_0 = GAMMA_E * (1.0 + K_SOM * sin2) / np.sqrt(1.0 - E2 * sin2)
 fac = 1.0 + F_WGS84 + M_RATIO - 2.0 * F_WGS84 * sin2
-T_UU_formula = gamma_0 * (-2.0 * fac / A_WGS84)
+T_UU_formula = -gamma_0 * (-2.0 * fac / A_WGS84)
 err_formula = abs(T_UU_45 - T_UU_formula)
-check("T_UU at h=0 equals gamma_0*(-2*fac/a)", err_formula < 1e-15,
+check("T_UU at h=0 equals -gamma_0*(-2*fac/a)", err_formula < 1e-15,
       f"difference = {err_formula:.2e} s^-2")
 
 # Convert to Eotvos (1 E = 1e-9 s^-2)
 T_UU_eotvos = T_UU_45 * 1e9
 print(f"  T_UU in Eotvos    = {T_UU_eotvos:.1f} E")
-check("T_UU ~ -3086 Eotvos", abs(T_UU_eotvos - (-3086)) < 5,
+check("T_UU ~ +3086 Eotvos", abs(T_UU_eotvos - 3086) < 5,
       f"T_UU = {T_UU_eotvos:.1f} E")
 
 
 # =========================================================================
-# 2. Trace condition: Tr(T_Earth) = -2*Omega^2
+# 2. Trace condition: Tr(T_Earth) = +2*Omega^2 (vacuum Poisson)
 # =========================================================================
-print("\n=== 2. Trace condition Tr(T) = -2*Omega^2 ===")
+print("\n=== 2. Trace condition Tr(T) = +2*Omega^2 ===")
 
-target_trace = -2.0 * OMEGA ** 2
-print(f"  Target: -2*Omega^2 = {target_trace:.6e} s^-2")
+target_trace = 2.0 * OMEGA ** 2
+print(f"  Target: +2*Omega^2 = {target_trace:.6e} s^-2")
 
 for lat in [0.0, 15.0, 30.0, 45.0, 60.0, 75.0, 90.0]:
     for alt in [0.0, 100.0, 1000.0, 5000.0]:
@@ -167,32 +167,18 @@ T_UU_earth = T_earth[2, 2]
 print(f"  d(gamma)/dh (FD)  = {d_gamma_dh:.6e} s^-2  (should be negative)")
 print(f"  Correct T_UU      = -d(gamma)/dh = {T_UU_correct:.6e} s^-2")
 print(f"  Code T_UU         = {T_UU_earth:.6e} s^-2")
-print(f"  Code T_UU equals d(gamma)/dh, NOT -d(gamma)/dh")
 
-# The code sets T_UU = d(gamma)/dh directly.
-# Since g_z = -gamma, the correct gradient is T_UU = -d(gamma)/dh.
-# Check if code matches d(gamma)/dh (expected behavior of current code):
-err_fd = abs(d_gamma_dh - T_UU_earth)
+# T_UU should equal -d(gamma)/dh (positive near sea level)
+err_fd = abs(T_UU_correct - T_UU_earth)
 rel_fd = err_fd / abs(T_UU_earth)
-print(f"  |T_UU - d(gamma)/dh| rel err = {rel_fd:.4e}")
-check("T_UU equals d(gamma)/dh (current code behavior)",
+print(f"  |T_UU - (-d(gamma)/dh)| rel err = {rel_fd:.4e}")
+check("T_UU equals -d(gamma)/dh (acceleration gradient convention)",
       rel_fd < 1e-4, f"rel_err = {rel_fd:.2e}")
 
-# ** SIGN ISSUE NOTE **
-# The code uses T_UU = gamma_0 * (-2*fac/a + 6*h/a^2) which is d(gamma)/dh.
-# But physically T_UU = d(g_z)/dz = -d(gamma)/dh should be POSITIVE.
-# This means at([0,0,1]) gives g_z more negative (stronger gravity) when
-# going UP, which is physically wrong.
-#
-# However, this may be an intentional convention where T encodes
-# d(gamma)/dh directly rather than d(g_z)/dz. The field() method constructs
-# g = [0,0,-g_normal] + tidal, and T is used in at() as g + T@offset.
-# With T_UU < 0, at([0,0,dz]) gives g_z = -g_normal + T_UU*dz, which
-# actually makes |g| increase with altitude -- a SIGN ERROR.
-sign_issue = (T_UU_earth < 0)  # code has negative T_UU
-check("SIGN ISSUE: T_UU has wrong sign (negative instead of positive)",
-      sign_issue,
-      "T_UU = d(gamma)/dh but should be -d(gamma)/dh for correct gradient")
+# Verify sign is now correct: T_UU > 0 (gravity weakens going up)
+check("T_UU is positive (correct acceleration-gradient sign)",
+      T_UU_earth > 0,
+      f"T_UU = {T_UU_earth:.6e} should be positive")
 
 
 # =========================================================================

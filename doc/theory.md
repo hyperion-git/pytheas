@@ -25,7 +25,7 @@ Three quantities characterize this observer:
 - $\Omega^i$: **angular velocity** of the spatial triad relative to Fermi--Walker transport (Earth's rotation),
 - $R_{\alpha\beta\gamma\delta}$: **Riemann curvature tensor** evaluated on the worldline (encodes tidal fields).
 
-The task is to write down the acceleration of a test mass in terms of these three quantities, accurate to the level where the Newtonian tidal formula suffices (~10 nGal).
+The task is to write down the acceleration of a test mass in terms of these three quantities, accurate to the level where the Newtonian tidal formula suffices (sub-$\mu$Gal, typically $10^2$--$10^3$ nGal in this implementation).
 
 
 ## 2. Fermi Normal Coordinates
@@ -38,11 +38,11 @@ Expanding the metric to quadratic order in $X^i$ about the worldline:
 
 $$g_{00} = -\!\left(1 + \frac{a_i X^i}{c^2}\right)^{\!2} + \frac{R_{0i0j}\,X^i X^j}{c^2} + \mathcal{O}(X^3) \tag{2.1}$$
 
-$$g_{0i} = \frac{2}{3}\,R_{0jik}\,X^j X^k + \epsilon_{ijk}\,\Omega^j X^k + \mathcal{O}(X^3) \tag{2.2}$$
+$$g_{0i} = \frac{2}{3}\,R_{0jik}\,X^j X^k + \frac{1}{c}\,\epsilon_{ijk}\,\Omega^j X^k + \mathcal{O}(X^3) \tag{2.2}$$
 
 $$g_{ij} = \delta_{ij} - \frac{1}{3}\,R_{ikjl}\,X^k X^l + \mathcal{O}(X^3) \tag{2.3}$$
 
-The numerical coefficients ($1$, $2/3$, $1/3$) are uniquely fixed by the Riemann symmetries and the requirement that the Christoffel symbols vanish at the origin.
+The curvature coefficients ($2/3$, $1/3$) are fixed by the Riemann symmetries together with the Fermi-coordinate gauge conditions on the worldline.  The linear terms encode the observer's prescribed acceleration and rotation; because $x^0 = cT$, the rotation term in $g_{0i}$ carries an explicit factor $1/c$.
 
 **Physical content:**
 
@@ -50,7 +50,7 @@ The numerical coefficients ($1$, $2/3$, $1/3$) are uniquely fixed by the Riemann
 |-----------|-------|---------|
 | $g_{00}$ | $a_i X^i$ | Gravitational redshift (equivalence principle) |
 | $g_{00}$ | $R_{0i0j} X^i X^j$ | Tidal curvature from external fields |
-| $g_{0i}$ | $\epsilon_{ijk}\Omega^j X^k$ | Rotation (Coriolis, centrifugal) |
+| $g_{0i}$ | $\epsilon_{ijk}\Omega^j X^k / c$ | Rotation (Coriolis, centrifugal) |
 | $g_{0i}$ | $R_{0jik} X^j X^k$ | Gravitomagnetic curvature (frame-dragging) |
 | $g_{ij}$ | $R_{ikjl} X^k X^l$ | Spatial curvature (negligible here) |
 
@@ -62,7 +62,7 @@ $$\frac{d^2 X^i}{dT^2} = -c^2\,\Gamma^i_{00} - 2c\,\Gamma^i_{0j}\,v^j + \cdots \
 
 Computing the Christoffel symbols from Eqs. (2.1)--(2.3) and collecting terms:
 
-$$\boxed{\frac{d^2 X^i}{dT^2} = \underbrace{-a^i}_{\text{gravity}} \underbrace{-\,2(\boldsymbol{\Omega}\times\mathbf{v})^i}_{\text{Coriolis}} \underbrace{-\,[\boldsymbol{\Omega}\times(\boldsymbol{\Omega}\times\mathbf{X})]^i}_{\text{centrifugal}} + \underbrace{c^2 R^i{}_{0j0}\,X^j}_{\text{tidal}} + \underbrace{2\,R^i{}_{0jk}\,X^k v^j}_{\text{gravitomagnetic}}} \tag{2.5}$$
+$$\boxed{\frac{d^2 X^i}{dT^2} = \underbrace{-a^i}_{\text{gravity}} \underbrace{-\,2(\boldsymbol{\Omega}\times\mathbf{v})^i}_{\text{Coriolis}} \underbrace{-\,[\boldsymbol{\Omega}\times(\boldsymbol{\Omega}\times\mathbf{X})]^i}_{\text{centrifugal}} + \underbrace{c^2 R^i{}_{0j0}\,X^j}_{\text{tidal}} + \underbrace{2c\,R^i{}_{0jk}\,X^k v^j}_{\text{gravitomagnetic}}} \tag{2.5}$$
 
 Each term is derived and classified in Section 5.
 
@@ -110,7 +110,7 @@ $$H_\text{FNC} = \frac{p^2}{2m} + m\,\Phi_\text{grav}(\mathbf{x}) \tag{4.1}$$
 
 where the **gravitational potential in FNC** is:
 
-$$\Phi_\text{grav}(\mathbf{x}) = a_j\,x^j + \frac{c^2}{2}\,R_{0i0j}\,x^i x^j \tag{4.2}$$
+$$\Phi_\text{grav}(\mathbf{x}) = a_j\,x^j - \frac{c^2}{2}\,R_{0i0j}\,x^i x^j \tag{4.2}$$
 
 The first term is zeroth-order gravity ($g_i = -a_i$ at the origin); the second is the tidal field from spacetime curvature.
 
@@ -146,9 +146,9 @@ At the FNC origin, the gravity vector equals the negative of the proper accelera
 
 **The gravity gradient tensor**:
 
-$$T_{ij} \equiv -\frac{\partial^2\Phi_\text{eff}}{\partial x^i\,\partial x^j}\bigg|_{\mathbf{x}_0} = -c^2\,R_{0i0j} + \Omega^2\delta_{ij} - \Omega_i\Omega_j \tag{4.7}$$
+$$T_{ij} \equiv -\frac{\partial^2\Phi_\text{eff}}{\partial x^i\,\partial x^j}\bigg|_{\mathbf{x}_0} = c^2\,R_{0i0j} + \Omega^2\delta_{ij} - \Omega_i\Omega_j \tag{4.7}$$
 
-This symmetric $3\times 3$ tensor encodes tidal stretching (from curvature $-c^2 R_{0i0j}$) and the centrifugal effect ($\Omega^2\delta_{ij} - \Omega_i\Omega_j$).
+This symmetric $3\times 3$ tensor encodes tidal stretching (from curvature $c^2 R_{0i0j}$) and the centrifugal effect ($\Omega^2\delta_{ij} - \Omega_i\Omega_j$).
 
 **The rotation vector** $\Omega_i$ enters through the Coriolis coupling and cannot be written as the gradient of any potential.  In ENU coordinates:
 
@@ -198,7 +198,7 @@ Since $T_{ii} = -\nabla^2\Phi_\text{eff}$:
 
 $$\boxed{\operatorname{Tr}(\mathbf{T}) = -4\pi G\rho + 2\Omega^2} \tag{5.5}$$
 
-In vacuum ($\rho = 0$) outside the Earth: $\operatorname{Tr}(\mathbf{T}) = 2\Omega^2 \approx 1.06 \times 10^{-8}$ s$^{-2}$ (~10.6 Eotvos).
+In vacuum ($\rho = 0$) outside the Earth: $\operatorname{Tr}(\mathbf{T}) = 2\Omega^2 \approx 1.06 \times 10^{-8}$ s$^{-2}$ (~10.6 Eotvos).  This is the mathematically consistent acceleration-gradient convention used in Eqs. (4.7) and (5.3); the current Pytheas static Earth approximation is discussed separately in [Implementation](implementation.md).
 
 ### Tidal tracelessness
 
@@ -237,6 +237,7 @@ where $\mathcal{T}_{ij}$ is the Newtonian tidal tensor.  For a point mass $M$ at
 $$\mathcal{T}_{ij} = -\frac{GM}{d^3}\left(3\hat{\mathbf{d}}_i\hat{\mathbf{d}}_j - \delta_{ij}\right) \tag{6.2}$$
 
 This tensor is trace-free ($\mathcal{T}_{ii} = 0$) as required by the vacuum Laplace equation.
+With this convention, $\mathcal{T}_{ij}$ is the Hessian-level object from Eq. (6.1); the acceleration-gradient tensor used in Pytheas is $T^\text{tidal}_{ij} = -\mathcal{T}_{ij} = \frac{GM}{d^3}\!\left(-\delta_{ij} + 3\hat{\mathbf{d}}_i\hat{\mathbf{d}}_j\right)$ (Eq. 5.7).
 
 ### The exact tidal formula
 
@@ -244,7 +245,7 @@ The tidal acceleration at the lab recovers the exact Newtonian expression:
 
 $$\boxed{\mathbf{a}_\text{tidal} = GM\left[\frac{\mathbf{r}_M - \mathbf{R}}{|\mathbf{r}_M - \mathbf{R}|^3} - \frac{\mathbf{r}_M}{|\mathbf{r}_M|^3}\right]} \tag{6.3}$$
 
-This is the difference between gravitational pull at the observer and at the Earth's center, without expanding in $R/r_M$.  The gradient (tidal tensor) approximation truncates at order $(R/r_M)^1$; for the Moon with $R/r_M \approx 1/60$, the next-order term contributes ~2.5%, or ~25 nGal.  **The exact formula is not an approximation --- it is the leading-order result of GR in the weak-field limit.**
+This is the difference between gravitational pull at the observer and at the Earth's center, without expanding in $R/r_M$.  The gradient (tidal tensor) approximation truncates at order $(R/r_M)^1$; for the Moon with $R/r_M \approx 1/60$, the next-order term contributes ~2.5%, or ~2.5 $\mu$Gal (~2500 nGal).  **The exact formula is not an approximation --- it is the leading-order result of GR in the weak-field limit.**
 
 ### Why "exact" is the right word
 
@@ -300,9 +301,9 @@ The tidal signal is 16% larger than on a rigid Earth.
 
 ### Known limitations
 
-**FCN resonance.**  Near the K1 tidal frequency (~23.93 h), the free core nutation resonance causes the Love numbers to vary rapidly.  $\delta$ can deviate from 1.1608 by ~1%, introducing up to ~10 nGal of error.  This is the **single largest error source** in Pytheas.  A frequency-dependent $\delta(f)$ table would correct it.
+**FCN resonance.**  Near the K1 tidal frequency (~23.93 h), the free core nutation resonance causes the Love numbers to vary rapidly.  $\delta$ can deviate from 1.1608 by ~1%, introducing a site/frequency-dependent error typically in the $10^2$--$10^3$ nGal range.  This is one of the dominant model-error terms in Pytheas.  A frequency-dependent $\delta(f)$ table would correct it.
 
-**Higher degrees.**  The degree-3 lunar contribution is ~1.7% of degree 2; its effect on gravity is negligible at 10 nGal.
+**Higher degrees.**  The degree-3 lunar contribution is ~1.7% of degree 2; in this stripped-down model it is smaller than the dominant error terms above.
 
 
 ## 8. Post-Newtonian Corrections
@@ -319,10 +320,10 @@ Eq. (2.5) contains five terms.  The following table classifies every contributio
 | 4 | Solar tidal (Newtonian) | ~51 $\mu$Gal | **Measured signal** |
 | 5 | First-order Coriolis | Horizontal | No projection onto $\hat{\mathbf{n}}$ |
 | 6 | Second-order Coriolis (Eotvos) | ~319 nGal | Instrument-dependent$^*$ |
-| 7 | GM curvature cross-term | ~0.17 nGal | Below 10 nGal floor |
-| 8 | Direct Lense--Thirring | ~0.008 nGal | Below 10 nGal floor |
-| 9 | 1PN tidal (Sun) | ~0.001 nGal | Below 10 nGal floor |
-| 10 | 1PN tidal (Moon) | $\sim 3 \times 10^{-8}$ nGal | Below 10 nGal floor |
+| 7 | GM curvature cross-term | ~0.17 nGal | Below practical model floor |
+| 8 | Direct Lense--Thirring | ~0.008 nGal | Below practical model floor |
+| 9 | 1PN tidal (Sun) | ~0.001 nGal | Below practical model floor |
+| 10 | 1PN tidal (Moon) | $\sim 3 \times 10^{-8}$ nGal | Below practical model floor |
 
 $^*$Present in absolute (free-fall) gravimeters; absent from superconducting gravimeters.
 
@@ -330,7 +331,7 @@ $^*$Present in absolute (free-fall) gravimeters; absent from superconducting gra
 
 The $R^i{}_{0jk}$ Riemann components in $g_{0i}$ couple the test mass velocity to the gravitomagnetic tidal field:
 
-$$a^i_\text{GM} = 2\,R^i{}_{0jk}\,X^k v^j \tag{8.1}$$
+$$a^i_\text{GM} = 2c\,R^i{}_{0jk}\,X^k v^j \tag{8.1}$$
 
 These are suppressed relative to the electric-type tidal components by $v_\text{rot}/c$, where $v_\text{rot} = \Omega R_\oplus\cos\varphi$ is the lab's rotational velocity.  At $\varphi = 45\degree$:
 
@@ -361,7 +362,7 @@ Every correction falls into one of four categories:
 
 **(c) Instrument-dependent:** Eotvos effect (~319 nGal for 0.3 m drop); present in absolute gravimeters, absent from superconducting gravimeters.
 
-**(d) Below the 10 nGal accuracy floor:** All general-relativistic corrections.  The largest (GM curvature cross-term at ~0.17 nGal) falls 60$\times$ below the accuracy floor.
+**(d) Below the practical model floor (typically $10^2$--$10^3$ nGal):** All general-relativistic corrections.  The largest (GM curvature cross-term at ~0.17 nGal) remains far below that floor.
 
 The gravimeter equation:
 

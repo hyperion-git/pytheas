@@ -454,21 +454,19 @@ class TestLabFrame:
     # -- Earth gradient tensor --
 
     def test_earth_gradient_trace(self, lab):
-        """Earth gradient tensor trace = -2*Omega^2 (Poisson condition)."""
+        """Earth gradient tensor trace = +2*Omega^2 (vacuum Poisson)."""
         from pytheas._core import _earth_gradient_tensor
         T_earth = _earth_gradient_tensor(self.LAT, self.ALT)
-        expected = -2.0 * OMEGA ** 2
+        expected = 2.0 * OMEGA ** 2
         assert abs(np.trace(T_earth) - expected) < 1e-20
 
     def test_earth_gradient_T_UU(self):
-        """Free-air gradient T_UU ~ -3086 Eotvos at mid-latitude, sea level."""
+        """Free-air gradient T_UU ~ +3086 Eotvos at mid-latitude, sea level."""
         from pytheas._core import _earth_gradient_tensor
         T = _earth_gradient_tensor(45.0, 0.0)
-        T_UU_eotvos = T[2, 2] * 1e9  # convert s^-2 to nanoEotvos... no
         T_UU_eotvos = T[2, 2] / 1e-9  # convert s^-2 to Eotvos
-        # T_UU should be about -3086e-9 s^-2 = -3086 nE = -3.086 uGal/m
-        # In Eotvos (1E = 1e-9 s^-2): ~ -3086 E
-        assert abs(T_UU_eotvos - (-3086)) < 20
+        # T_UU = -d(gamma)/dh ~ +3086e-9 s^-2 = +3086 E
+        assert abs(T_UU_eotvos - 3086) < 20
 
     def test_earth_gradient_symmetric(self):
         """Earth gradient tensor is symmetric."""
@@ -479,8 +477,8 @@ class TestLabFrame:
     # -- Full tensor --
 
     def test_total_tensor_trace(self, field):
-        """Total tensor trace = -2*Omega^2 (tidal is traceless)."""
-        expected = -2.0 * OMEGA ** 2
+        """Total tensor trace = +2*Omega^2 (tidal is traceless)."""
+        expected = 2.0 * OMEGA ** 2
         assert abs(np.trace(field.T) - expected) < 1e-20
 
     def test_total_tensor_symmetric(self, field):

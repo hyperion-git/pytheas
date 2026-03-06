@@ -41,12 +41,12 @@ The return value is a frozen dataclass, `GravityResult`:
 
 ```python
 result.g_total      # 9.807374... m/s²  — total g on the measurement axis
-result.g_static     # 9.807376... m/s²  — normal gravity projected on axis
-result.g_normal     # 9.807376... m/s²  — normal gravity magnitude
+result.g_static     # 9.807374... m/s²  — normal gravity projected on axis
+result.g_normal     # 9.807374... m/s²  — normal gravity magnitude
 result.cos_zenith   # 1.0               — cos(zenith angle)
-result.g_tidal      # -1.8e-6 m/s²      — total tidal perturbation on axis
-result.g_tidal_moon # -1.5e-6 m/s²      — lunar component
-result.g_tidal_sun  # -0.3e-6 m/s²      — solar component
+result.g_tidal      # 2.64e-7 m/s²      — total tidal perturbation on axis
+result.g_tidal_moon # 1.74e-7 m/s²      — lunar component
+result.g_tidal_sun  # 8.98e-8 m/s²      — solar component
 ```
 
 The tidal components are in m/s$^2$.  Multiply by $10^6$ for $\mu$m/s$^2$ (the conventional tidal unit):
@@ -192,9 +192,11 @@ field.g_tidal_sun    # (3,) solar tidal vector in ENU
 
 All vectors use the **ENU** (East-North-Up) convention.  The gravity vector points downward, so `field.g[2] < 0`.
 
+Sign convention note: `compute_g()` reports the scalar reading $\gamma\cos\theta + \hat{\mathbf{n}}\cdot\mathbf{a}_\text{tidal}$, so the static vertical result is positive.  `GravityField`, however, stores the signed ENU vector, so its Up component is negative at the surface.
+
 ### Gravity at an Offset
 
-The gradient tensor maps displacements to gravity changes:
+The gradient tensor maps displacements to gravity changes using the acceleration-gradient convention ($T_{ij} = \partial g_i / \partial x_j$):
 
 ```python
 import numpy as np
@@ -212,7 +214,7 @@ Project the gravity onto any axis (as a unit vector in ENU):
 
 ```python
 # Vertical reading
-g_vertical = field.reading([0, 0, 1])  # same as field.g[2]
+g_vertical = field.reading([0, 0, 1])  # signed Up component = field.g[2] < 0
 
 # Along a tilted axis (15 deg from vertical, toward east)
 axis = np.array([np.sin(np.radians(15)), 0, np.cos(np.radians(15))])
@@ -221,6 +223,8 @@ g_tilted = field.reading(axis)
 # With offset from lab origin
 g_off = field.reading(axis, offset=[5.0, 0, 0])
 ```
+
+For the Up axis, `field.reading([0, 0, 1])` therefore differs by a sign from `compute_g(...).g_total` for a vertical sensor.
 
 ### Equation of Motion
 
@@ -291,7 +295,7 @@ pytheas --lat 48.42 --lon 9.96 --alt 620 \
 | `--alt` | 0 | Altitude above ellipsoid (m) |
 | `--zenith` | 0 | Zenith angle (0 = vertical) |
 | `--azimuth` | 0 | Azimuth from north (deg) |
-| `--start` | now | Start time (YYYY-MM-DD or YYYY-MM-DDTHH:MM) |
+| `--start` | current UTC hour | Start time (YYYY-MM-DD or YYYY-MM-DDTHH:MM) |
 | `--hours` | 48 | Duration (hours) |
 | `--interval` | 10 | Cadence (minutes) |
 | `--csv` | — | Write CSV to file |

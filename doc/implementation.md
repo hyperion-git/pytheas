@@ -7,7 +7,7 @@ For mathematical derivations, see [Theory](theory.md).  For usage examples, see 
 
 ## 1. Pipeline Overview
 
-A call to `compute_g(dt, lat, lon, alt, zenith, azimuth)` executes the following chain:
+A call to `compute_g(dt, lat_deg, lon_deg, alt_m, zenith_deg, azimuth_deg)` executes the following chain:
 
 ```
 (lat, lon, alt) ──► geodetic_to_ecef ──► r_ecef
@@ -29,7 +29,7 @@ dt ──► moon_position_ecef ──► R_moon ─────┤
                                        GravityResult
 ```
 
-`LabFrame.field()` follows the same pipeline but returns the full 3D gravity vector, gradient tensor, and rotation vector in ENU coordinates rather than projecting onto a single axis.
+`compute_g()` and `compute_timeseries()` report the scalar reading on the chosen measurement axis, so a vertical sensor returns a positive static value $\gamma$.  `LabFrame.field()`, by contrast, returns the signed ENU gravity vector itself, with $g_U < 0$.
 
 
 ## 2. Normal Gravity
@@ -47,7 +47,7 @@ $$\gamma_0(\varphi) = \gamma_e \frac{1 + k \sin^2\varphi}{\sqrt{1 - e^2 \sin^2\v
 | $a$ | 6 378 137.0 m | Semi-major axis |
 | $f$ | 1/298.257 223 563 | Flattening |
 | $b$ | 6 356 752.314 245 m | Semi-minor axis |
-| $e^2$ | 0.006 694 379 9013 | First eccentricity squared |
+| $e^2$ | 0.006 694 379 9901 | First eccentricity squared |
 | $GM$ | 3.986 004 418 $\times 10^{14}$ m$^3$/s$^2$ | Geocentric gravitational parameter |
 | $\Omega$ | 7.292 115 $\times 10^{-5}$ rad/s | Rotation rate |
 | $\gamma_e$ | 9.780 325 3141 m/s$^2$ | Equatorial normal gravity |
@@ -61,7 +61,7 @@ $$\gamma(\varphi, h) = \gamma_0 \left[1 - \frac{2(1+f+m-2f\sin^2\varphi)}{a}\,h 
 
 where $m = \Omega^2 a^2 b / GM$.
 
-**Accuracy:** < 1 nGal below 400 m altitude, < 20 nGal below 1 km.  The first-order free-air gradient ($-3.086\ \mu\text{Gal/m}$) has ~0.2% error at 500 m; the second-order term corrects this.
+The first-order free-air gradient is about $-308.6\ \mu\text{Gal/m}$ (equivalently $-3.086\ \mu\text{m}\,\text{s}^{-2}\,\text{m}^{-1}$).  At 500 m altitude, the quadratic term changes $\gamma$ by about $1.8\times10^{-7}$ m/s$^2$ ($\approx 1.8\times10^4$ nGal): tiny compared with total gravity, but still worth retaining because the code already has the closed-form second-order expression.
 
 
 ## 3. Ephemerides
@@ -73,7 +73,7 @@ The lunar ephemeris uses the truncated series from Meeus, *Astronomical Algorith
 - **24** longitude terms (Table 47.A) → ecliptic longitude
 - **23** distance terms (Table 47.A) → geocentric distance
 - **18** latitude terms (Table 47.B) → ecliptic latitude
-- **3** additive corrections (A1, A2, A3)
+- Additive corrections: **3** longitude terms and **6** latitude terms (using A1/A2/A3 and combinations with $L'$, $F$, $M'$)
 - **Eccentricity correction** factor $E = 1 - 0.002516\,T - 0.0000074\,T^2$
 
 The five fundamental arguments ($L'$, $D$, $M'$, $M_s$, $F$) are polynomials in Julian centuries $T$ since J2000.0.
@@ -81,7 +81,7 @@ The five fundamental arguments ($L'$, $D$, $M'$, $M_s$, $F$) are polynomials in 
 **Position accuracy:** ~0.1$\degree$ (~700 km at mean distance).
 **Distance accuracy:** ~200 km out of 385 000 km (~0.05%).
 
-The tidal acceleration scales as $R^{-3}$, so a 0.05% distance error produces ~0.15% tidal error, or **~1 nGal**.  Position error contributes similarly via the direction cosines.
+The tidal acceleration scales as $R^{-3}$, so a 0.05% distance error produces ~0.15% tidal error: for a 100 $\mu$Gal lunar tide this is ~0.15 $\mu$Gal (~150 nGal).  Position error contributes a comparable order.
 
 ### Sun: Low-Precision Meeus
 
@@ -94,7 +94,7 @@ The solar ephemeris uses:
 
 **Accuracy:** ~1 arcmin in ecliptic longitude, ~0.01% in distance.
 
-Solar tides are ~2.2$\times$ smaller than lunar tides, and the ephemeris is proportionally more accurate.  **Tidal error: < 1 nGal.**
+Solar tides are ~2.2$\times$ smaller than lunar tides, and the ephemeris is proportionally more accurate.  **Tidal error: typically O(10 nGal).**
 
 ### Coordinate Chain
 
@@ -124,7 +124,7 @@ truncates at order $(r/R)^1$.  For the Moon with $r/R \approx 1/60$, the next-or
 
 $$\frac{a_\text{exact} - a_\text{grad}}{a_\text{exact}} \sim \frac{3r}{2R} \approx 2.5\%$$
 
-At a peak tidal signal of ~1 $\mu$m/s$^2$, this is **~25 nGal** — significant at our 10 nGal accuracy target.  The exact formula costs negligibly more to compute, so there is no reason to approximate.
+At a peak tidal signal of ~1 $\mu$m/s$^2$ (~100 $\mu$Gal), this is **~2.5 $\mu$Gal (~2500 nGal)**.  The exact formula costs negligibly more to compute, so there is no reason to approximate.
 
 ### Elastic Amplification
 
@@ -195,13 +195,13 @@ The static Earth gradient tensor is diagonal in ENU:
 
 $$T_\text{Earth} = \operatorname{diag}(T_H,\ T_H,\ T_{UU})$$
 
-where $T_{UU} = \partial\gamma/\partial h$ is the vertical free-air gradient, and the horizontal components satisfy the **Poisson trace condition**:
+where $T_{UU} = \partial g_U/\partial h = -\partial\gamma/\partial h > 0$ near sea level (gravity weakens going up), consistent with the acceleration-gradient convention used by the tidal tensor and [Theory](theory.md) Eq. (5.3).  The horizontal components satisfy the vacuum Poisson trace condition:
 
-$$T_{EE} + T_{NN} + T_{UU} = -2\Omega^2$$
+$$T_{EE} + T_{NN} + T_{UU} = 2\Omega^2$$
 
-The $-2\Omega^2$ term is the centrifugal contribution to the trace (inside the rotating frame, the effective potential includes the centrifugal term).  Setting $T_{EE} = T_{NN} = T_H$:
+Setting $T_{EE} = T_{NN} = T_H$:
 
-$$T_H = \frac{-2\Omega^2 - T_{UU}}{2}$$
+$$T_H = \frac{2\Omega^2 - T_{UU}}{2}$$
 
 Off-diagonal terms of order $O(f)$ (flattening) are deferred.
 
@@ -220,13 +220,13 @@ This tensor is symmetric and traceless (vacuum Laplace equation $\nabla^2\Phi = 
 
 | Source | Error | Notes |
 |--------|-------|-------|
-| Lunar ephemeris (position) | ~1 nGal | 0.1$\degree$ = 0.1% of tidal signal |
-| Lunar ephemeris (distance) | ~1 nGal | 200 km / 385 000 km = 0.05% |
-| Solar ephemeris | < 1 nGal | 1 arcmin, negligible at solar tidal scale |
-| Elastic Earth (no FCN) | ~10 nGal | 1% error near K1 diurnal frequency |
+| Lunar ephemeris (position) | ~100–300 nGal | 0.1$\degree$ angular error on a ~100 $\mu$Gal signal |
+| Lunar ephemeris (distance) | ~150 nGal | 200 km / 385 000 km = 0.05% distance $\Rightarrow$ 0.15% tidal |
+| Solar ephemeris | ~10–100 nGal | Smaller signal but comparable angular/distance uncertainties |
+| Elastic Earth (no FCN) | ~100–1000 nGal | 1% Love-number mismatch on major constituents |
 | Normal gravity | < 1 nGal | WGS84 Somigliana + 2nd-order free-air |
 | Tidal formula (exact, not gradient) | < 0.1 nGal | Full expression, no truncation |
-| **Total modeled** | **~10 nGal** | Dominated by FCN omission |
+| **Total modeled** | **~200–1000 nGal** | Usually dominated by ephemeris + FCN treatment |
 
 ### Unmodeled Effects
 
@@ -236,7 +236,7 @@ This tensor is symmetric and traceless (vacuum Laplace equation $\nabla^2\Phi = 
 | Atmospheric pressure | ~300 nGal/hPa | Requires barometer data |
 | Polar motion | ~10–20 nGal | 48-hr variation; static offset ~5 $\mu$Gal |
 | Planetary tides (Venus) | 1–6 nGal | At inferior conjunction |
-| FCN resonance (K1) | ~10 nGal | Frequency-dependent Love number |
+| FCN resonance (K1) | ~100–1000 nGal | Frequency-dependent Love number |
 | LOD variations | < 1 nGal | Earth rotation rate fluctuations |
 | Non-tidal ocean/atmosphere | Variable | Weather, currents |
 
@@ -244,8 +244,8 @@ This tensor is symmetric and traceless (vacuum Laplace equation $\nabla^2\Phi = 
 
 For a **vertical sensor** at an **inland continental site** below ~1 km altitude:
 
-- **Total accuracy: ~10 nGal** (1 $\times$ 10$^{-10}$ m/s$^2$)
-- Error is dominated by the frequency-independent Love number approximation near K1
+- **Total modeled error: typically sub-$\mu$Gal** (~10$^2$–10$^3$ nGal)
+- Error is usually dominated by ephemeris accuracy and frequency-independent Love numbers near K1
 - At coastal sites, unmodeled ocean loading can add up to ~3 $\mu$Gal
 
 For horizontal or tilted sensors, the same accuracy applies to the projected tidal component.  The static projection $\gamma\cos\theta$ is exact to the precision of the Somigliana formula.
@@ -255,40 +255,41 @@ For horizontal or tilted sensors, the same accuracy applies to the projected tid
 
 ### External References
 
-**JPL Horizons (DE441).**  Moon and Sun positions from JPL's DE441 planetary ephemeris are used as truth values.  At the J2000.0 epoch:
+**JPL Horizons (DE441).**  Moon and Sun positions from JPL's DE441 planetary ephemeris are used as truth values in the regression tests (2024--2025 epochs):
 
-- Moon distance agreement: < 300 km (0.08%)
-- Sun distance agreement: < 0.01%
-- Tidal acceleration agreement: $\Delta a / a < 0.2\%$
+- Moon distance agreement: < 200 km
+- Moon declination agreement: < 0.15$\degree$
+- Sun distance agreement: < 10 000 km (~0.007%)
+- Sun declination agreement: < 0.2$\degree$
 
 **GRS80 normal gravity.**  The WGS84 Somigliana formula (which uses GRS80-compatible constants) is validated against published GRS80 values at the equator and pole.
 
 ### Test Suite
 
-The test suite (`tests/test_pytheas.py`) contains 70+ test methods across 13 test classes:
+The test suite (`tests/test_pytheas.py`) contains **79 test methods** across **13 test classes**, with additional parameterized cases in the external-validation and property sections:
 
 | Category | Tests | What is checked |
 |----------|-------|-----------------|
-| Constants | 4 | GM values, $\delta$, $\gamma_e$ within known tolerances |
+| Constants | 6 | GM values, $\delta$, Somigliana self-consistency |
 | Normal gravity | 5 | Equator/pole values, latitude trend, altitude dependence, free-air gradient |
 | Time utilities | 2 | Julian date, GMST at known epochs |
-| Coordinates | 5 | ECEF conversion, ENU orthonormality, right-handedness, axis vector |
+| Coordinates | 7 | ECEF conversion, ENU orthonormality, right-handedness, axis vectors |
 | Ephemeris | 4 | Sun/Moon distances, position ranges, external validation |
 | Tidal acceleration | 3 | Order of magnitude, Moon/Sun ratio, center-of-mass limit |
-| Full pipeline | 5 | Decomposition sums, gravimetric amplification, zenith projection |
-| Timeseries | 5 | Length, variation range, spectral periods (M2/S2), static constancy |
+| Full pipeline | 6 | Decomposition sums, gravimetric amplification, zenith projection |
+| Timeseries | 4 | Length, variation range, spectral periods, static constancy |
 | Edge cases | 4 | South pole, date line, high altitude, negative longitude |
-| LabFrame | 6 | Rotation vector, gradient tensor symmetry/trace, EOM, Coriolis, timeseries |
-| Dataclass API | 3 | Frozen behavior, `asdict` conversion |
-| External validation | 3 | JPL Horizons Moon/Sun, GRS80 gravity |
-| Physics properties | 5 | Tidal → 0 as $R \to \infty$, ENU right-handedness (7 sites), gravity bounds, symmetry, Coriolis $\perp$ velocity |
+| LabFrame | 21 | Rotation vector, tensor symmetry/trace, EOM, Coriolis, timeseries |
+| Dataclass API | 6 | Frozen behavior, `asdict` conversion |
+| External validation | 5 | JPL Horizons Moon/Sun, GRS80 gravity |
+| Physics properties | 6 | Scaling limits, ENU handedness, gravity bounds, Coriolis $\perp$ velocity |
 
 ### Property-Based Tests
 
 Several tests use **property-based** (randomized) assertions rather than fixed reference values:
 
-- **Tidal vanishing:** At 50 random latitudes, tidal acceleration → 0 as body distance → $\infty$
-- **ENU orthonormality:** Verified at 7 global locations spanning all quadrants
+- **Tidal scaling:** $a_\text{tidal}$ decreases with distance (1x, 10x, 100x checks)
+- **ENU orthonormality/right-handedness:** Verified at 7 global locations spanning quadrants
 - **Gravity bounds:** $g \in [9.76, 9.84]$ m/s$^2$ for any latitude/altitude in range
 - **Coriolis perpendicularity:** $(\boldsymbol{\Omega} \times \mathbf{v}) \cdot \mathbf{v} = 0$ for 20 random velocities
 
@@ -299,4 +300,4 @@ pip install -e ".[test]"
 pytest tests/ -v
 ```
 
-All 103 tests should pass.
+The full parameterized suite should pass.
