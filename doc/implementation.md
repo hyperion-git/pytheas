@@ -235,10 +235,10 @@ Rank-2 tensors transform as $T_\text{ENU} = R\,T_\text{ECEF}\,R^T$.
 
 `LabFrame.field(dt)` adds time-dependent tidal contributions:
 
-1. Compute $\mathbf{R}_\text{Moon}(t)$, $\mathbf{R}_\text{Sun}(t)$ in ECEF
+1. Compute $\mathbf{R}\_\text{Moon}(t)$, $\mathbf{R}\_\text{Sun}(t)$ in ECEF
 2. Compute tidal acceleration vectors in ECEF, multiply by $\delta$
 3. Rotate tidal vectors to ENU
-4. Assemble $\mathbf{g} = (0, 0, -\gamma) + \mathbf{a}_\text{Moon}^\text{ENU} + \mathbf{a}_\text{Sun}^\text{ENU}$
+4. Assemble $\mathbf{g} = (0, 0, -\gamma) + \mathbf{a}\_\text{Moon}^\text{ENU} + \mathbf{a}\_\text{Sun}^\text{ENU}$
 5. If `order >= 1`: compute tidal gradient tensors in ECEF, rotate to ENU, add to $T_\text{Earth}$
 6. Return `GravityField(g, omega, T, ...)`
 

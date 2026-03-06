@@ -15,7 +15,7 @@ This document derives the equations behind the Pytheas lab-frame model, starting
 
 $$R^\alpha{}_{\beta\gamma\delta} = \partial_\gamma \Gamma^\alpha_{\beta\delta} - \partial_\delta \Gamma^\alpha_{\beta\gamma} + \Gamma^\alpha_{\mu\gamma}\Gamma^\mu_{\beta\delta} - \Gamma^\alpha_{\mu\delta}\Gamma^\mu_{\beta\gamma}$$
 
-or equivalently $[\nabla_\gamma,\nabla_\delta]V^\alpha = R^\alpha{}_{\beta\gamma\delta}V^\beta$.  This is the MTW/Wald/Carroll convention, so the $+R_{0i0j}X^iX^j/c^2$ term in Eq. (2.1) and the $+c^2 R^i{}_{0j0}X^j$ term in Eq. (2.5) follow from that choice.
+or equivalently $[\nabla_\gamma,\nabla_\delta]V^\alpha = R^\alpha{}\_{\beta\gamma\delta}V^\beta$.  This is the MTW/Wald/Carroll convention, so the $+R_{0i0j}X^iX^j/c^2$ term in Eq. (2.1) and the $+c^2 R^i{}_{0j0}X^j$ term in Eq. (2.5) follow from that choice.
 
 **References.**
 Synge (1960), *Relativity: The General Theory*;
@@ -77,7 +77,7 @@ Computing the Christoffel symbols from Eqs. (2.1)--(2.3) and collecting terms.
 
 $$\Gamma^i_{00}\big|_0 = \frac{a_i}{c^2}, \qquad \Gamma^i_{0j}\big|_0 = \frac{1}{c}\,\epsilon^i{}_{jk}\,\Omega^k \tag{2.4a}$$
 
-from $\partial_j g_{00}|_0 = -2a_j/c^2$ and $\partial_k g_{0j}|_0 = c^{-1}\epsilon_{jlk}\Omega^l$ respectively.  These produce the $-a^i$ (gravity) and $-2(\boldsymbol{\Omega}\times\mathbf{v})^i$ (Coriolis) terms at the origin.  Including first-order corrections in $X^j$ from the curvature terms in Eqs. (2.1)--(2.3) generates the tidal ($c^2 R^i{}_{0j0} X^j$) and centrifugal ($-[\boldsymbol{\Omega}\times(\boldsymbol{\Omega}\times\mathbf{X})]^i$) contributions.  The result:
+from $\partial_j g_{00}|\_0 = -2a_j/c^2$ and $\partial_k g_{0j}|\_0 = c^{-1}\epsilon_{jlk}\Omega^l$ respectively.  These produce the $-a^i$ (gravity) and $-2(\boldsymbol{\Omega}\times\mathbf{v})^i$ (Coriolis) terms at the origin.  Including first-order corrections in $X^j$ from the curvature terms in Eqs. (2.1)--(2.3) generates the tidal ($c^2 R^i{}_{0j0} X^j$) and centrifugal ($-[\boldsymbol{\Omega}\times(\boldsymbol{\Omega}\times\mathbf{X})]^i$) contributions.  The result:
 
 $$\boxed{\frac{d^2 X^i}{dT^2} = \underbrace{-a^i}_{\text{gravity}} \underbrace{-\,2(\boldsymbol{\Omega}\times\mathbf{v})^i}_{\text{Coriolis}} \underbrace{-\,[\boldsymbol{\Omega}\times(\boldsymbol{\Omega}\times\mathbf{X})]^i}_{\text{centrifugal}} + \underbrace{c^2 R^i{}_{0j0}\,X^j}_{\text{tidal}} + \underbrace{2c\,R^i{}_{0jk}\,X^k v^j}_{\text{gravitomagnetic}}} \tag{2.5}$$
 
@@ -205,7 +205,7 @@ This is the central result.  Each term:
 The centrifugal acceleration does **not** appear as a separate term.  It is fully absorbed:
 
 - **Into $\mathbf{g}$:** The Somigliana formula (WGS84 normal gravity) computes the magnitude of $-\nabla\Phi_\text{eff}$, not $-\nabla\Phi_\text{grav}$ alone.  The centrifugal correction is already included.
-- **Into $\mathbf{T}$:** The centrifugal contribution to the gradient tensor is $T^\text{cent}_{ij} = \Omega^2\delta_{ij} - \Omega_i\Omega_j$, which enters the Poisson trace condition (Section 5.3).
+- **Into $\mathbf{T}$:** The centrifugal contribution to the gradient tensor is $T^\text{cent}\_{ij} = \Omega^2\delta_{ij} - \Omega_i\Omega_j$, which enters the Poisson trace condition (Section 5.3).
 
 ### The Poisson trace condition
 
@@ -255,8 +255,8 @@ where $\mathcal{T}_{ij}$ is the Newtonian tidal tensor.  For a point mass $M$ at
 
 $$\mathcal{T}_{ij} = -\frac{GM}{d^3}\left(3\hat{\mathbf{d}}_i\hat{\mathbf{d}}_j - \delta_{ij}\right) \tag{6.2}$$
 
-This tensor is trace-free ($\mathcal{T}_{ii} = 0$) as required by the vacuum Laplace equation.
-With this convention, $\mathcal{T}_{ij}$ is the Hessian-level object from Eq. (6.1); the acceleration-gradient tensor used in Pytheas is $T^\text{tidal}_{ij} = -\mathcal{T}_{ij} = \frac{GM}{d^3}\!\left(-\delta_{ij} + 3\hat{\mathbf{d}}_i\hat{\mathbf{d}}_j\right)$ (Eq. 5.7).
+This tensor is trace-free ($\mathcal{T}\_{ii} = 0$) as required by the vacuum Laplace equation.
+With this convention, $\mathcal{T}\_{ij}$ is the Hessian-level object from Eq. (6.1); the acceleration-gradient tensor used in Pytheas is $T^\text{tidal}\_{ij} = -\mathcal{T}\_{ij} = \frac{GM}{d^3}\!\left(-\delta_{ij} + 3\hat{\mathbf{d}}\_i\hat{\mathbf{d}}\_j\right)$ (Eq. 5.7).
 
 ### The exact tidal formula
 
@@ -350,7 +350,7 @@ $^*$Present in absolute (free-fall) gravimeters; absent from superconducting gra
 
 ### Gravitomagnetic effects
 
-The $R^i{}_{0jk}$ Riemann components in $g_{0i}$ couple the test mass velocity to the gravitomagnetic tidal field:
+The $R^i{}\_{0jk}$ Riemann components in $g_{0i}$ couple the test mass velocity to the gravitomagnetic tidal field:
 
 $$a^i_\text{GM} = 2c\,R^i{}_{0jk}\,X^k v^j \tag{8.1}$$
 
