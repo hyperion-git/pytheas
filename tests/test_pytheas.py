@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 from dataclasses import asdict, FrozenInstanceError
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from pytheas import (
     compute_g,
@@ -110,6 +110,22 @@ class TestTime:
         theta = np.degrees(gmst_rad(datetime(2000, 1, 1, 12, 0, 0)))
         assert abs(theta - 280.46) < 0.1
 
+    def test_julian_date_normalizes_timezone(self):
+        """Timezone-aware datetime gives same JD as UTC equivalent."""
+        aware = datetime(2025, 3, 20, 12, 0, 0,
+                         tzinfo=timezone(timedelta(hours=2)))
+        utc_equiv = datetime(2025, 3, 20, 10, 0, 0)
+        assert abs(julian_date(aware) - julian_date(utc_equiv)) < 1e-12
+
+    def test_compute_g_normalizes_timezone(self):
+        """compute_g produces identical results for tz-aware and UTC naive."""
+        aware = datetime(2025, 3, 20, 12, 0, 0,
+                         tzinfo=timezone(timedelta(hours=2)))
+        utc_equiv = datetime(2025, 3, 20, 10, 0, 0)
+        result_aware = compute_g(aware, 48.14, 11.58, 500.0)
+        result_utc = compute_g(utc_equiv, 48.14, 11.58, 500.0)
+        assert abs(result_aware.g_total - result_utc.g_total) < 1e-15
+
 
 # =========================================================================
 # Coordinate transforms
@@ -164,6 +180,29 @@ class TestCoordinates:
         e, n, u = enu_basis(48.14, 11.58)
         ax = measurement_axis(48.14, 11.58, 90.0, 90.0)
         np.testing.assert_allclose(ax, e, atol=1e-12)
+
+    def test_eci_to_ecef_rotation(self):
+        """ECI->ECEF rotates x,y by GMST (not just z-invariant)."""
+        from pytheas._core import _eci_to_ecef
+
+        dt = datetime(2000, 1, 1, 12, 0, 0)  # J2000.0
+        phi = np.radians(45.0)
+        dec = np.radians(30.0)
+        ra = gmst_rad(dt) + phi
+
+        x_eci = np.cos(dec) * np.cos(ra)
+        y_eci = np.cos(dec) * np.sin(ra)
+        z_eci = np.sin(dec)
+
+        x_ecef, y_ecef, z_ecef = _eci_to_ecef(x_eci, y_eci, z_eci, dt)
+
+        expected = np.array([
+            np.cos(dec) * np.cos(phi),
+            np.cos(dec) * np.sin(phi),
+            np.sin(dec),
+        ])
+        np.testing.assert_allclose(
+            np.array([x_ecef, y_ecef, z_ecef]), expected, atol=1e-12)
 
 
 # =========================================================================
@@ -340,6 +379,18 @@ class TestTimeseries:
             48.14, 11.58, 500.0,
         )
         assert np.ptp(data.g_static) == 0.0
+
+    def test_invalid_interval_raises(self):
+        with pytest.raises(ValueError, match="interval_minutes must be > 0"):
+            compute_timeseries(
+                datetime(2025, 3, 20), datetime(2025, 3, 21),
+                48.14, 11.58, 500.0, interval_minutes=0.0)
+
+    def test_start_after_end_raises(self):
+        with pytest.raises(ValueError, match="end must be >= start"):
+            compute_timeseries(
+                datetime(2025, 3, 21), datetime(2025, 3, 20),
+                48.14, 11.58, 500.0)
 
 
 # =========================================================================
@@ -582,6 +633,17 @@ class TestLabFrame:
         assert len(ts['times']) == 10
         assert len(ts['fields']) == 10
 
+    def test_timeseries_invalid_interval_raises(self, lab):
+        with pytest.raises(ValueError, match="interval_minutes must be > 0"):
+            lab.timeseries(
+                datetime(2025, 3, 20), datetime(2025, 3, 21),
+                interval_minutes=0.0)
+
+    def test_timeseries_start_after_end_raises(self, lab):
+        with pytest.raises(ValueError, match="end must be >= start"):
+            lab.timeseries(
+                datetime(2025, 3, 21), datetime(2025, 3, 20))
+
 
 # =========================================================================
 # Dataclass behavior
@@ -633,6 +695,18 @@ class TestDataclassAPI:
         assert 'times' in d
         assert 'g_total' in d
         assert d['g_normal'] == data.g_normal
+
+    def test_gravityfield_arrays_are_readonly(self):
+        field = LabFrame(48.14, 11.58, 500.0).field(self.DT)
+        with pytest.raises(ValueError):
+            field.g[0] = 0.0
+
+    def test_timeseries_arrays_are_readonly(self):
+        data = compute_timeseries(
+            self.DT, self.DT + timedelta(hours=1),
+            48.14, 11.58, 500.0, n_samples=3)
+        with pytest.raises(ValueError):
+            data.g_total[0] = 0.0
 
 
 # =========================================================================

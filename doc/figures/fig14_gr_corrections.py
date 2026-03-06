@@ -3,7 +3,7 @@
 
 Horizontal bar chart showing every contribution from the Fermi frame analysis,
 spanning from centrifugal (10^6 µGal) down to spin GM tidal (10^{-15} nGal),
-with the 10 nGal accuracy floor.
+with the vertical body-tide accuracy floor indicated for scale.
 """
 
 import sys
@@ -23,7 +23,7 @@ apply_style()
 #   signal      = measured tidal signal (what Pytheas models)
 #   horizontal  = no projection onto measurement axis
 #   instrument  = instrument-dependent systematic
-#   below_floor = below 10 nGal accuracy floor
+#   below_floor = below the practical Pytheas model floor
 entries = [
     {"label": "Static normal gravity $\\gamma(\\varphi,h)$",
      "nGal": 9.81e11, "category": "absorbed"},
@@ -68,7 +68,7 @@ color_map = {
     "signal":      COLORS["navy"],   # the tidal signal Pytheas models
     "horizontal":  COLORS["green"],  # horizontal, no n-hat projection
     "instrument":  COLORS["blue"],   # instrument-dependent systematic
-    "below_floor": COLORS["orange"], # below 10 nGal accuracy floor
+    "below_floor": COLORS["orange"], # below the practical model floor
 }
 bar_colors = [color_map[c] for c in categories]
 
@@ -99,8 +99,8 @@ for i, (mag, bar) in enumerate(zip(magnitudes, bars)):
     ax.text(x_text, i, label, va="center", fontsize=7, color="0.3")
 
 # Accuracy floor line
-ax.axvline(10, color=COLORS["red"], linestyle="--", linewidth=1.2, zorder=0)
-ax.text(10, len(entries) - 0.3, "  Pytheas accuracy\n  floor (10 nGal)",
+ax.axvline(200, color=COLORS["red"], linestyle="--", linewidth=1.2, zorder=0)
+ax.text(200, len(entries) - 0.3, "  Vertical body-tide\n  floor (~200-1000 nGal)",
         fontsize=7.5, color=COLORS["red"], va="top")
 
 # Legend

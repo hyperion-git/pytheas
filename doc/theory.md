@@ -2,9 +2,20 @@
 
 From general relativity to the lab-frame equation of motion.
 
-This document derives the equations behind Pytheas, starting from the metric in the lab's proper reference frame and ending with the three measurable quantities --- the gravity vector $\mathbf{g}$, the gradient tensor $\mathbf{T}$, and the rotation vector $\boldsymbol{\Omega}$ --- that determine the acceleration of a test mass in a terrestrial laboratory.  For what the code computes and its accuracy, see [Implementation](implementation.md).
+This document derives the equations behind the Pytheas lab-frame model, starting from the metric in the lab's proper reference frame and ending with the three quantities --- the gravity vector $\mathbf{g}$, the gradient tensor $\mathbf{T}$, and the rotation vector $\boldsymbol{\Omega}$ --- that enter the acceleration of a test mass in a terrestrial laboratory.  In the current code, these quantities are populated by a normal-gravity baseline plus lunisolar body tides.  For what the implementation actually computes and how accurate each output is, see [Implementation](implementation.md).
+
+**Model scope.**  Pytheas is a body-tide predictor on top of WGS84 normal gravity; it is not a complete terrestrial gravity model.
+
+- **Included:** WGS84/Somigliana normal gravity with second-order free-air dependence; exact Newtonian point-mass tides from the Moon and Sun; Earth rotation in the local equation of motion; a single scalar elastic-response factor applied to the lunisolar tide.
+- **Not included:** Static geopotential beyond normal gravity (geoid, terrain, local mass anomalies), ocean/atmospheric/hydrological loading, polar motion and detailed Earth-orientation corrections, and the constituent-/component-dependent Earth response of the IERS conventions.  These omissions leave the vertical body-tide channel at the $10^2$--$10^3$ nGal level at quiet inland sites, but they matter much more for horizontal components and for the full gravity-gradient tensor.
 
 **Conventions.**  Signature $(-,+,+,+)$, $x^0 = cT$.  Spatial indices $i,j,k$ run over 1,2,3.  ENU coordinates: East, North, Up.  $g_U < 0$ at the surface.
+
+**Riemann sign.**  We define
+
+$$R^\alpha{}_{\beta\gamma\delta} = \partial_\gamma \Gamma^\alpha_{\beta\delta} - \partial_\delta \Gamma^\alpha_{\beta\gamma} + \Gamma^\alpha_{\mu\gamma}\Gamma^\mu_{\beta\delta} - \Gamma^\alpha_{\mu\delta}\Gamma^\mu_{\beta\gamma}$$
+
+or equivalently $[\nabla_\gamma,\nabla_\delta]V^\alpha = R^\alpha{}_{\beta\gamma\delta}V^\beta$.  This is the MTW/Wald/Carroll convention, so the $+R_{0i0j}X^iX^j/c^2$ term in Eq. (2.1) and the $+c^2 R^i{}_{0j0}X^j$ term in Eq. (2.5) follow from that choice.
 
 **References.**
 Synge (1960), *Relativity: The General Theory*;
@@ -25,7 +36,7 @@ Three quantities characterize this observer:
 - $\Omega^i$: **angular velocity** of the spatial triad relative to Fermi--Walker transport (Earth's rotation),
 - $R_{\alpha\beta\gamma\delta}$: **Riemann curvature tensor** evaluated on the worldline (encodes tidal fields).
 
-The task is to write down the acceleration of a test mass in terms of these three quantities, accurate to the level where the Newtonian tidal formula suffices (sub-$\mu$Gal, typically $10^2$--$10^3$ nGal in this implementation).
+The task is to write down the acceleration of a test mass in terms of these three quantities, accurate to the level where the Newtonian tidal formula suffices.  In the current implementation, the best-supported quantitative claim is the vertical body-tide channel at the $10^2$--$10^3$ nGal level; other components inherit larger modeling error from the simplified Earth response and static Earth tensor.
 
 
 ## 2. Fermi Normal Coordinates
@@ -60,7 +71,13 @@ For a non-relativistic test mass ($v^i \ll c$), the spatial geodesic equation re
 
 $$\frac{d^2 X^i}{dT^2} = -c^2\,\Gamma^i_{00} - 2c\,\Gamma^i_{0j}\,v^j + \cdots \tag{2.4}$$
 
-Computing the Christoffel symbols from Eqs. (2.1)--(2.3) and collecting terms:
+Computing the Christoffel symbols from Eqs. (2.1)--(2.3) and collecting terms.
+
+**Sketch.**  At the worldline origin ($X^i = 0$), the metric reduces to $g_{00} = -1$, $g_{0i} = 0$, $g_{ij} = \delta_{ij}$.  The two relevant Christoffel symbols are:
+
+$$\Gamma^i_{00}\big|_0 = \frac{a_i}{c^2}, \qquad \Gamma^i_{0j}\big|_0 = \frac{1}{c}\,\epsilon^i{}_{jk}\,\Omega^k \tag{2.4a}$$
+
+from $\partial_j g_{00}|_0 = -2a_j/c^2$ and $\partial_k g_{0j}|_0 = c^{-1}\epsilon_{jlk}\Omega^l$ respectively.  These produce the $-a^i$ (gravity) and $-2(\boldsymbol{\Omega}\times\mathbf{v})^i$ (Coriolis) terms at the origin.  Including first-order corrections in $X^j$ from the curvature terms in Eqs. (2.1)--(2.3) generates the tidal ($c^2 R^i{}_{0j0} X^j$) and centrifugal ($-[\boldsymbol{\Omega}\times(\boldsymbol{\Omega}\times\mathbf{X})]^i$) contributions.  The result:
 
 $$\boxed{\frac{d^2 X^i}{dT^2} = \underbrace{-a^i}_{\text{gravity}} \underbrace{-\,2(\boldsymbol{\Omega}\times\mathbf{v})^i}_{\text{Coriolis}} \underbrace{-\,[\boldsymbol{\Omega}\times(\boldsymbol{\Omega}\times\mathbf{X})]^i}_{\text{centrifugal}} + \underbrace{c^2 R^i{}_{0j0}\,X^j}_{\text{tidal}} + \underbrace{2c\,R^i{}_{0jk}\,X^k v^j}_{\text{gravitomagnetic}}} \tag{2.5}$$
 
@@ -97,7 +114,7 @@ $$f(x') = f - (\nabla_a f)\,\sigma^a + \tfrac{1}{2}(\nabla_a\nabla_b f)\,\sigma^
 
 where everything on the right is evaluated at $x$.  For a vector field, the parallel propagator handles index transport.
 
-Applying Eq. (3.3) to the metric $g_{ab}$ about the lab worldline, using the orthonormal Fermi--Walker-transported tetrad as basis, recovers the FNC metric of Eqs. (2.1)--(2.3).  The bitensor framework is thus the theoretical engine behind the FNC expansion.
+Applying Eq. (3.3) to the metric $g_{ab}$ about the lab worldline, using the orthonormal Fermi--Walker-transported tetrad as basis, recovers the FNC metric of Eqs. (2.1)--(2.3).  Concretely, the $R_{0i0j}X^iX^j$ term in $g_{00}$ arises from the second-order covariant Taylor coefficient $\nabla_a\nabla_b g_{00}$ contracted with the Fermi displacements $\sigma^a\sigma^b$; the Riemann tensor appears through the commutation relation $[\nabla_a,\nabla_b]g_{cd}$.  The bitensor framework is thus the theoretical engine behind the FNC expansion.
 
 
 ## 4. The Rotating Lab Frame
@@ -154,7 +171,7 @@ This symmetric $3\times 3$ tensor encodes tidal stretching (from curvature $c^2 
 
 $$\boldsymbol{\Omega} = (0,\;\Omega\cos\varphi,\;\Omega\sin\varphi) \tag{4.8}$$
 
-with $\Omega = 7.292\,115 \times 10^{-5}$ rad/s.
+with $\Omega = 7.292\,115 \times 10^{-5}$ rad/s.  This derivation assumes $\dot{\boldsymbol{\Omega}} = 0$ (constant Earth rotation rate), suppressing the Euler acceleration $-\dot{\boldsymbol{\Omega}}\times\mathbf{X}$.  For the real Earth, $|\dot{\Omega}|/\Omega \lesssim 10^{-8}\,\text{yr}^{-1}$, so the Euler term is negligible at sub-nGal level.
 
 
 ## 5. The Equation of Motion
@@ -168,6 +185,8 @@ $$m\ddot{\mathbf{x}} = -m\nabla\Phi_\text{grav} - m\boldsymbol{\Omega}\times(\bo
 The first two terms combine into $-m\nabla\Phi_\text{eff}$ via the identity:
 
 $$\tfrac{1}{2}\nabla|\boldsymbol{\Omega}\times\mathbf{x}|^2 = -\boldsymbol{\Omega}\times(\boldsymbol{\Omega}\times\mathbf{x}) \tag{5.2}$$
+
+*Proof.*  Expand $|\boldsymbol{\Omega}\times\mathbf{x}|^2 = \Omega^2 x^2 - (\boldsymbol{\Omega}\cdot\mathbf{x})^2$ and differentiate: $\frac{1}{2}\partial_i[\Omega^2 x^2 - (\Omega_k x^k)^2] = \Omega^2 x_i - (\boldsymbol{\Omega}\cdot\mathbf{x})\,\Omega_i$.  The BAC-CAB identity gives $-[\boldsymbol{\Omega}\times(\boldsymbol{\Omega}\times\mathbf{x})]_i = \Omega^2 x_i - (\boldsymbol{\Omega}\cdot\mathbf{x})\,\Omega_i$, confirming the equality. $\square$
 
 Taylor-expanding $-\nabla_i\Phi_\text{eff} \approx g_i + T_{ij}\,\delta x^j$ yields:
 
@@ -266,7 +285,7 @@ The formula is exact to all orders in $R/r_M$ within Newtonian gravity.
 
 ## 7. Elastic Earth
 
-The solid Earth deforms under tidal stress, amplifying the surface gravity change.
+The solid Earth deforms under tidal stress, amplifying the surface gravity change.  In Pytheas this enters only as a simplified correction to the lunisolar body tide; it is not a full treatment of terrestrial loading or constituent-by-constituent Earth response.
 
 ### Love numbers
 
@@ -293,17 +312,19 @@ The gravimetric factor is:
 
 $$\boxed{\delta = 1 + h_2 - \tfrac{3}{2}k_2} \tag{7.2}$$
 
-With IERS 2010 values ($h_2 = 0.6078$, $k_2 = 0.2980$):
+With IERS 2010 nominal values ($h_2 = 0.6078$, $k_2 = 0.2980$):
 
 $$\delta = 1.1608 \tag{7.3}$$
 
-The tidal signal is 16% larger than on a rigid Earth.
+The tidal signal is 16% larger than on a rigid Earth for the vertical degree-2 body-tide response.
+
+Pytheas currently extends Eq. (7.1) by multiplying the full tidal acceleration vector and tidal gradient tensor by the same scalar $\delta$.  That is a pragmatic approximation to the vertical gravimetric response, but it is not the full IERS treatment.  In IERS Conventions 2010, Chapters 6--7, the Earth response depends on tidal constituent, latitude, and observable: frequency-dependent Love/Shida numbers are needed, especially near resonances.  The scalar approximation is therefore most defensible for the vertical body-tide component away from resonance, and it is weakest in the K1/FCN band, in horizontal components, and in tensor elements where no single gravimetric factor is standard.
 
 ### Known limitations
 
-**FCN resonance.**  Near the K1 tidal frequency (~23.93 h), the free core nutation resonance causes the Love numbers to vary rapidly.  $\delta$ can deviate from 1.1608 by ~1%, introducing a site/frequency-dependent error typically in the $10^2$--$10^3$ nGal range.  This is one of the dominant model-error terms in Pytheas.  A frequency-dependent $\delta(f)$ table would correct it.
+**FCN resonance.**  Near the K1 tidal frequency (~23.93 h), the free core nutation resonance causes the Love numbers to vary rapidly.  $\delta$ can deviate from 1.1608 by ~1%, introducing a site/frequency-dependent error typically in the $10^2$--$10^3$ nGal range in the vertical body tide.  This is one of the dominant model-error terms in Pytheas.  A constituent-dependent IERS correction is required to model this band properly.
 
-**Higher degrees.**  The degree-3 lunar contribution is ~1.7% of degree 2; in this stripped-down model it is smaller than the dominant error terms above.
+**Higher-degree response.**  Eq. (6.3) already gives the complete rigid-Earth point-mass tide, i.e. all spatial degrees in the expansion parameter $R_\oplus/d$.  What Pytheas omits is higher-degree *Earth response*: it uses only the degree-2-style scalar factor $\delta$ rather than degree- and frequency-dependent Love numbers such as $h_3$, $k_3$, \dots.  The missing degree-3 lunar term is therefore an elastic-response omission, not a missing term in the exact Newtonian forcing.
 
 
 ## 8. Post-Newtonian Corrections
@@ -341,6 +362,8 @@ The Lense--Thirring gravitomagnetic field from Earth's angular momentum:
 
 $$B_g = \frac{2GJ_\oplus}{c^2 R_\oplus^3} \approx 3.4\times10^{-14}\;\text{s}^{-1} \tag{8.3}$$
 
+using $J_\oplus \approx 7.05 \times 10^{33}$ kg m$^2$/s (IERS Conventions 2010, Table 1.1).
+
 Nine orders of magnitude below Earth's rotation rate.  Direct acceleration on a falling test mass: ~0.008 nGal.
 
 ### 1PN tidal corrections
@@ -369,3 +392,18 @@ The gravimeter equation:
 $$\boxed{g(t) = \gamma(\varphi,h) + \delta\left[\mathbf{a}_\text{Moon}(t) + \mathbf{a}_\text{Sun}(t)\right]\cdot\hat{\mathbf{n}}} \tag{8.4}$$
 
 is not merely a useful approximation.  It is the *exact leading-order result* of general relativity in the weak-field limit, with controlled, computable, and negligible corrections at every post-Newtonian order.
+
+
+---
+
+## References
+
+1. Synge, J. L. (1960). *Relativity: The General Theory*. North-Holland.
+2. Manasse, F. K. & Misner, C. W. (1963). Fermi normal coordinates and some basic concepts in differential geometry. *J. Math. Phys.* **4**, 735--745.
+3. Ni, W.-T. & Zimmerman, M. (1978). Inertial and gravitational effects in the proper reference frame of an accelerated, rotating observer. *Phys. Rev. D* **17**, 1473--1476.
+4. Poisson, E. & Will, C. M. (2014). *Gravity: Newtonian, Post-Newtonian, Relativistic*. Cambridge University Press. Ch. 9.
+5. Meeus, J. (1998). *Astronomical Algorithms*, 2nd ed. Willmann-Bell.
+6. Moritz, H. (1980). Geodetic Reference System 1980. *Bull. Géod.* **54**, 395--405.
+7. Petit, G. & Luzum, B. (eds.) (2010). *IERS Conventions (2010)*. IERS Technical Note 36, Verlag des Bundesamts für Kartographie und Geodäsie, Frankfurt am Main. Chs. 6--7.
+8. Torge, W. & Müller, J. (2012). *Geodesy*, 4th ed. De Gruyter.
+9. National Geospatial-Intelligence Agency (2014). *World Geodetic System 1984: Its Definition and Relationships with Local Geodetic Systems*. NGA.STND.0036_1.0.0_WGS84.

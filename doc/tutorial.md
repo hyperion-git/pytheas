@@ -22,6 +22,8 @@ pip install -e ".[plot]"
 
 **Requirements:** Python $\ge$ 3.9, NumPy $\ge$ 1.20.  Matplotlib is optional (needed for `--plot`).
 
+**Timezone handling:** All datetime arguments are interpreted as UTC.  Timezone-aware datetimes (e.g., `datetime(..., tzinfo=timezone(timedelta(hours=2)))`) are automatically converted to UTC before computation.  Naive datetimes are assumed to already be UTC.
+
 
 ## Single-Epoch Computation
 
@@ -192,7 +194,15 @@ field.g_tidal_sun    # (3,) solar tidal vector in ENU
 
 All vectors use the **ENU** (East-North-Up) convention.  The gravity vector points downward, so `field.g[2] < 0`.
 
-Sign convention note: `compute_g()` reports the scalar reading $\gamma\cos\theta + \hat{\mathbf{n}}\cdot\mathbf{a}_\text{tidal}$, so the static vertical result is positive.  `GravityField`, however, stores the signed ENU vector, so its Up component is negative at the surface.
+> **Sign convention — read this carefully.**
+>
+> | API | Vertical result | Convention |
+> |-----|----------------|------------|
+> | `compute_g().g_total` | **+9.807...** | Scalar reading on the measurement axis (positive = toward sensor) |
+> | `field.g[2]` | **−9.807...** | Signed ENU vector component (negative = downward) |
+> | `field.reading([0,0,1])` | **−9.807...** | Dot product of g with the Up axis |
+>
+> `compute_g()` reports the *magnitude* of the gravity projection, so a vertical sensor gives a positive number.  `GravityField` stores the *signed* ENU vector, so its Up component is negative at the surface.  These represent the same physics; the sign difference is purely a convention choice between the scalar and vector APIs.
 
 ### Gravity at an Offset
 
@@ -239,6 +249,22 @@ Centrifugal acceleration is absorbed into $\mathbf{g}$ (Somigliana) and $\mathbf
 dx = np.array([0.0, 0.0, 1.0])   # 1 m above origin
 v  = np.array([0.0, 5.0, 0.0])   # 5 m/s northward
 a  = field.eom(dx, v)             # (3,) acceleration in ENU
+```
+
+**Example: Coriolis deflection in a 10 cm free fall.**  A test mass dropped from rest at 48$\degree$N is deflected eastward by the Coriolis force.  A simple Euler integration:
+
+```python
+dt_step = 0.0001
+dx = np.array([0.0, 0.0, 0.1])   # 10 cm above origin
+v  = np.array([0.0, 0.0, 0.0])   # released from rest
+
+while dx[2] > 0:
+    a = field.eom(dx, v)
+    v  += a * dt_step
+    dx += v * dt_step
+
+print(f"Eastward deflection: {dx[0]*1e6:.2f} µm")
+# ≈ 0.47 µm — the classic Coriolis deflection
 ```
 
 ### When to Use LabFrame vs. compute_g
@@ -304,6 +330,8 @@ pytheas --lat 48.42 --lon 9.96 --alt 620 \
 
 Or run as a module: `python -m pytheas --lat 48.42 --lon 9.96 --alt 620`
 
+**Input validation.**  Both `compute_timeseries` and `LabFrame.timeseries` raise `ValueError` if `end < start` or if `interval_minutes <= 0` (when `n_samples` is not set).
+
 
 ## Recipes
 
@@ -341,6 +369,47 @@ result = compute_g(datetime(2025, 3, 20, 12, 0),
                    lat_deg=48.42, lon_deg=9.96, alt_m=620.0)
 d = asdict(result)
 # {'g_total': 9.807..., 'g_static': ..., 'g_tidal': ..., ...}
+```
+
+### LabFrame Tensor Timeseries
+
+Extract gradient tensor components over time (useful for gradiometry):
+
+```python
+from datetime import datetime
+from pytheas import LabFrame
+
+lab = LabFrame(lat_deg=48.42, lon_deg=9.96, alt_m=620.0)
+ts = lab.timeseries(
+    start=datetime(2025, 3, 20),
+    end=datetime(2025, 3, 22),
+    interval_minutes=10.0,
+)
+
+# Vertical gravity gradient over time
+T_UU = [f.T[2, 2] for f in ts["fields"]]
+
+# Full tidal vector (Up component) over time
+g_tidal_up = [f.g_tidal_moon[2] + f.g_tidal_sun[2] for f in ts["fields"]]
+```
+
+### Dict Conversion (note on immutability)
+
+`GravityResult`, `TimeSeries`, and `GravityField` are frozen dataclasses with read-only arrays.  `dataclasses.asdict()` returns *mutable copies* of the data:
+
+```python
+from dataclasses import asdict
+from pytheas import compute_g
+from datetime import datetime
+
+result = compute_g(datetime(2025, 3, 20, 12, 0),
+                   lat_deg=48.42, lon_deg=9.96, alt_m=620.0)
+d = asdict(result)
+# {'g_total': 9.807..., 'g_static': ..., 'g_tidal': ..., ...}
+
+# Direct mutation is blocked:
+# result.g_total = 0.0  → FrozenInstanceError
+# field.g[0] = 0.0      → ValueError (read-only array)
 ```
 
 ### Building Blocks

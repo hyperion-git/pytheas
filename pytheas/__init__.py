@@ -1,20 +1,21 @@
 """
-Pytheas -- gravitational acceleration g(t) at a point on Earth
+Pytheas -- body-tide prediction on a normal-gravity baseline
 
 Named after Pytheas of Massalia (c. 325 BC), the Greek explorer who made the
 first recorded systematic observations connecting ocean tides to the Moon.
 
-Computes the total gravitational acceleration projected along an arbitrary
-measurement axis, including normal gravity (WGS84), lunar and solar tidal
-acceleration (exact Newtonian, Meeus ephemeris), and elastic Earth
-amplification (IERS 2010 Love numbers).
+Computes the normal-gravity background plus lunisolar body tides along an
+arbitrary measurement axis, using exact Newtonian point-mass forcing, Meeus
+ephemerides, and a single scalar elastic-response factor.
 
-Accuracy: sub-uGal (~200-1000 nGal) for inland sites, dominated by
-ephemeris precision and frequency-independent Love numbers.
+Quoted ~200-1000 nGal accuracy applies to the vertical body-tide channel at
+quiet inland sites.  Pytheas is not a complete terrestrial gravity model:
+loading, local anomalies, and full IERS constituent-/component-dependent
+response corrections are omitted.
 Dependency: numpy only.
 """
 
-__version__ = "3.3.1"
+__version__ = "3.4.0"
 
 from ._core import (
     # Main API

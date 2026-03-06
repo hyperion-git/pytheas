@@ -189,7 +189,7 @@ This computes the difference between the gravitational acceleration at the obser
 
 ### Ephemerides
 
-**Sun:** Low-precision Meeus (*Astronomical Algorithms*) ephemeris. Ecliptic longitude accurate to ~1 arcmin; distance derived from true anomaly. Tidal error contribution: <1 nGal.
+**Sun:** Low-precision Meeus (*Astronomical Algorithms*) ephemeris. Ecliptic longitude accurate to ~1 arcmin; distance derived from true anomaly. Tidal error contribution: typically O(10 nGal).
 
 **Moon:** Truncated Meeus (ch. 47) ephemeris including:
 - 24 longitude terms (Table 47.A)
@@ -198,17 +198,17 @@ This computes the difference between the gravitational acceleration at the obser
 - A1, A2, A3 additive corrections
 - Eccentricity correction factor E
 
-Position accurate to ~0.1 deg; distance accurate to ~200 km. The resulting tidal error is ~0.1% of the lunar signal (~1 nGal).
+Position accurate to ~0.1 deg; distance accurate to ~200 km. The resulting lunar-tide error is typically O(100 nGal).
 
 ### Elastic Earth Correction
 
-The solid Earth deforms under the tidal potential, amplifying the surface gravity change by the gravimetric factor:
+The solid Earth deforms under the tidal potential.  Pytheas models this with a single gravimetric factor:
 
 ```
 delta = 1 + h2 - (3/2) * k2 = 1.1608
 ```
 
-using IERS 2010 Love numbers h2 = 0.6078, k2 = 0.2980. This single frequency-independent value neglects the ~1% resonance near the K1 frequency caused by the free core nutation (FCN), introducing up to ~10 nGal of error at that constituent.
+using nominal IERS 2010 degree-2 Love numbers h2 = 0.6078, k2 = 0.2980. This is a scalar approximation to the vertical body-tide response, not the full IERS constituent-by-constituent treatment. In particular, it neglects frequency dependence near the K1 free-core-nutation band and is not the correct transfer model for horizontal components or tensor elements.
 
 ### Coordinate System
 
@@ -217,23 +217,28 @@ All calculations use ECEF (Earth-Centered, Earth-Fixed) Cartesian coordinates. T
 
 ## Accuracy Budget
 
-For a vertical sensor at a continental (inland) site:
+Pytheas is best understood as a **body-tide predictor on top of a normal-gravity baseline**, not as a complete terrestrial gravity model.
+
+For the **vertical body tide** at a quiet inland site:
 
 | Error source | Magnitude | Notes |
 |-------------|-----------|-------|
-| Lunar ephemeris (position) | ~1 nGal | 0.1 deg = 0.1% of tidal signal |
-| Lunar ephemeris (distance) | ~1 nGal | 200 km / 385000 km ~ 0.05% |
-| Solar ephemeris | <1 nGal | 1 arcmin, negligible |
-| Elastic Earth (no FCN) | ~10 nGal | 1% near K1 only |
+| Lunar ephemeris (position) | ~100--300 nGal | 0.1 deg angular error on a ~100 µGal signal |
+| Lunar ephemeris (distance) | ~150 nGal | 200 km / 385000 km ~ 0.05% distance |
+| Solar ephemeris | ~10--100 nGal | Smaller signal, more accurate ephemeris |
+| Scalar elastic response (`delta`) | ~100--1000 nGal | Dominant near diurnal constituents, especially K1 |
 | Normal gravity | <1 nGal | WGS84 + 2nd-order free-air |
-| Ocean loading (not modeled) | 1--3000 nGal | negligible inland, up to ~3 µGal at coast |
-| Atmospheric pressure (not modeled) | ~300 nGal/hPa | needs barometer data |
-| Polar motion (not modeled) | ~10--20 nGal | 48-hour variation; static offset ~5 µGal |
-| Planetary tides (not modeled) | ~1--6 nGal | Venus dominates at inferior conjunction |
 
-**Total for inland sites: ~10 nGal (1e-10 m/s²).**
+**Modeled vertical body-tide accuracy: ~200--1000 nGal.**
 
-At coastal sites, unmodeled ocean loading can add up to ~3 µGal of error.
+For **horizontal components** and the full **gravity-gradient tensor**, uncertainty is substantially larger because the implementation applies the same scalar elastic factor to every component and uses a diagonal static Earth tensor. The returned tensor should be treated as an order-10 Eotvos product, not precision gradiometry.
+
+Unmodeled loading terms can still dominate at real sites:
+
+- **Ocean loading:** ~1--3000 nGal depending on coastal geometry
+- **Atmospheric pressure:** ~300 nGal/hPa
+- **Polar motion:** ~10--20 nGal dynamic variation, with larger static offsets
+- **Hydrological and non-tidal atmosphere/ocean effects:** site- and time-dependent
 
 
 ## API Reference
@@ -286,17 +291,13 @@ pytheas.H2, pytheas.K2  # Love numbers
 
 ## Limitations
 
-The following effects, omitted here, would be needed for sub-10-nGal accuracy:
+The following effects would be needed for an IERS-grade terrestrial gravity model:
 
-- **Ocean tidal loading:** Requires site-specific coefficients from models
-  such as FES2014 or GOT4.10c. Dominant at coastal sites (up to 50 nGal).
-- **Atmospheric pressure loading:** ~3 nGal per hPa of barometric anomaly.
-  Requires real-time barometer data.
-- **FCN Love number correction:** A frequency-dependent delta(f) table would
-  capture the ~1% gravimetric resonance near K1.
-- **JPL planetary ephemeris:** DE440/DE441 would provide sub-arcsecond
-  positions, reducing ephemeris error to <0.01 nGal.
-- **Polar motion and LOD:** Earth orientation parameters from IERS bulletins.
+- **Ocean tidal loading:** Requires site-specific coefficients from models such as FES2014 or GOT4.10c.
+- **Atmospheric pressure loading:** Requires local pressure data and loading coefficients.
+- **Constituent-dependent Love/Shida numbers:** Needed near K1/FCN and for horizontal/tensor observables.
+- **Local gravity anomalies and terrain:** Needed for realistic static background gravity and tensors.
+- **Polar motion and refined Earth orientation:** Requires IERS bulletins and associated corrections.
 
 
 ## License

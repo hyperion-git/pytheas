@@ -1,23 +1,25 @@
 """
-Pytheas -- gravitational acceleration g(t) at a point on Earth
+Pytheas -- body-tide prediction on a normal-gravity baseline
 
-Computes the total gravitational acceleration projected along an arbitrary
-measurement axis, as a function of time.  The model includes:
+Computes the normal-gravity projection plus lunisolar body-tide perturbations
+along an arbitrary measurement axis.  The current model includes:
 
-  - Normal gravity on the WGS84 ellipsoid with second-order free-air correction
-  - Lunar tidal acceleration (exact Newtonian formula, Meeus ephemeris)
-  - Solar tidal acceleration (exact Newtonian formula, Meeus ephemeris)
-  - Elastic Earth amplification via IERS 2010 Love numbers
+  - WGS84 normal gravity with second-order free-air correction
+  - Lunar and solar point-mass tides (exact Newtonian formula, Meeus ephemerides)
+  - A single scalar elastic-response factor based on nominal degree-2 Love numbers
 
-Accuracy: sub-uGal (~200-1000 nGal) for inland sites, dominated by
-ephemeris precision and frequency-independent Love numbers.
+This is not a complete terrestrial gravity model: loading, local gravity
+anomalies, and the full constituent-/component-dependent IERS response are
+omitted.  The ~200-1000 nGal accuracy claim applies only to the vertical
+body-tide channel at quiet inland sites; horizontal components and the full
+tensor are less certain.
 
 Dependencies: numpy only.
 """
 
 import numpy as np
-from dataclasses import dataclass, field as dc_field
-from datetime import datetime, timedelta
+from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
 from typing import List
 
 # =============================================================================
@@ -46,10 +48,10 @@ M_RATIO = OMEGA ** 2 * A_WGS84 ** 2 * B_WGS84 / GM_E
 AU              = 1.495978707e11              # astronomical unit (m)
 OBLIQUITY_J2000 = 23.439291                   # mean obliquity at J2000 (deg)
 
-# Elastic Earth (IERS 2010 Love numbers)
+# Scalar elastic-response approximation (IERS 2010 nominal degree-2 Love numbers)
 H2 = 0.6078
 K2 = 0.2980
-DELTA_GRAV = 1.0 + H2 - 1.5 * K2             # gravimetric factor = 1.1608
+DELTA_GRAV = 1.0 + H2 - 1.5 * K2             # vertical gravimetric factor = 1.1608
 
 
 # =============================================================================
@@ -89,8 +91,21 @@ def normal_gravity(lat_deg, alt_m):
 # Time Utilities
 # =============================================================================
 
+def _as_utc_naive(dt):
+    """Return *dt* normalized to naive UTC.
+
+    Naive datetimes are assumed to already be UTC.
+    """
+    if dt.tzinfo is None or dt.utcoffset() is None:
+        return dt
+    return dt.astimezone(timezone.utc).replace(tzinfo=None)
+
+
 def julian_date(dt):
     """Convert a UTC datetime to Julian Date (Meeus algorithm).
+
+    Timezone-aware datetimes are converted to UTC first.  Naive datetimes
+    are assumed to already be UTC.
 
     Parameters
     ----------
@@ -102,6 +117,7 @@ def julian_date(dt):
     float
         Julian Date.
     """
+    dt = _as_utc_naive(dt)
     y, m = dt.year, dt.month
     if m <= 2:
         y -= 1
@@ -527,7 +543,7 @@ def _earth_gradient_tensor(lat_deg, alt_m):
     """Earth gravity gradient tensor in ENU (diagonal approximation).
 
     Uses the free-air gradient from Somigliana for T_UU and the Poisson
-    trace condition Tr(T) = -2*Omega^2 for the horizontal components.
+    trace condition Tr(T) = +2*Omega^2 for the horizontal components.
     Off-diagonal O(f) terms are deferred.
 
     Parameters
@@ -592,6 +608,12 @@ class GravityField:
     g_normal: float
     g_tidal_moon: np.ndarray
     g_tidal_sun: np.ndarray
+
+    def __post_init__(self):
+        for name in ('g', 'omega', 'T', 'g_tidal_moon', 'g_tidal_sun'):
+            arr = np.array(getattr(self, name), copy=True)
+            arr.flags.writeable = False
+            object.__setattr__(self, name, arr)
 
     def at(self, offset):
         """Gravity at a displacement from the lab origin.
@@ -758,6 +780,8 @@ class LabFrame:
             times  : list of datetime objects
             fields : list of GravityField objects
         """
+        if end < start:
+            raise ValueError("end must be >= start")
         if n_samples is not None:
             if n_samples < 1:
                 raise ValueError("n_samples must be >= 1")
@@ -769,6 +793,9 @@ class LabFrame:
                 times = [start + timedelta(seconds=i * step_sec)
                          for i in range(n_samples)]
         else:
+            if interval_minutes <= 0:
+                raise ValueError(
+                    "interval_minutes must be > 0 when n_samples is not set")
             step = timedelta(minutes=interval_minutes)
             times = []
             t = start
@@ -816,6 +843,13 @@ class TimeSeries:
     g_tidal_moon: np.ndarray
     g_tidal_sun: np.ndarray
 
+    def __post_init__(self):
+        for name in ('g_total', 'g_static', 'g_tidal',
+                      'g_tidal_moon', 'g_tidal_sun'):
+            arr = np.array(getattr(self, name), copy=True)
+            arr.flags.writeable = False
+            object.__setattr__(self, name, arr)
+
 
 # =============================================================================
 # Main API
@@ -823,7 +857,7 @@ class TimeSeries:
 
 def compute_g(dt, lat_deg, lon_deg, alt_m,
               zenith_deg=0.0, azimuth_deg=0.0):
-    """Compute total g(t) projected along a measurement axis.
+    """Compute the normal-gravity + body-tide reading on a measurement axis.
 
     Parameters
     ----------
@@ -870,7 +904,7 @@ def compute_g(dt, lat_deg, lon_deg, alt_m,
 def compute_timeseries(start, end, lat_deg, lon_deg, alt_m,
                        zenith_deg=0.0, azimuth_deg=0.0,
                        interval_minutes=10.0, n_samples=None):
-    """Compute a g(t) timeseries.
+    """Compute a normal-gravity + body-tide timeseries.
 
     Parameters
     ----------
@@ -908,6 +942,8 @@ def compute_timeseries(start, end, lat_deg, lon_deg, alt_m,
     g_static_val = g0 * cos_z
     r = geodetic_to_ecef(lat_deg, lon_deg, alt_m)
 
+    if end < start:
+        raise ValueError("end must be >= start")
     if n_samples is not None:
         if n_samples < 1:
             raise ValueError("n_samples must be >= 1")
@@ -919,6 +955,9 @@ def compute_timeseries(start, end, lat_deg, lon_deg, alt_m,
             times = [start + timedelta(seconds=i * step_sec)
                      for i in range(n_samples)]
     else:
+        if interval_minutes <= 0:
+            raise ValueError(
+                "interval_minutes must be > 0 when n_samples is not set")
         step = timedelta(minutes=interval_minutes)
         times = []
         t = start

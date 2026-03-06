@@ -18,15 +18,15 @@ apply_style()
 
 # ---- Error budget data ----
 errors = [
-    {"source": "Ocean loading",            "nGal": 25,   "status": "not modeled"},
-    {"source": "Elastic Earth (no FCN)",    "nGal": 10,   "status": "limitation"},
-    {"source": "Atmospheric pressure",      "nGal": 3,    "status": "not modeled"},
-    {"source": "Lunar ephemeris (position)","nGal": 1,    "status": "modeled"},
-    {"source": "Lunar ephemeris (distance)","nGal": 1,    "status": "modeled"},
-    {"source": "Solar ephemeris",           "nGal": 0.5,  "status": "modeled"},
+    {"source": "Ocean loading",             "nGal": 3000, "status": "not modeled"},
+    {"source": "Scalar elastic response",   "nGal": 1000, "status": "limitation"},
+    {"source": "Atmospheric pressure",      "nGal": 300,  "status": "not modeled"},
+    {"source": "Lunar ephemeris (position)","nGal": 300,  "status": "modeled"},
+    {"source": "Lunar ephemeris (distance)","nGal": 150,  "status": "modeled"},
+    {"source": "Solar ephemeris",           "nGal": 100,  "status": "modeled"},
+    {"source": "Polar motion",              "nGal": 20,   "status": "not modeled"},
+    {"source": "Planetary tides",           "nGal": 6,    "status": "not modeled"},
     {"source": "Normal gravity",            "nGal": 0.5,  "status": "modeled"},
-    {"source": "Polar motion",              "nGal": 0.5,  "status": "not modeled"},
-    {"source": "Planetary tides",           "nGal": 0.1,  "status": "not modeled"},
 ]
 
 # Sort by magnitude (largest at top)
@@ -56,7 +56,7 @@ ax.set_xlabel("Error magnitude (nGal)")
 ax.set_xscale("log")
 
 # Set x limits to give some breathing room
-ax.set_xlim(0.05, 80)
+ax.set_xlim(0.3, 6000)
 
 # Add value labels on bars
 for i, (mag, bar) in enumerate(zip(magnitudes, bars)):
@@ -75,7 +75,7 @@ ax.legend(handles=legend_elements, loc="lower right", frameon=False,
 
 # Accuracy annotation
 ax.text(0.98, 0.98,
-        "Accuracy: ~10 nGal inland, ~50 nGal coastal",
+        "Vertical body tide: ~200-1000 nGal inland",
         transform=ax.transAxes, fontsize=8, ha="right", va="top",
         style="italic", color="0.4",
         bbox=dict(boxstyle="round,pad=0.3", facecolor="0.95",

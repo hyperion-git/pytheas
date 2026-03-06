@@ -1,8 +1,42 @@
 # Implementation Notes
 
-What the code computes, how it computes it, and how accurate the result is.
+What the code computes, how it computes it, and how accurate each output is.
 
 For mathematical derivations, see [Theory](theory.md).  For usage examples, see [Tutorial](tutorial.md).
+
+Pytheas is a body-tide predictor on top of a normal-gravity baseline.  The current implementation combines WGS84/Somigliana normal gravity with exact Newtonian Moon/Sun point-mass tides and a single scalar elastic-response factor.  It does not attempt to be a complete terrestrial gravity model.
+
+**Included in the code path.**
+
+- Normal gravity on the WGS84 ellipsoid with second-order free-air correction
+- Exact Newtonian lunisolar body tides from point masses
+- Rotation of vectors and tensors into the local ENU frame
+- A single scalar gravimetric factor $\delta = 1 + h_2 - \tfrac{3}{2}k_2$
+
+**Not included.**
+
+- Static gravity anomalies beyond normal gravity (geoid, terrain, local mass distribution): affects the absolute background field and static tensor at a real site
+- Ocean, atmospheric, and hydrological loading: can add site-dependent signals from tens of nGal to $\mu$Gal
+- Full IERS constituent-dependent Earth response, including FCN-sensitive diurnal corrections and horizontal/tensor transfer factors: this is the main reason the quoted sub-$\mu$Gal accuracy applies only to the vertical body-tide channel
+- A full non-diagonal Earth gradient model: the returned tensor is useful for local linearization, not precision gradiometry
+
+
+## Notation
+
+| Symbol | Code | Description |
+|--------|------|-------------|
+| $\varphi$ | `lat_deg` | Geodetic latitude |
+| $\lambda$ | `lon_deg` | Geodetic longitude |
+| $h$ | `alt_m` | Altitude above ellipsoid |
+| $\gamma$ | `g_normal` | Normal gravity magnitude |
+| $\mathbf{g}$ | `field.g` | Gravity vector (ENU, $g_U < 0$) |
+| $\mathbf{T}$ | `field.T` | Gravity gradient tensor (ENU) |
+| $\boldsymbol{\Omega}$ | `field.omega` | Earth rotation vector (ENU) |
+| $\delta$ | `DELTA_GRAV` | Scalar gravimetric factor $1 + h_2 - \frac{3}{2}k_2$ |
+| $h_2$, $k_2$ | `H2`, `K2` | Degree-2 Love numbers |
+| $\hat{\mathbf{n}}$ | `n_hat` | Measurement axis unit vector |
+| $\theta$ | `zenith_deg` | Zenith angle (0 = vertical) |
+| $\alpha$ | `azimuth_deg` | Azimuth (clockwise from north) |
 
 
 ## 1. Pipeline Overview
@@ -16,7 +50,7 @@ dt ──► moon_position_ecef ──► R_moon ─────┤
    └─► sun_position_ecef  ──► R_sun  ─────┤
                                            ▼
                               tidal_acceleration(r, R, GM)
-                              × DELTA_GRAV  (elastic amplification)
+                              × DELTA_GRAV  (scalar elastic-response approximation)
                                            │
 (lat, lon) ──► enu_basis ──► (E, N, U)    │
 (zenith, azimuth) ──► measurement_axis ──► n_hat
@@ -105,6 +139,21 @@ Both ephemerides produce positions in **ecliptic coordinates** (geocentric), whi
 
 GMST uses the IAU polynomial in Julian centuries.
 
+### Time Scale
+
+The code uses UTC throughout, but the Meeus ephemerides are parameterized by Terrestrial Time (TT).  The difference TT $-$ UTC $\approx$ 69 s in 2025 (and growing with each leap second) is not corrected.  At the Moon's angular rate of $\sim$0.5$\degree$/h, 69 s produces $\sim$0.01$\degree$ position error, which is small compared with the Meeus truncation error ($\sim$0.1$\degree$) but should be noted for future high-precision work.
+
+### Measured Ephemeris Accuracy
+
+Against JPL Horizons DE441 reference positions at four test epochs (2024--2025):
+
+| Body | Distance error | Declination error |
+|------|---------------|-------------------|
+| Moon | 1.6--36.7 km (of 385 000 km) | $\le$ 0.146$\degree$ |
+| Sun  | $\le$ 5 830 km (of 150 000 000 km) | $\le$ 0.144$\degree$ |
+
+These are tighter than the Meeus textbook estimates, confirming that the truncated series is adequate for the $10^2$--$10^3$ nGal accuracy target.
+
 
 ## 4. Tidal Acceleration
 
@@ -113,6 +162,8 @@ GMST uses the IAU polynomial in Julian centuries.
 $$\mathbf{a}_\text{tidal} = GM\left[\frac{\mathbf{R} - \mathbf{r}}{|\mathbf{R} - \mathbf{r}|^3} - \frac{\mathbf{R}}{R^3}\right]$$
 
 This computes the difference between gravitational pull at the observer ($\mathbf{r}$) and at the Earth's center (origin), without expanding in $r/R$.
+
+**Numerical note.**  The subtraction $(\mathbf{R}-\mathbf{r})/|\mathbf{R}-\mathbf{r}|^3 - \mathbf{R}/R^3$ involves two nearly equal vectors, but catastrophic cancellation is not a concern: for the Moon, $r/R \approx 1/60$, so the subtraction loses at most $\sim$1.7 decimal digits, well within the $\sim$15.7 digits available in IEEE 754 double precision.
 
 ### Why Not the Gradient Approximation?
 
@@ -128,11 +179,13 @@ At a peak tidal signal of ~1 $\mu$m/s$^2$ (~100 $\mu$Gal), this is **~2.5 $\mu$G
 
 ### Elastic Amplification
 
-The tidal acceleration is multiplied by the gravimetric factor before use:
+Pytheas multiplies the rigid-Earth tidal acceleration by a single gravimetric factor before use:
 
 $$\mathbf{a}_\text{measured} = \delta \cdot \mathbf{a}_\text{tidal}$$
 
-with $\delta = 1 + h_2 - \tfrac{3}{2}k_2 = 1.1608$ (see Section 7).
+with $\delta = 1 + h_2 - \tfrac{3}{2}k_2 = 1.1608$ (see [Theory](theory.md), Section 7).
+
+This scalar factor is a simplification.  In the full IERS 2010 treatment (Chapters 6--7), the Earth response depends on constituent, latitude, and observable, and horizontal components use different transfer factors than vertical gravity.  Applying one $\delta$ to the full vector and to every tensor element is therefore only a first-order approximation; it is weakest in the K1/FCN band, in horizontal components, and in gravity-gradient tensors.
 
 
 ## 5. Coordinate Transforms
@@ -203,7 +256,7 @@ Setting $T_{EE} = T_{NN} = T_H$:
 
 $$T_H = \frac{2\Omega^2 - T_{UU}}{2}$$
 
-Off-diagonal terms of order $O(f)$ (flattening) are deferred.
+Off-diagonal terms of order $O(f)$ (flattening) are deferred.  This diagonal closure is adequate for the linearized equation of motion but sets an order-10 Eotvos floor on the total tensor.
 
 ### Tidal Gradient Tensor
 
@@ -216,19 +269,19 @@ This tensor is symmetric and traceless (vacuum Laplace equation $\nabla^2\Phi = 
 
 ## 7. Accuracy Budget
 
-### Modeled Error Sources
+### Vertical body tide (best-supported channel)
 
 | Source | Error | Notes |
 |--------|-------|-------|
 | Lunar ephemeris (position) | ~100–300 nGal | 0.1$\degree$ angular error on a ~100 $\mu$Gal signal |
 | Lunar ephemeris (distance) | ~150 nGal | 200 km / 385 000 km = 0.05% distance $\Rightarrow$ 0.15% tidal |
 | Solar ephemeris | ~10–100 nGal | Smaller signal but comparable angular/distance uncertainties |
-| Elastic Earth (no FCN) | ~100–1000 nGal | 1% Love-number mismatch on major constituents |
-| Normal gravity | < 1 nGal | WGS84 Somigliana + 2nd-order free-air |
-| Tidal formula (exact, not gradient) | < 0.1 nGal | Full expression, no truncation |
-| **Total modeled** | **~200–1000 nGal** | Usually dominated by ephemeris + FCN treatment |
+| Scalar elastic response ($\delta$, no constituent table) | ~100–1000 nGal | Dominant near diurnal constituents; quoted for the vertical body tide |
+| Normal gravity baseline | < 1 nGal | WGS84 Somigliana + 2nd-order free-air |
+| Tidal forcing formula (exact point mass) | < 0.1 nGal | Full expression, no $r/R$ truncation |
+| **Total modeled vertical body tide** | **~200–1000 nGal** | Quiet inland site; excludes loading and weather |
 
-### Unmodeled Effects
+### Effects not modeled in the vertical budget
 
 | Effect | Magnitude | Notes |
 |--------|-----------|-------|
@@ -236,19 +289,22 @@ This tensor is symmetric and traceless (vacuum Laplace equation $\nabla^2\Phi = 
 | Atmospheric pressure | ~300 nGal/hPa | Requires barometer data |
 | Polar motion | ~10–20 nGal | 48-hr variation; static offset ~5 $\mu$Gal |
 | Planetary tides (Venus) | 1–6 nGal | At inferior conjunction |
-| FCN resonance (K1) | ~100–1000 nGal | Frequency-dependent Love number |
 | LOD variations | < 1 nGal | Earth rotation rate fluctuations |
 | Non-tidal ocean/atmosphere | Variable | Weather, currents |
 
+### Horizontal components and tilted sensors
+
+The rigid Newtonian forcing geometry is still computed exactly, but the Earth response is not: Pytheas uses the same scalar $\delta$ that is derived for the vertical gravimetric response.  The full IERS treatment uses constituent- and latitude-dependent Love/Shida numbers for horizontal motion and tilt.  Horizontal components should therefore be treated as qualitative or low-order predictions, not as sub-$\mu$Gal products.
+
+### Gradient tensor
+
+The external-body tensor is exact for a rigid point mass, but the total tensor is limited by two implementation choices: the same scalar $\delta$ is applied to every tensor element, and the static Earth tensor is represented by a diagonal ENU approximation constrained only by the trace.  That is adequate for local linearization of the equation of motion, but not for precision gradiometry.  Expect order-10 Eotvos fidelity for the total tensor, with the diagonal static-Earth approximation setting the floor.
+
 ### Bottom Line
 
-For a **vertical sensor** at an **inland continental site** below ~1 km altitude:
-
-- **Total modeled error: typically sub-$\mu$Gal** (~10$^2$–10$^3$ nGal)
-- Error is usually dominated by ephemeris accuracy and frequency-independent Love numbers near K1
-- At coastal sites, unmodeled ocean loading can add up to ~3 $\mu$Gal
-
-For horizontal or tilted sensors, the same accuracy applies to the projected tidal component.  The static projection $\gamma\cos\theta$ is exact to the precision of the Somigliana formula.
+- **Vertical body tide:** ~200–1000 nGal is a defensible modeled-error range for a quiet inland site
+- **Horizontal components:** uncertainty is substantially larger because the elastic response is not modeled with the required component/frequency dependence
+- **Gradient tensor:** useful at the ~10 Eotvos level, not as a calibrated gravity-gradient product
 
 
 ## 8. Validation
@@ -262,27 +318,27 @@ For horizontal or tilted sensors, the same accuracy applies to the projected tid
 - Sun distance agreement: < 10 000 km (~0.007%)
 - Sun declination agreement: < 0.2$\degree$
 
-**GRS80 normal gravity.**  The WGS84 Somigliana formula (which uses GRS80-compatible constants) is validated against published GRS80 values at the equator and pole.
+**WGS84 normal gravity.**  The Somigliana formula is validated against the WGS84 defining parameters: $\gamma_e = 9.780\,325\,3141$ m/s$^2$ (equatorial) and $\gamma_p = 9.832\,184\,9378$ m/s$^2$ (polar), with agreement to better than 1 nGal at the boundary latitudes.
 
 ### Test Suite
 
-The test suite (`tests/test_pytheas.py`) contains **79 test methods** across **13 test classes**, with additional parameterized cases in the external-validation and property sections:
+The test suite (`tests/test_pytheas.py`) contains **113 tests** across **13 test classes**, including parameterized cases in the external-validation and property sections:
 
 | Category | Tests | What is checked |
 |----------|-------|-----------------|
 | Constants | 6 | GM values, $\delta$, Somigliana self-consistency |
 | Normal gravity | 5 | Equator/pole values, latitude trend, altitude dependence, free-air gradient |
-| Time utilities | 2 | Julian date, GMST at known epochs |
-| Coordinates | 7 | ECEF conversion, ENU orthonormality, right-handedness, axis vectors |
+| Time utilities | 4 | Julian date, GMST, timezone normalization |
+| Coordinates | 8 | ECEF conversion, ENU orthonormality, right-handedness, axis vectors, ECI→ECEF rotation |
 | Ephemeris | 4 | Sun/Moon distances, position ranges, external validation |
 | Tidal acceleration | 3 | Order of magnitude, Moon/Sun ratio, center-of-mass limit |
 | Full pipeline | 6 | Decomposition sums, gravimetric amplification, zenith projection |
-| Timeseries | 4 | Length, variation range, spectral periods, static constancy |
+| Timeseries | 6 | Length, variation, spectral periods, static constancy, input validation |
 | Edge cases | 4 | South pole, date line, high altitude, negative longitude |
-| LabFrame | 21 | Rotation vector, tensor symmetry/trace, EOM, Coriolis, timeseries |
-| Dataclass API | 6 | Frozen behavior, `asdict` conversion |
-| External validation | 5 | JPL Horizons Moon/Sun, GRS80 gravity |
-| Physics properties | 6 | Scaling limits, ENU handedness, gravity bounds, Coriolis $\perp$ velocity |
+| LabFrame | 23 | Rotation vector, tensor symmetry/trace, EOM, Coriolis, timeseries, input validation |
+| Dataclass API | 8 | Frozen behavior, `asdict` conversion, array immutability |
+| External validation | 19 | JPL Horizons Moon/Sun (parameterized), WGS84 gravity |
+| Physics properties | 17 | Scaling limits, ENU handedness (7 locations), gravity bounds, Coriolis $\perp$ velocity |
 
 ### Property-Based Tests
 

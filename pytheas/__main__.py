@@ -11,7 +11,7 @@ from . import __version__, compute_timeseries
 def main():
     p = argparse.ArgumentParser(
         prog='pytheas',
-        description='Compute g(t) at a point on Earth (accuracy ~10-100 nGal)',
+        description='Compute g(t) at a point on Earth (accuracy ~200-1000 nGal)',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""\
 examples:
