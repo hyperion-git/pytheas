@@ -112,7 +112,7 @@ The lunar ephemeris uses the truncated series from Meeus, *Astronomical Algorith
 
 The five fundamental arguments ($L'$, $D$, $M'$, $M_s$, $F$) are polynomials in Julian centuries $T$ since J2000.0.
 
-**Position accuracy:** ~0.1$\degree$ (~700 km at mean distance).
+**Position accuracy:** ~0.1° (~700 km at mean distance).
 **Distance accuracy:** ~200 km out of 385 000 km (~0.05%).
 
 The tidal acceleration scales as $R^{-3}$, so a 0.05% distance error produces ~0.15% tidal error: for a 100 $\mu$Gal lunar tide this is ~0.15 $\mu$Gal (~150 nGal).  Position error contributes a comparable order.
@@ -141,7 +141,7 @@ GMST uses the IAU polynomial in Julian centuries.
 
 ### Time Scale
 
-The code uses UTC throughout, but the Meeus ephemerides are parameterized by Terrestrial Time (TT).  The difference TT $-$ UTC $\approx$ 69 s in 2025 (and growing with each leap second) is not corrected.  At the Moon's angular rate of $\sim$0.5$\degree$/h, 69 s produces $\sim$0.01$\degree$ position error, which is small compared with the Meeus truncation error ($\sim$0.1$\degree$) but should be noted for future high-precision work.
+The code uses UTC throughout, but the Meeus ephemerides are parameterized by Terrestrial Time (TT).  The difference TT $-$ UTC $\approx$ 69 s in 2025 (and growing with each leap second) is not corrected.  At the Moon's angular rate of $\sim$0.5°/h, 69 s produces $\sim$0.01° position error, which is small compared with the Meeus truncation error ($\sim$0.1°) but should be noted for future high-precision work.
 
 ### Measured Ephemeris Accuracy
 
@@ -149,8 +149,8 @@ Against JPL Horizons DE441 reference positions at four test epochs (2024--2025):
 
 | Body | Distance error | Declination error |
 |------|---------------|-------------------|
-| Moon | 1.6--36.7 km (of 385 000 km) | $\le$ 0.146$\degree$ |
-| Sun  | $\le$ 5 830 km (of 150 000 000 km) | $\le$ 0.144$\degree$ |
+| Moon | 1.6--36.7 km (of 385 000 km) | $\le$ 0.146° |
+| Sun  | $\le$ 5 830 km (of 150 000 000 km) | $\le$ 0.144° |
 
 These are tighter than the Meeus textbook estimates, confirming that the truncated series is adequate for the $10^2$--$10^3$ nGal accuracy target.
 
@@ -273,7 +273,7 @@ This tensor is symmetric and traceless (vacuum Laplace equation $\nabla^2\Phi = 
 
 | Source | Error | Notes |
 |--------|-------|-------|
-| Lunar ephemeris (position) | ~100–300 nGal | 0.1$\degree$ angular error on a ~100 $\mu$Gal signal |
+| Lunar ephemeris (position) | ~100–300 nGal | 0.1° angular error on a ~100 $\mu$Gal signal |
 | Lunar ephemeris (distance) | ~150 nGal | 200 km / 385 000 km = 0.05% distance $\Rightarrow$ 0.15% tidal |
 | Solar ephemeris | ~10–100 nGal | Smaller signal but comparable angular/distance uncertainties |
 | Scalar elastic response ($\delta$, no constituent table) | ~100–1000 nGal | Dominant near diurnal constituents; quoted for the vertical body tide |
@@ -314,9 +314,9 @@ The external-body tensor is exact for a rigid point mass, but the total tensor i
 **JPL Horizons (DE441).**  Moon and Sun positions from JPL's DE441 planetary ephemeris are used as truth values in the regression tests (2024--2025 epochs):
 
 - Moon distance agreement: < 200 km
-- Moon declination agreement: < 0.15$\degree$
+- Moon declination agreement: < 0.15°
 - Sun distance agreement: < 10 000 km (~0.007%)
-- Sun declination agreement: < 0.2$\degree$
+- Sun declination agreement: < 0.2°
 
 **WGS84 normal gravity.**  The Somigliana formula is validated against the WGS84 defining parameters: $\gamma_e = 9.780\,325\,3141$ m/s$^2$ (equatorial) and $\gamma_p = 9.832\,184\,9378$ m/s$^2$ (polar), with agreement to better than 1 nGal at the boundary latitudes.
 

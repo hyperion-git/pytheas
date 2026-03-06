@@ -2,7 +2,7 @@
 
 Pytheas computes gravitational acceleration $g(t)$ at a point on Earth's surface. This tutorial walks through the API from simplest use to full lab-frame physics.
 
-All examples use **Ulm, Eselsberg** (48.42$\degree$N, 9.96$\degree$E, 620 m) as a reference site.
+All examples use **Ulm, Eselsberg** (48.42°N, 9.96°E, 620 m) as a reference site.
 
 
 ## Installation
@@ -154,7 +154,7 @@ result = compute_g(
 # Only the horizontal projection of tidal forces remains
 ```
 
-**Tilted sensor** (15$\degree$ from vertical toward east):
+**Tilted sensor** (15° from vertical toward east):
 
 ```python
 result = compute_g(
@@ -251,7 +251,7 @@ v  = np.array([0.0, 5.0, 0.0])   # 5 m/s northward
 a  = field.eom(dx, v)             # (3,) acceleration in ENU
 ```
 
-**Example: Coriolis deflection in a 10 cm free fall.**  A test mass dropped from rest at 48$\degree$N is deflected eastward by the Coriolis force.  A simple Euler integration:
+**Example: Coriolis deflection in a 10 cm free fall.**  A test mass dropped from rest at 48°N is deflected eastward by the Coriolis force.  A simple Euler integration:
 
 ```python
 dt_step = 0.0001

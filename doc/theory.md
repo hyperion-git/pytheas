@@ -239,7 +239,7 @@ manifestly traceless ($-1-1+2=0$), reflecting the quadrupolar stretching-compres
 |-------|-----------|
 | $\Omega \to 0$ | $\ddot{\mathbf{x}} = \mathbf{g} + \mathbf{T}\cdot\delta\mathbf{x}$ (non-rotating geodesic deviation); $\operatorname{Tr}(\mathbf{T}) = -4\pi G\rho$ |
 | $M_\text{ext} \to 0$ | All tidal terms vanish; gravimeter reads constant $\gamma(\varphi,h)$ |
-| Poles ($\varphi = 90\degree$) | $\boldsymbol{\Omega} = (0,0,\Omega)$ purely vertical; centrifugal vanishes at origin |
+| Poles ($\varphi = 90^\circ$) | $\boldsymbol{\Omega} = (0,0,\Omega)$ purely vertical; centrifugal vanishes at origin |
 | Flat spacetime | $R_{\alpha\beta\gamma\delta} = 0$, no tidal forces; rotating-frame mechanics only |
 
 
@@ -354,7 +354,7 @@ The $R^i{}_{0jk}$ Riemann components in $g_{0i}$ couple the test mass velocity t
 
 $$a^i_\text{GM} = 2c\,R^i{}_{0jk}\,X^k v^j \tag{8.1}$$
 
-These are suppressed relative to the electric-type tidal components by $v_\text{rot}/c$, where $v_\text{rot} = \Omega R_\oplus\cos\varphi$ is the lab's rotational velocity.  At $\varphi = 45\degree$:
+These are suppressed relative to the electric-type tidal components by $v_\text{rot}/c$, where $v_\text{rot} = \Omega R_\oplus\cos\varphi$ is the lab's rotational velocity.  At $\varphi = 45^\circ$:
 
 $$a_\text{GM} \sim 2\frac{v_\text{rot}}{c}\,a^\text{Newt}_\text{tidal} \sim 2 \times \frac{329}{3\times10^8}\times 8\times10^{-7} \approx 0.17\;\text{nGal}  \tag{8.2}$$
 
